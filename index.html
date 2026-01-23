@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jeu Vocabulaire - Score</title>
+    <title>Vocabulaire & IA</title>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -17,25 +17,39 @@
         
         button { 
             width: 100%; min-height: 70px; padding: 10px; 
-            font-size: 20px; font-weight: bold; /* Texte plus gros et gras */
+            font-size: 20px; font-weight: bold;
             cursor: pointer; border: 2px solid #3498db; background: white; 
             border-radius: 10px; transition: all 0.2s; word-wrap: break-word;
             -webkit-tap-highlight-color: transparent;
         }
         button.selected { background-color: #3498db; color: white; }
         
-        #message { margin: 15px 0; font-size: 20px; font-weight: bold; min-height: 25px; }
+        #message { margin: 15px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
         .error { color: #e74c3c; }
 
         .refresh-btn { 
-            margin-top: 20px; padding: 12px 20px; background: #95a5a6; 
+            margin-top: 15px; padding: 10px 20px; background: #95a5a6; 
             color: white; border: none; border-radius: 25px; font-size: 14px;
         }
         
         #score-container {
-            margin-top: 15px; font-size: 18px; color: #34495e; font-weight: bold;
-            padding: 10px 20px; background: white; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 10px; font-size: 16px; color: #34495e; font-weight: bold;
+        }
+
+        #ai-link-container {
+            margin-top: 25px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #ai-link-container a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -49,9 +63,12 @@
         <div id="right-col" class="column"></div>
     </div>
 
+    <div id="score-container">Série : <span id="score-val">0</span></div>
     <button class="refresh-btn" onclick="resetGameFull()">Réinitialiser</button>
-    
-    <div id="score-container">Série en cours : <span id="score-val">0</span></div>
+
+    <div id="ai-link-container">
+        <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
+    </div>
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
@@ -80,35 +97,36 @@
         function initGame() {
             document.getElementById('message').innerText = "";
             currentPairs = [...allData].sort(() => 0.5 - Math.random()).slice(0, 5);
+            updateChatGPTLink();
             renderAll();
+        }
+
+        function updateChatGPTLink() {
+            const words = currentPairs.map(p => p.vn).join(', ');
+            const query = encodeURIComponent(`Peux-tu m'expliquer les mots vietnamiens suivants en français : ${words}`);
+            document.getElementById('chatgpt-link').href = `https://chatgpt.com/?q=${query}`;
         }
 
         function resetGameFull() {
             score = 0;
-            updateScoreDisplay();
+            document.getElementById('score-val').innerText = score;
             initGame();
         }
 
-        function updateScoreDisplay() {
-            document.getElementById('score-val').innerText = score;
-        }
-
         function renderAll() {
-            const leftCol = document.getElementById('left-col');
-            const rightCol = document.getElementById('right-col');
-            leftCol.innerHTML = "";
-            rightCol.innerHTML = "";
+            document.getElementById('left-col').innerHTML = "";
+            document.getElementById('right-col').innerHTML = "";
             const leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             const rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
-            leftOrder.forEach(pair => createBtn(pair, leftCol, 'left'));
-            rightOrder.forEach(pair => createBtn(pair, rightCol, 'right'));
+            leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left'));
+            rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right'));
         }
 
-        function createBtn(pair, container, side) {
+        function createBtn(pair, containerId, side) {
             const btn = document.createElement('button');
             btn.innerText = (side === 'left') ? pair.vn : pair.fr;
             btn.onclick = () => handleSelection(pair.id, btn, side);
-            container.appendChild(btn);
+            document.getElementById(containerId).appendChild(btn);
         }
 
         function handleSelection(id, element, side) {
@@ -121,9 +139,8 @@
                 if (selection.left.id === selection.right.id) {
                     msgDiv.innerText = "✅ OK";
                     msgDiv.className = "ok";
-                    score++; // On augmente le score
-                    updateScoreDisplay();
-                    
+                    score++;
+                    document.getElementById('score-val').innerText = score;
                     setTimeout(() => {
                         replacePair(selection.left.id);
                         selection = { left: null, right: null };
@@ -132,8 +149,8 @@
                 } else {
                     msgDiv.innerText = "❌ ERROR";
                     msgDiv.className = "error";
-                    score = 0; // On réinitialise le score en cas d'erreur
-                    updateScoreDisplay();
+                    score = 0;
+                    document.getElementById('score-val').innerText = score;
                 }
             }
         }
@@ -145,6 +162,7 @@
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
                 currentPairs[indexToReplace] = newPair;
+                updateChatGPTLink(); // On met à jour le lien avec le nouveau mot
                 renderAll();
             }
         }
