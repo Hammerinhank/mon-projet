@@ -3,53 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jeu Vocabulaire Mobile</title>
+    <title>Jeu Vocabulaire - Score</title>
     <style>
-        * { box-sizing: border-box; } /* Empêche le padding de déborder */
-
+        * { box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            background-color: #f4f7f6; 
-            padding: 10px; 
-            margin: 0;
-            overflow-x: hidden; /* Empêche le défilement horizontal */
+            display: flex; flex-direction: column; align-items: center; 
+            background-color: #f4f7f6; padding: 10px; margin: 0; overflow-x: hidden; 
         }
-
-        h1 { font-size: 1.5rem; color: #2c3e50; text-align: center; margin: 15px 0; }
-
-        .container { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; /* Espace réduit entre les colonnes pour mobile */
-            width: 100%; 
-            max-width: 500px; 
-            padding: 0 5px;
-        }
-
-        .column { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-            flex: 1; /* Les colonnes se partagent l'espace équitablement */
-        }
-
+        h1 { font-size: 1.5rem; color: #2c3e50; margin: 15px 0; }
+        .container { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
+        .column { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        
         button { 
-            width: 100%; /* Le bouton prend toute la largeur de sa colonne */
-            min-height: 60px; /* Plus haut pour faciliter le clic au doigt */
-            padding: 10px 5px; 
-            font-size: 20px; 
-            cursor: pointer; 
-            border: 2px solid #3498db;
-            background: white; 
-            border-radius: 10px; 
-            transition: all 0.2s;
-            word-wrap: break-word; /* Coupe les mots trop longs si besoin */
-            -webkit-tap-highlight-color: transparent; /* Enlève le flash gris sur iPhone */
+            width: 100%; min-height: 70px; padding: 10px; 
+            font-size: 20px; font-weight: bold; /* Texte plus gros et gras */
+            cursor: pointer; border: 2px solid #3498db; background: white; 
+            border-radius: 10px; transition: all 0.2s; word-wrap: break-word;
+            -webkit-tap-highlight-color: transparent;
         }
-
         button.selected { background-color: #3498db; color: white; }
         
         #message { margin: 15px 0; font-size: 20px; font-weight: bold; min-height: 25px; }
@@ -57,13 +29,13 @@
         .error { color: #e74c3c; }
 
         .refresh-btn { 
-            margin-top: 20px; 
-            padding: 12px 20px; 
-            background: #95a5a6; 
-            color: white; 
-            border: none; 
-            border-radius: 25px; 
-            font-size: 14px;
+            margin-top: 20px; padding: 12px 20px; background: #95a5a6; 
+            color: white; border: none; border-radius: 25px; font-size: 14px;
+        }
+        
+        #score-container {
+            margin-top: 15px; font-size: 18px; color: #34495e; font-weight: bold;
+            padding: 10px 20px; background: white; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -77,13 +49,16 @@
         <div id="right-col" class="column"></div>
     </div>
 
-    <button class="refresh-btn" onclick="initGame()">Réinitialiser</button>
+    <button class="refresh-btn" onclick="resetGameFull()">Réinitialiser</button>
+    
+    <div id="score-container">Série en cours : <span id="score-val">0</span></div>
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
         let allData = [];
         let currentPairs = [];
         let selection = { left: null, right: null };
+        let score = 0;
 
         async function loadGistData() {
             try {
@@ -106,6 +81,16 @@
             document.getElementById('message').innerText = "";
             currentPairs = [...allData].sort(() => 0.5 - Math.random()).slice(0, 5);
             renderAll();
+        }
+
+        function resetGameFull() {
+            score = 0;
+            updateScoreDisplay();
+            initGame();
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('score-val').innerText = score;
         }
 
         function renderAll() {
@@ -136,6 +121,9 @@
                 if (selection.left.id === selection.right.id) {
                     msgDiv.innerText = "✅ OK";
                     msgDiv.className = "ok";
+                    score++; // On augmente le score
+                    updateScoreDisplay();
+                    
                     setTimeout(() => {
                         replacePair(selection.left.id);
                         selection = { left: null, right: null };
@@ -144,6 +132,8 @@
                 } else {
                     msgDiv.innerText = "❌ ERROR";
                     msgDiv.className = "error";
+                    score = 0; // On réinitialise le score en cas d'erreur
+                    updateScoreDisplay();
                 }
             }
         }
