@@ -23,7 +23,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         button.selected { background-color: #3498db !important; color: white !important; }
-        button.mastered { background-color: #d4edda; border-color: #c3e6cb; } /* Vert pâle */
+        button.mastered { background-color: #d4edda; border-color: #c3e6cb; } 
         
         #message { margin: 15px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
@@ -50,7 +50,7 @@
     </div>
 
     <div id="score-container">Série : <span id="score-val">0</span></div>
-    <button id="refresh-btn" class="refresh-btn" onclick="resetGameFull()">Réinitialiser (0)</button>
+    <button id="refresh-btn" class="refresh-btn" onclick="resetGameFull()">Réinitialiser</button>
 
     <div id="ai-link-container">
         <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
@@ -62,7 +62,7 @@
         let currentPairs = [];
         let selection = { left: null, right: null };
         let score = 0;
-        let counters = {}; // Objet pour stocker les scores par mot
+        let counters = {};
 
         async function loadGistData() {
             try {
@@ -70,7 +70,6 @@
                 const gist = await response.json();
                 const content = gist.files[Object.keys(gist.files)[0]].content;
                 
-                // Charger les compteurs sauvegardés
                 const savedCounters = localStorage.getItem('vocab_counters');
                 counters = savedCounters ? JSON.parse(savedCounters) : {};
 
@@ -79,7 +78,6 @@
                                  .map((line, index) => {
                                      const parts = line.split(':');
                                      const vnWord = parts[0].trim();
-                                     // Initialiser le compteur à 0 si inconnu
                                      if (counters[vnWord] === undefined) counters[vnWord] = 0;
                                      return { id: index, vn: vnWord, fr: parts[1].trim() };
                                  });
@@ -92,9 +90,9 @@
         }
 
         function updateRefreshButtonText() {
-            // Compter combien de mots ont un score > 0
             const countStarted = Object.values(counters).filter(v => v > 0).length;
-            document.getElementById('refresh-btn').innerText = `Réinitialiser (${countStarted})`;
+            const countIgnored = Object.values(counters).filter(v => v > 4).length;
+            document.getElementById('refresh-btn').innerText = `Réinitialiser (${countStarted} vus, ${countIgnored} appris)`;
         }
 
         function saveProgress() {
@@ -104,7 +102,16 @@
 
         function initGame() {
             document.getElementById('message').innerText = "";
-            currentPairs = [...allData].sort(() => 0.5 - Math.random()).slice(0, 5);
+            // Filtrer pour exclure les mots dont le compteur est > 4
+            const pool = allData.filter(p => counters[p.vn] <= 4);
+            
+            if (pool.length < 5) {
+                document.getElementById('message').innerText = "Bravo, presque tout est appris !";
+                currentPairs = [...pool]; 
+            } else {
+                currentPairs = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
+            }
+            
             updateChatGPTLink();
             renderAll();
         }
@@ -133,12 +140,9 @@
         function createBtn(pair, containerId, side) {
             const btn = document.createElement('button');
             btn.innerText = (side === 'left') ? pair.vn : pair.fr;
-            
-            // Appliquer le fond vert si le compteur est >= 2
             if (counters[pair.vn] >= 2) {
                 btn.classList.add('mastered');
             }
-
             btn.onclick = () => handleSelection(pair, btn, side);
             document.getElementById(containerId).appendChild(btn);
         }
@@ -154,12 +158,10 @@
                     msgDiv.innerText = "✅ OK";
                     msgDiv.className = "ok";
                     score++;
-                    
-                    // Incrémenter le compteur spécifique au mot
                     counters[selection.left.vn]++;
                     saveProgress();
-
                     document.getElementById('score-val').innerText = score;
+                    
                     setTimeout(() => {
                         replacePair(selection.left.id);
                         selection = { left: null, right: null };
@@ -176,13 +178,22 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
-            const availablePairs = allData.filter(p => !usedIds.includes(p.id));
+            // On ne pioche que dans les mots dont le compteur est <= 4
+            const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
+            
             if (availablePairs.length > 0) {
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
                 currentPairs[indexToReplace] = newPair;
                 updateChatGPTLink();
                 renderAll();
+            } else {
+                // Si plus de mots dispo, on enlève juste la paire trouvée sans remplacer
+                currentPairs = currentPairs.filter(p => p.id !== oldId);
+                renderAll();
+                if (currentPairs.length === 0) {
+                    document.getElementById('message').innerText = "Session terminée !";
+                }
             }
         }
 
