@@ -29,7 +29,6 @@
         .ok { color: #27ae60; }
         .error { color: #e74c3c; }
 
-        /* Conteneur pour les boutons du bas */
         .bottom-controls {
             display: flex;
             gap: 10px;
@@ -189,6 +188,14 @@
         }
 
         function handleSelection(pair, element, side) {
+            // Logique de désélection si on clique sur le même bouton
+            if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
+                element.classList.remove('selected');
+                selection[side] = null;
+                if (hideMode) renderAll();
+                return;
+            }
+
             if (selection[side]) selection[side].element.classList.remove('selected');
             element.classList.add('selected');
             selection[side] = { id: pair.id, vn: pair.vn, element };
