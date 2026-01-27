@@ -29,9 +29,25 @@
         .ok { color: #27ae60; }
         .error { color: #e74c3c; }
 
+        /* Conteneur pour les boutons du bas */
+        .bottom-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 15px;
+        }
+
         .refresh-btn { 
-            margin-top: 15px; padding: 12px 20px; background: #95a5a6; 
-            color: white; border: none; border-radius: 25px; font-size: 14px; cursor: pointer;
+            flex: 1.5; padding: 12px 10px; background: #95a5a6; 
+            color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer;
+            min-height: 45px;
+        }
+        
+        .mode-toggle {
+            flex: 1; padding: 12px 10px; background: #34495e;
+            color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer;
+            min-height: 45px;
         }
         
         #score-container { margin-top: 10px; font-size: 16px; color: #34495e; font-weight: bold; }
@@ -50,7 +66,11 @@
     </div>
 
     <div id="score-container">Série : <span id="score-val">0</span></div>
-    <button id="refresh-btn" class="refresh-btn" onclick="resetGameFull()">Réinitialiser</button>
+    
+    <div class="bottom-controls">
+        <button id="refresh-btn" class="refresh-btn" onclick="resetGameFull()">Réinitialiser</button>
+        <button id="mode-toggle" class="mode-toggle" onclick="toggleHideMode()">Masqué : OFF</button>
+    </div>
 
     <div id="ai-link-container">
         <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
@@ -63,6 +83,7 @@
         let selection = { left: null, right: null };
         let score = 0;
         let counters = {};
+        let hideMode = false;
 
         async function loadGistData() {
             try {
@@ -92,7 +113,7 @@
         function updateRefreshButtonText() {
             const countStarted = Object.values(counters).filter(v => v > 0).length;
             const countIgnored = Object.values(counters).filter(v => v > 4).length;
-            document.getElementById('refresh-btn').innerText = `Réinitialiser (${countStarted} vus, ${countIgnored} appris)`;
+            document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} ok)`;
         }
 
         function saveProgress() {
@@ -102,7 +123,6 @@
 
         function initGame() {
             document.getElementById('message').innerText = "";
-            // Filtrer pour exclure les mots dont le compteur est > 4
             const pool = allData.filter(p => counters[p.vn] <= 4);
             
             if (pool.length < 5) {
@@ -128,21 +148,42 @@
             initGame();
         }
 
+        function toggleHideMode() {
+            hideMode = !hideMode;
+            document.getElementById('mode-toggle').innerText = `Masqué : ${hideMode ? 'ON' : 'OFF'}`;
+            renderAll();
+        }
+
         function renderAll() {
             document.getElementById('left-col').innerHTML = "";
             document.getElementById('right-col').innerHTML = "";
             const leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             const rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
-            leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left'));
-            rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right'));
+            
+            const isAnythingSelected = selection.left !== null || selection.right !== null;
+
+            leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left', isAnythingSelected));
+            rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right', isAnythingSelected));
         }
 
-        function createBtn(pair, containerId, side) {
+        function createBtn(pair, containerId, side, isAnythingSelected) {
             const btn = document.createElement('button');
-            btn.innerText = (side === 'left') ? pair.vn : pair.fr;
+            
+            if (side === 'left' && hideMode && !isAnythingSelected) {
+                btn.innerText = "-";
+            } else {
+                btn.innerText = (side === 'left') ? pair.vn : pair.fr;
+            }
+
             if (counters[pair.vn] >= 2) {
                 btn.classList.add('mastered');
             }
+            
+            if ((selection.left && side === 'left' && selection.left.vn === pair.vn) || 
+                (selection.right && side === 'right' && selection.right.id === pair.id)) {
+                btn.classList.add('selected');
+            }
+
             btn.onclick = () => handleSelection(pair, btn, side);
             document.getElementById(containerId).appendChild(btn);
         }
@@ -151,6 +192,8 @@
             if (selection[side]) selection[side].element.classList.remove('selected');
             element.classList.add('selected');
             selection[side] = { id: pair.id, vn: pair.vn, element };
+
+            if (hideMode) renderAll();
 
             if (selection.left && selection.right) {
                 const msgDiv = document.getElementById('message');
@@ -163,8 +206,9 @@
                     document.getElementById('score-val').innerText = score;
                     
                     setTimeout(() => {
-                        replacePair(selection.left.id);
+                        const oldId = selection.left.id;
                         selection = { left: null, right: null };
+                        replacePair(oldId);
                         msgDiv.innerText = "";
                     }, 500);
                 } else {
@@ -178,7 +222,6 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
-            // On ne pioche que dans les mots dont le compteur est <= 4
             const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
             
             if (availablePairs.length > 0) {
@@ -188,7 +231,6 @@
                 updateChatGPTLink();
                 renderAll();
             } else {
-                // Si plus de mots dispo, on enlève juste la paire trouvée sans remplacer
                 currentPairs = currentPairs.filter(p => p.id !== oldId);
                 renderAll();
                 if (currentPairs.length === 0) {
