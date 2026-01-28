@@ -168,7 +168,7 @@
 
         function updateChatGPTLink() {
             const words = currentPairs.map(p => p.vn).join(', ');
-            const query = encodeURIComponent(`Peux-tu m'expliquer les mots vietnamiens suivants en français : ${words}`);
+            const query = encodeURIComponent(`Peux-tu m'expliquer les mots vietnamiens suivants en français (et quand les mots ont deux syllable, me donner en plus une explication spécifique pour chacune des syllables) : ${words}`);
             document.getElementById('chatgpt-link').href = `https://chatgpt.com/?q=${query}`;
         }
 
