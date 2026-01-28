@@ -142,7 +142,7 @@
 
         function updateRefreshButtonText() {
             const countStarted = Object.values(counters).filter(v => v > 0).length;
-            const countIgnored = Object.values(counters).filter(v => v > 4).length; // Retour à la limite de 4
+            const countIgnored = Object.values(counters).filter(v => v > 4).length;
             document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} ok)`;
         }
 
@@ -153,7 +153,7 @@
 
         function initGame() {
             document.getElementById('message').innerText = "";
-            const pool = allData.filter(p => counters[p.vn] <= 4); // Retour à la limite de 4
+            const pool = allData.filter(p => counters[p.vn] <= 4);
             
             if (pool.length === 0) {
                 document.getElementById('message').innerText = "Bravo, tout est appris !";
@@ -308,16 +308,18 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
-            // On cherche n'importe quelle paire disponible avec compteur <= 4
+            // On filtre immédiatement pour n'avoir QUE des mots dont le compteur est <= 4
             const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
             
             if (availablePairs.length > 0) {
+                // On pioche au hasard dans le pool valide
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
                 currentPairs[indexToReplace] = newPair;
                 updateChatGPTLink();
                 renderAll();
             } else {
+                // Uniquement s'il n'y a plus aucun mot valide dans tout le fichier, on réduit l'affichage
                 currentPairs = currentPairs.filter(p => p.id !== oldId);
                 renderAll();
                 if (currentPairs.length === 0) {
