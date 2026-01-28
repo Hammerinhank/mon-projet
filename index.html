@@ -56,7 +56,7 @@
 </head>
 <body>
 
-    <h1>Vocabulaire 1</h1>
+    <h1>Vocabulaire OK</h1>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -86,7 +86,6 @@
         
         // Variables pour la détection des 4 clics
         let lastClickedId = null;
-        let lastClickedWord = null; // Stocke le mot VN cliqué
         let clickCount = 0;
 
         async function loadGistData() {
@@ -152,30 +151,14 @@
             initGame();
         }
 
-        // Fonction modifiée pour inclure les deux nouvelles options
+        // Nouvelle fonction de réinitialisation totale des compteurs
         function resetAllCounters() {
-            const choix = prompt("Choisir une option :\n'tous' : Reset total\n'un' : Reset ce bouton uniquement\n'top' : Voir les 10 plus grands compteurs");
-            
-            if (choix === "tous") {
-                if (confirm("Réinitialiser TOUS les compteurs ?")) {
-                    for (let key in counters) counters[key] = 0;
-                    saveProgress();
-                    resetGameFull();
+            if (confirm("Voulez-vous réinitialiser tous les compteurs ?")) {
+                for (let key in counters) {
+                    counters[key] = 0;
                 }
-            } else if (choix === "un") {
-                if (lastClickedWord && counters[lastClickedWord] !== undefined) {
-                    counters[lastClickedWord] = 0;
-                    saveProgress();
-                    alert(`Compteur réinitialisé pour : ${lastClickedWord}`);
-                    resetGameFull();
-                }
-            } else if (choix === "top") {
-                const top10 = Object.entries(counters)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 10)
-                    .map(([word, val]) => `${word} : ${val}`)
-                    .join('\n');
-                alert("Top 10 des compteurs :\n\n" + (top10 || "Aucune donnée"));
+                saveProgress();
+                resetGameFull();
             }
         }
 
@@ -225,4 +208,74 @@
             if (lastClickedId === currentId) {
                 clickCount++;
                 if (clickCount === 4) {
-                    clickCount
+                    clickCount = 0;
+                    resetAllCounters();
+                    return;
+                }
+            } else {
+                lastClickedId = currentId;
+                clickCount = 1;
+            }
+
+            // Logique de désélection si on clique sur le même bouton
+            if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
+                element.classList.remove('selected');
+                selection[side] = null;
+                if (hideMode) renderAll();
+                return;
+            }
+
+            if (selection[side]) selection[side].element.classList.remove('selected');
+            element.classList.add('selected');
+            selection[side] = { id: pair.id, vn: pair.vn, element };
+
+            if (hideMode) renderAll();
+
+            if (selection.left && selection.right) {
+                const msgDiv = document.getElementById('message');
+                if (selection.left.id === selection.right.id) {
+                    msgDiv.innerText = "✅ OK";
+                    msgDiv.className = "ok";
+                    score++;
+                    counters[selection.left.vn]++;
+                    saveProgress();
+                    document.getElementById('score-val').innerText = score;
+                    
+                    setTimeout(() => {
+                        const oldId = selection.left.id;
+                        selection = { left: null, right: null };
+                        replacePair(oldId);
+                        msgDiv.innerText = "";
+                    }, 500);
+                } else {
+                    msgDiv.innerText = "❌ ERROR";
+                    msgDiv.className = "error";
+                    score = 0;
+                    document.getElementById('score-val').innerText = score;
+                }
+            }
+        }
+
+        function replacePair(oldId) {
+            const usedIds = currentPairs.map(p => p.id);
+            const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
+            
+            if (availablePairs.length > 0) {
+                const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
+                const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
+                currentPairs[indexToReplace] = newPair;
+                updateChatGPTLink();
+                renderAll();
+            } else {
+                currentPairs = currentPairs.filter(p => p.id !== oldId);
+                renderAll();
+                if (currentPairs.length === 0) {
+                    document.getElementById('message').innerText = "Session terminée !";
+                }
+            }
+        }
+
+        loadGistData();
+    </script>
+</body>
+</html>
