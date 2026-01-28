@@ -75,7 +75,7 @@
 </head>
 <body>
 
-    <h1>Vocabulaire</h1>
+    <h1>Vocabulaire OK1</h1>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -99,7 +99,7 @@
             <h3 id="modal-title">Actions</h3>
             <button class="modal-btn btn-all" onclick="execAction('all')">Tout réinitialiser</button>
             <button class="modal-btn btn-one" onclick="execAction('one')" id="btn-one-label">Réinitialiser ce mot</button>
-            <button class="modal-btn btn-top" onclick="execAction('top')">Top 10 compteurs</button>
+            <button class="modal-btn btn-top" onclick="execAction('top')">Liste des compteurs</button>
             <button class="modal-btn btn-cancel" onclick="closeModal()">Annuler</button>
         </div>
     </div>
@@ -174,7 +174,7 @@
 
         function resetGameFull() {
             score = 0;
-            selection = { left: null, right: null }; // Réinitialise visuellement la sélection
+            selection = { left: null, right: null };
             document.getElementById('score-val').innerText = score;
             initGame();
         }
@@ -201,11 +201,11 @@
                 saveProgress();
                 resetGameFull();
             } else if (action === 'top') {
-                const sorted = Object.entries(counters).sort((a, b) => b[1] - a[1]).slice(0, 10);
-                let report = "Top 10 compteurs :\n\n";
-                sorted.forEach(([word, count]) => {
-                    const d = allData.find(item => item.vn === word);
-                    report += `${word} (${d?d.fr:'?'}) : ${count}\n`;
+                // MODIFICATION ICI : On boucle sur allData pour être sûr de n'oublier personne
+                const sorted = [...allData].sort((a, b) => (counters[b.vn] || 0) - (counters[a.vn] || 0)).slice(0, 15);
+                let report = "Liste des compteurs (Top 15) :\n\n";
+                sorted.forEach(item => {
+                    report += `${item.vn} (${item.fr}) : ${counters[item.vn] || 0}\n`;
                 });
                 alert(report);
             }
