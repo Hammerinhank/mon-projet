@@ -142,7 +142,7 @@
 
         function updateRefreshButtonText() {
             const countStarted = Object.values(counters).filter(v => v > 0).length;
-            const countIgnored = Object.values(counters).filter(v => v > 4).length;
+            const countIgnored = Object.values(counters).filter(v => v > 4).length; // Retour à la limite de 4
             document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} ok)`;
         }
 
@@ -153,7 +153,7 @@
 
         function initGame() {
             document.getElementById('message').innerText = "";
-            const pool = allData.filter(p => counters[p.vn] <= 4);
+            const pool = allData.filter(p => counters[p.vn] <= 4); // Retour à la limite de 4
             
             if (pool.length === 0) {
                 document.getElementById('message').innerText = "Bravo, tout est appris !";
@@ -201,7 +201,6 @@
                 saveProgress();
                 resetGameFull();
             } else if (action === 'top') {
-                // MODIFICATION ICI : On boucle sur allData pour être sûr de n'oublier personne
                 const sorted = [...allData].sort((a, b) => (counters[b.vn] || 0) - (counters[a.vn] || 0)).slice(0, 15);
                 let report = "Liste des compteurs (Top 15) :\n\n";
                 sorted.forEach(item => {
@@ -309,6 +308,7 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
+            // On cherche n'importe quelle paire disponible avec compteur <= 4
             const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
             
             if (availablePairs.length > 0) {
