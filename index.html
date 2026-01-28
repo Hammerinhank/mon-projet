@@ -9,9 +9,9 @@
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             display: flex; flex-direction: column; align-items: center; 
-            background-color: #f4f7f6; padding: 5px; margin: 0; overflow-x: hidden; 
+            background-color: #f4f7f6; padding: 10px; margin: 0; overflow-x: hidden; 
         }
-        h1 { font-size: 1.5rem; color: #2c3e50; margin: 5px 0 10px 0; }
+        h1 { font-size: 1.5rem; color: #2c3e50; margin: 15px 0; }
         .container { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
         .column { display: flex; flex-direction: column; gap: 10px; flex: 1; }
         
@@ -25,28 +25,13 @@
         button.selected { background-color: #3498db !important; color: white !important; }
         button.mastered { background-color: #d4edda; border-color: #c3e6cb; } 
         
-        #message { margin: 5px 0 10px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
+        #message { margin: 15px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
         .error { color: #e74c3c; }
 
-        .bottom-controls {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            max-width: 500px;
-            margin-top: 15px;
-        }
-
         .refresh-btn { 
-            flex: 1.5; padding: 12px 10px; background: #95a5a6; 
-            color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer;
-            min-height: 45px;
-        }
-        
-        .mode-toggle {
-            flex: 1; padding: 12px 10px; background: #34495e;
-            color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer;
-            min-height: 45px;
+            margin-top: 15px; padding: 12px 20px; background: #95a5a6; 
+            color: white; border: none; border-radius: 25px; font-size: 14px; cursor: pointer;
         }
         
         #score-container { margin-top: 10px; font-size: 16px; color: #34495e; font-weight: bold; }
@@ -65,11 +50,7 @@
     </div>
 
     <div id="score-container">Série : <span id="score-val">0</span></div>
-    
-    <div class="bottom-controls">
-        <button id="refresh-btn" class="refresh-btn" onclick="resetGameFull()">Réinitialiser</button>
-        <button id="mode-toggle" class="mode-toggle" onclick="toggleHideMode()">Masqué : OFF</button>
-    </div>
+    <button id="refresh-btn" class="refresh-btn" onclick="resetGameFull()">Réinitialiser</button>
 
     <div id="ai-link-container">
         <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
@@ -82,11 +63,6 @@
         let selection = { left: null, right: null };
         let score = 0;
         let counters = {};
-        let hideMode = false;
-        
-        // Variables pour la détection des 4 clics
-        let lastClickedId = null;
-        let clickCount = 0;
 
         async function loadGistData() {
             try {
@@ -116,7 +92,7 @@
         function updateRefreshButtonText() {
             const countStarted = Object.values(counters).filter(v => v > 0).length;
             const countIgnored = Object.values(counters).filter(v => v > 4).length;
-            document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} ok)`;
+            document.getElementById('refresh-btn').innerText = `Réinitialiser (${countStarted} vus, ${countIgnored} appris)`;
         }
 
         function saveProgress() {
@@ -126,6 +102,7 @@
 
         function initGame() {
             document.getElementById('message').innerText = "";
+            // Filtrer pour exclure les mots dont le compteur est > 4
             const pool = allData.filter(p => counters[p.vn] <= 4);
             
             if (pool.length < 5) {
@@ -151,85 +128,29 @@
             initGame();
         }
 
-        // Nouvelle fonction de réinitialisation totale des compteurs
-        function resetAllCounters() {
-            if (confirm("Voulez-vous réinitialiser tous les compteurs ?")) {
-                for (let key in counters) {
-                    counters[key] = 0;
-                }
-                saveProgress();
-                resetGameFull();
-            }
-        }
-
-        function toggleHideMode() {
-            hideMode = !hideMode;
-            document.getElementById('mode-toggle').innerText = `Masqué : ${hideMode ? 'ON' : 'OFF'}`;
-            renderAll();
-        }
-
         function renderAll() {
             document.getElementById('left-col').innerHTML = "";
             document.getElementById('right-col').innerHTML = "";
             const leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             const rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
-            
-            const isAnythingSelected = selection.left !== null || selection.right !== null;
-
-            leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left', isAnythingSelected));
-            rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right', isAnythingSelected));
+            leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left'));
+            rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right'));
         }
 
-        function createBtn(pair, containerId, side, isAnythingSelected) {
+        function createBtn(pair, containerId, side) {
             const btn = document.createElement('button');
-            
-            if (side === 'left' && hideMode && !isAnythingSelected) {
-                btn.innerText = "-";
-            } else {
-                btn.innerText = (side === 'left') ? pair.vn : pair.fr;
-            }
-
+            btn.innerText = (side === 'left') ? pair.vn : pair.fr;
             if (counters[pair.vn] >= 2) {
                 btn.classList.add('mastered');
             }
-            
-            if ((selection.left && side === 'left' && selection.left.vn === pair.vn) || 
-                (selection.right && side === 'right' && selection.right.id === pair.id)) {
-                btn.classList.add('selected');
-            }
-
             btn.onclick = () => handleSelection(pair, btn, side);
             document.getElementById(containerId).appendChild(btn);
         }
 
         function handleSelection(pair, element, side) {
-            // Logique de détection des 4 clics
-            const currentId = side + pair.id;
-            if (lastClickedId === currentId) {
-                clickCount++;
-                if (clickCount === 4) {
-                    clickCount = 0;
-                    resetAllCounters();
-                    return;
-                }
-            } else {
-                lastClickedId = currentId;
-                clickCount = 1;
-            }
-
-            // Logique de désélection si on clique sur le même bouton
-            if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
-                element.classList.remove('selected');
-                selection[side] = null;
-                if (hideMode) renderAll();
-                return;
-            }
-
             if (selection[side]) selection[side].element.classList.remove('selected');
             element.classList.add('selected');
             selection[side] = { id: pair.id, vn: pair.vn, element };
-
-            if (hideMode) renderAll();
 
             if (selection.left && selection.right) {
                 const msgDiv = document.getElementById('message');
@@ -242,9 +163,8 @@
                     document.getElementById('score-val').innerText = score;
                     
                     setTimeout(() => {
-                        const oldId = selection.left.id;
+                        replacePair(selection.left.id);
                         selection = { left: null, right: null };
-                        replacePair(oldId);
                         msgDiv.innerText = "";
                     }, 500);
                 } else {
@@ -258,6 +178,7 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
+            // On ne pioche que dans les mots dont le compteur est <= 4
             const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
             
             if (availablePairs.length > 0) {
@@ -267,6 +188,7 @@
                 updateChatGPTLink();
                 renderAll();
             } else {
+                // Si plus de mots dispo, on enlève juste la paire trouvée sans remplacer
                 currentPairs = currentPairs.filter(p => p.id !== oldId);
                 renderAll();
                 if (currentPairs.length === 0) {
