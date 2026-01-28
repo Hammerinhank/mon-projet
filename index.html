@@ -24,6 +24,8 @@
         }
         button.selected { background-color: #3498db !important; color: white !important; }
         button.mastered { background-color: #d4edda; border-color: #c3e6cb; } 
+        /* Nouveau style pour compteur >= 4 */
+        button.completed { background-color: #219150 !important; border-color: #1e7e45; color: white !important; }
         
         #message { margin: 5px 0 10px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
@@ -53,7 +55,6 @@
         #ai-link-container { margin-top: 25px; padding: 15px; background: #e8f4fd; border-radius: 10px; text-align: center; }
         #ai-link-container a { color: #2980b9; text-decoration: none; font-weight: bold; font-size: 18px; }
 
-        /* Nouveaux styles pour la boîte de dialogue à 4 boutons */
         #custom-modal {
             display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;
@@ -66,15 +67,15 @@
             margin: 5px 0; min-height: 50px; font-size: 16px; border: none; color: white;
             border-radius: 8px; width: 100%; cursor: pointer;
         }
-        .btn-all { background: #e74c3c; } /* Rouge */
-        .btn-one { background: #f39c12; } /* Orange */
-        .btn-top { background: #3498db; } /* Bleu */
-        .btn-cancel { background: #95a5a6; } /* Gris */
+        .btn-all { background: #e74c3c; }
+        .btn-one { background: #f39c12; }
+        .btn-top { background: #3498db; }
+        .btn-cancel { background: #95a5a6; }
     </style>
 </head>
 <body>
 
-    <h1>Vocabulaire OK2</h1>
+    <h1>Vocabulaire OK1</h1>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -175,7 +176,6 @@
             initGame();
         }
 
-        // --- GESTION DE LA NOUVELLE BOITE DE DIALOGUE ---
         function resetAllCounters() {
             document.getElementById('btn-one-label').innerText = `Reset "${lastClickedWord}"`;
             document.getElementById('custom-modal').style.display = 'flex';
@@ -207,7 +207,6 @@
                 alert(report);
             }
         }
-        // -----------------------------------------------
 
         function toggleHideMode() {
             hideMode = !hideMode;
@@ -232,7 +231,14 @@
             } else {
                 btn.innerText = (side === 'left') ? pair.vn : pair.fr;
             }
-            if (counters[pair.vn] >= 2) btn.classList.add('mastered');
+            
+            // Gestion des couleurs selon le compteur
+            if (counters[pair.vn] >= 4) {
+                btn.classList.add('completed');
+            } else if (counters[pair.vn] >= 2) {
+                btn.classList.add('mastered');
+            }
+            
             if ((selection.left && side === 'left' && selection.left.vn === pair.vn) || 
                 (selection.right && side === 'right' && selection.right.id === pair.id)) {
                 btn.classList.add('selected');
