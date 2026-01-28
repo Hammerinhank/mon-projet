@@ -22,10 +22,13 @@
             border-radius: 10px; transition: all 0.2s; word-wrap: break-word;
             -webkit-tap-highlight-color: transparent;
         }
-        button.selected { background-color: #3498db !important; color: white !important; }
+        
+        /* États de base */
         button.mastered { background-color: #d4edda; border-color: #c3e6cb; } 
-        /* Nouveau style pour compteur >= 4 */
-        button.completed { background-color: #219150 !important; border-color: #1e7e45; color: white !important; }
+        button.completed { background-color: #219150; border-color: #1e7e45; color: white; }
+
+        /* État sélectionné (Priorité maximale grâce au placement et au !important) */
+        button.selected { background-color: #3498db !important; color: white !important; border-color: #2980b9 !important; }
         
         #message { margin: 5px 0 10px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
@@ -75,7 +78,7 @@
 </head>
 <body>
 
-    <h1>Vocabulaire</h1>
+    <h1>Vocabulaire OK1</h1>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -232,7 +235,6 @@
                 btn.innerText = (side === 'left') ? pair.vn : pair.fr;
             }
             
-            // Gestion des couleurs selon le compteur
             if (counters[pair.vn] >= 4) {
                 btn.classList.add('completed');
             } else if (counters[pair.vn] >= 2) {
