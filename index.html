@@ -52,11 +52,29 @@
         #score-container { margin-top: 10px; font-size: 16px; color: #34495e; font-weight: bold; }
         #ai-link-container { margin-top: 25px; padding: 15px; background: #e8f4fd; border-radius: 10px; text-align: center; }
         #ai-link-container a { color: #2980b9; text-decoration: none; font-weight: bold; font-size: 18px; }
+
+        /* Nouveaux styles pour la boîte de dialogue à 4 boutons */
+        #custom-modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center;
+        }
+        .modal-content h3 { margin-top: 0; color: #2c3e50; }
+        .modal-btn { 
+            margin: 5px 0; min-height: 50px; font-size: 16px; border: none; color: white;
+            border-radius: 8px; width: 100%; cursor: pointer;
+        }
+        .btn-all { background: #e74c3c; } /* Rouge */
+        .btn-one { background: #f39c12; } /* Orange */
+        .btn-top { background: #3498db; } /* Bleu */
+        .btn-cancel { background: #95a5a6; } /* Gris */
     </style>
 </head>
 <body>
 
-    <h1>Vocabulaire OK1</h1>
+    <h1>Vocabulaire OK2</h1>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -75,6 +93,16 @@
         <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
     </div>
 
+    <div id="custom-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Actions</h3>
+            <button class="modal-btn btn-all" onclick="execAction('all')">Tout réinitialiser</button>
+            <button class="modal-btn btn-one" onclick="execAction('one')" id="btn-one-label">Réinitialiser ce mot</button>
+            <button class="modal-btn btn-top" onclick="execAction('top')">Top 10 compteurs</button>
+            <button class="modal-btn btn-cancel" onclick="closeModal()">Annuler</button>
+        </div>
+    </div>
+
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
         let allData = [];
@@ -84,8 +112,8 @@
         let counters = {};
         let hideMode = false;
         
-        // Variables pour la détection des 4 clics
         let lastClickedId = null;
+        let lastClickedWord = null;
         let clickCount = 0;
 
         async function loadGistData() {
@@ -93,7 +121,6 @@
                 const response = await fetch(`https://api.github.com/gists/${GIST_ID}`);
                 const gist = await response.json();
                 const content = gist.files[Object.keys(gist.files)[0]].content;
-                
                 const savedCounters = localStorage.getItem('vocab_counters');
                 counters = savedCounters ? JSON.parse(savedCounters) : {};
 
@@ -105,7 +132,6 @@
                                      if (counters[vnWord] === undefined) counters[vnWord] = 0;
                                      return { id: index, vn: vnWord, fr: parts[1].trim() };
                                  });
-                
                 updateRefreshButtonText();
                 initGame();
             } catch (e) {
@@ -127,14 +153,12 @@
         function initGame() {
             document.getElementById('message').innerText = "";
             const pool = allData.filter(p => counters[p.vn] <= 4);
-            
             if (pool.length < 5) {
                 document.getElementById('message').innerText = "Bravo, presque tout est appris !";
                 currentPairs = [...pool]; 
             } else {
                 currentPairs = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
             }
-            
             updateChatGPTLink();
             renderAll();
         }
@@ -151,16 +175,39 @@
             initGame();
         }
 
-        // Nouvelle fonction de réinitialisation totale des compteurs
+        // --- GESTION DE LA NOUVELLE BOITE DE DIALOGUE ---
         function resetAllCounters() {
-            if (confirm("Voulez-vous réinitialiser tous les compteurs ?")) {
-                for (let key in counters) {
-                    counters[key] = 0;
+            document.getElementById('btn-one-label').innerText = `Reset "${lastClickedWord}"`;
+            document.getElementById('custom-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').style.display = 'none';
+        }
+
+        function execAction(action) {
+            closeModal();
+            if (action === 'all') {
+                if (confirm("Réinitialiser TOUT ?")) {
+                    for (let key in counters) counters[key] = 0;
+                    saveProgress();
+                    resetGameFull();
                 }
+            } else if (action === 'one') {
+                counters[lastClickedWord] = 0;
                 saveProgress();
                 resetGameFull();
+            } else if (action === 'top') {
+                const sorted = Object.entries(counters).sort((a, b) => b[1] - a[1]).slice(0, 10);
+                let report = "Top 10 compteurs :\n\n";
+                sorted.forEach(([word, count]) => {
+                    const d = allData.find(item => item.vn === word);
+                    report += `${word} (${d?d.fr:'?'}) : ${count}\n`;
+                });
+                alert(report);
             }
         }
+        // -----------------------------------------------
 
         function toggleHideMode() {
             hideMode = !hideMode;
@@ -173,51 +220,43 @@
             document.getElementById('right-col').innerHTML = "";
             const leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             const rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
-            
             const isAnythingSelected = selection.left !== null || selection.right !== null;
-
             leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left', isAnythingSelected));
             rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right', isAnythingSelected));
         }
 
         function createBtn(pair, containerId, side, isAnythingSelected) {
             const btn = document.createElement('button');
-            
             if (side === 'left' && hideMode && !isAnythingSelected) {
                 btn.innerText = "-";
             } else {
                 btn.innerText = (side === 'left') ? pair.vn : pair.fr;
             }
-
-            if (counters[pair.vn] >= 2) {
-                btn.classList.add('mastered');
-            }
-            
+            if (counters[pair.vn] >= 2) btn.classList.add('mastered');
             if ((selection.left && side === 'left' && selection.left.vn === pair.vn) || 
                 (selection.right && side === 'right' && selection.right.id === pair.id)) {
                 btn.classList.add('selected');
             }
-
             btn.onclick = () => handleSelection(pair, btn, side);
             document.getElementById(containerId).appendChild(btn);
         }
 
         function handleSelection(pair, element, side) {
-            // Logique de détection des 4 clics
             const currentId = side + pair.id;
             if (lastClickedId === currentId) {
                 clickCount++;
                 if (clickCount === 4) {
                     clickCount = 0;
+                    lastClickedWord = pair.vn;
                     resetAllCounters();
                     return;
                 }
             } else {
                 lastClickedId = currentId;
+                lastClickedWord = pair.vn;
                 clickCount = 1;
             }
 
-            // Logique de désélection si on clique sur le même bouton
             if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
                 element.classList.remove('selected');
                 selection[side] = null;
@@ -240,7 +279,6 @@
                     counters[selection.left.vn]++;
                     saveProgress();
                     document.getElementById('score-val').innerText = score;
-                    
                     setTimeout(() => {
                         const oldId = selection.left.id;
                         selection = { left: null, right: null };
@@ -259,7 +297,6 @@
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
             const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
-            
             if (availablePairs.length > 0) {
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
@@ -274,7 +311,6 @@
                 }
             }
         }
-
         loadGistData();
     </script>
 </body>
