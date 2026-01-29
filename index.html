@@ -53,6 +53,13 @@
         .back-link-container { margin: 20px 0; }
         .back-link-container a { color: #95a5a6; text-decoration: none; font-size: 14px; }
 
+        /* ZONE DE DIAGNOSTIC PLEIN ÉCRAN */
+        #diagnostic-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 3000; padding: 20px; flex-direction: column;
+        }
+        #diag-text { width: 100%; flex-grow: 1; margin: 10px 0; font-family: monospace; font-size: 12px; border: 1px solid #ccc; padding: 10px; overflow-y: scroll; }
+
         #stats-modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: #1a1a2e; color: white; overflow-y: auto; padding: 20px;
@@ -106,6 +113,13 @@
 
     <div class="back-link-container">
         <a href="https://sites.google.com/view/anglais-/sandbox">Retour</a>
+    </div>
+
+    <div id="diagnostic-overlay">
+        <h3>Rapport Complet (Tri Décroissant)</h3>
+        <p>Copiez ce texte pour analyse :</p>
+        <textarea id="diag-text" readonly></textarea>
+        <button class="modal-btn btn-cancel" onclick="document.getElementById('diagnostic-overlay').style.display='none'">Fermer</button>
     </div>
 
     <div id="stats-modal">
@@ -243,17 +257,17 @@
                 saveProgress();
                 resetGameFull();
             } else if (action === 'top') {
-                // Tri décroissant
-                const sortedReport = allData
+                const sortedData = allData
                     .map(item => ({ word: item.vn, val: counters[item.vn] || 0 }))
                     .sort((a, b) => b.val - a.val);
 
-                let report = `RAPPORT DÉCROISSANT (${sortedReport.length} mots) :\n\n`;
-                sortedReport.forEach(item => {
+                let report = "";
+                sortedData.forEach(item => {
                     report += `${item.word} : ${item.val}\n`;
                 });
-                console.log(report);
-                alert(report + "\n\n(Vérifiez la console F12 si besoin)");
+
+                document.getElementById('diag-text').value = report;
+                document.getElementById('diagnostic-overlay').style.display = 'flex';
             }
         }
 
