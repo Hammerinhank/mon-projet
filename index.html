@@ -39,38 +39,45 @@
             margin-top: 15px;
         }
 
-        .refresh-btn { 
-            flex: 1.5; padding: 12px 10px; background: #95a5a6; 
-            color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer;
-            min-height: 45px;
-        }
+        .refresh-btn { flex: 1.5; padding: 12px 10px; background: #95a5a6; color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer; min-height: 45px; }
+        .mode-toggle { flex: 1; padding: 12px 10px; background: #34495e; color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer; min-height: 45px; }
         
-        .mode-toggle {
-            flex: 1; padding: 12px 10px; background: #34495e;
-            color: white; border: none; border-radius: 25px; font-size: 13px; cursor: pointer;
-            min-height: 45px;
+        /* Nouveau bouton Progression */
+        .stats-btn {
+            width: 100%; max-width: 500px; margin-top: 10px; padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 25px; font-weight: bold; cursor: pointer;
         }
-        
+
         #score-container { margin-top: 10px; font-size: 16px; color: #34495e; font-weight: bold; }
         #ai-link-container { margin-top: 25px; padding: 15px; background: #e8f4fd; border-radius: 10px; text-align: center; }
         #ai-link-container a { color: #2980b9; text-decoration: none; font-weight: bold; font-size: 18px; }
-
-        /* Style pour le lien Retour */
         .back-link-container { margin: 20px 0; }
         .back-link-container a { color: #95a5a6; text-decoration: none; font-size: 14px; }
 
+        /* MODAL VISU PROGRES */
+        #stats-modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: #1a1a2e; color: white; overflow-y: auto; padding: 20px;
+        }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(12px, 1fr));
+            gap: 3px; margin-top: 20px;
+        }
+        .dot { aspect-ratio: 1; border-radius: 2px; }
+        .dot.v0 { background: #2e2e48; }
+        .dot.v1 { background: #3498db; opacity: 0.5; }
+        .dot.v2 { background: #3498db; }
+        .dot.v3 { background: #d4edda; }
+        .dot.v4 { background: #27ae60; }
+        .dot.v5 { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; }
+        
         #custom-modal {
             display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;
         }
-        .modal-content {
-            background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center;
-        }
-        .modal-content h3 { margin-top: 0; color: #2c3e50; }
-        .modal-btn { 
-            margin: 5px 0; min-height: 50px; font-size: 16px; border: none; color: white;
-            border-radius: 8px; width: 100%; cursor: pointer;
-        }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-btn { margin: 5px 0; min-height: 50px; font-size: 16px; border: none; color: white; border-radius: 8px; width: 100%; cursor: pointer; }
         .btn-all { background: #e74c3c; }
         .btn-one { background: #f39c12; }
         .btn-top { background: #3498db; }
@@ -94,12 +101,26 @@
         <button id="mode-toggle" class="mode-toggle" onclick="toggleHideMode()">Masqué : OFF</button>
     </div>
 
+    <button class="stats-btn" onclick="showVisualStats()">📊 Ma Progression Visuelle</button>
+
     <div id="ai-link-container">
         <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
     </div>
 
     <div class="back-link-container">
         <a href="https://sites.google.com/view/anglais-/sandbox">Retour</a>
+    </div>
+
+    <div id="stats-modal">
+        <button class="modal-btn btn-cancel" onclick="closeStats()" style="width: auto; padding: 10px 20px;">Fermer la vue</button>
+        <h2 style="text-align:center">Nuage de Maîtrise</h2>
+        <p id="stats-summary" style="text-align:center; font-size: 0.9rem; color: #a2a2c2;"></p>
+        <div id="visual-grid" class="stats-grid"></div>
+        <div style="margin-top: 30px; font-size: 0.8rem; display: flex; justify-content: center; gap: 10px;">
+            <span><span style="color:#2e2e48">■</span> Neuf</span>
+            <span><span style="color:#3498db">■</span> Vu</span>
+            <span><span style="color:#2ecc71">■</span> Acquis</span>
+        </div>
     </div>
 
     <div id="custom-modal">
@@ -120,7 +141,6 @@
         let score = 0;
         let counters = {};
         let hideMode = false;
-        
         let lastClickedId = null;
         let lastClickedWord = null;
         let clickCount = 0;
@@ -162,14 +182,12 @@
         function initGame() {
             document.getElementById('message').innerText = "";
             const pool = allData.filter(p => counters[p.vn] <= 4);
-            
             if (pool.length === 0) {
                 document.getElementById('message').innerText = "Bravo, tout est appris !";
                 currentPairs = [];
             } else {
                 currentPairs = [...pool].sort(() => 0.5 - Math.random()).slice(0, Math.min(5, pool.length));
             }
-            
             updateChatGPTLink();
             renderAll();
         }
@@ -185,6 +203,36 @@
             selection = { left: null, right: null };
             document.getElementById('score-val').innerText = score;
             initGame();
+        }
+
+        function showVisualStats() {
+            const modal = document.getElementById('stats-modal');
+            const grid = document.getElementById('visual-grid');
+            grid.innerHTML = "";
+            
+            let totalOk = 0;
+            let totalSeen = 0;
+
+            allData.forEach(item => {
+                const c = counters[item.vn] || 0;
+                const dot = document.createElement('div');
+                dot.className = `dot v${Math.min(c, 5)}`;
+                dot.title = `${item.vn}: ${c}`;
+                grid.appendChild(dot);
+                
+                if(c >= 5) totalOk++;
+                if(c > 0) totalSeen++;
+            });
+
+            const percent = Math.round((totalOk / allData.length) * 100);
+            document.getElementById('stats-summary').innerText = 
+                `${allData.length} mots au total • ${totalSeen} rencontrés • ${totalOk} maîtrisés (${percent}%)`;
+            
+            modal.style.display = 'block';
+        }
+
+        function closeStats() {
+            document.getElementById('stats-modal').style.display = 'none';
         }
 
         function resetAllCounters() {
@@ -227,13 +275,10 @@
         function renderAll() {
             document.getElementById('left-col').innerHTML = "";
             document.getElementById('right-col').innerHTML = "";
-            
             if (currentPairs.length === 0) return;
-
             const leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             const rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             const isAnythingSelected = selection.left !== null || selection.right !== null;
-            
             leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left', isAnythingSelected));
             rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right', isAnythingSelected));
         }
@@ -245,13 +290,11 @@
             } else {
                 btn.innerText = (side === 'left') ? pair.vn : pair.fr;
             }
-            
             if (counters[pair.vn] >= 4) {
                 btn.classList.add('completed');
             } else if (counters[pair.vn] >= 2) {
                 btn.classList.add('mastered');
             }
-            
             if ((selection.left && side === 'left' && selection.left.vn === pair.vn) || 
                 (selection.right && side === 'right' && selection.right.id === pair.id)) {
                 btn.classList.add('selected');
@@ -275,20 +318,16 @@
                 lastClickedWord = pair.vn;
                 clickCount = 1;
             }
-
             if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
                 element.classList.remove('selected');
                 selection[side] = null;
                 if (hideMode) renderAll();
                 return;
             }
-
             if (selection[side]) selection[side].element.classList.remove('selected');
             element.classList.add('selected');
             selection[side] = { id: pair.id, vn: pair.vn, element };
-
             if (hideMode) renderAll();
-
             if (selection.left && selection.right) {
                 const msgDiv = document.getElementById('message');
                 if (selection.left.id === selection.right.id) {
@@ -298,7 +337,6 @@
                     counters[selection.left.vn]++;
                     saveProgress();
                     document.getElementById('score-val').innerText = score;
-                    
                     setTimeout(() => {
                         const oldId = selection.left.id;
                         selection = { left: null, right: null };
@@ -317,7 +355,6 @@
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
             const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
-            
             if (availablePairs.length > 0) {
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
