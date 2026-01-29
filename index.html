@@ -243,17 +243,17 @@
                 saveProgress();
                 resetGameFull();
             } else if (action === 'top') {
-                // MODIFICATION : Affiche TOUS les compteurs > 0
-                const sorted = Object.entries(counters)
-                    .filter(([word, val]) => val > 0)
-                    .sort((a, b) => b[1] - a[1]);
-                
-                let report = `Liste de TOUS les compteurs actifs (${sorted.length}) :\n\n`;
-                sorted.forEach(([word, val]) => { 
-                    report += `${word} : ${val}\n`; 
+                // Tri décroissant
+                const sortedReport = allData
+                    .map(item => ({ word: item.vn, val: counters[item.vn] || 0 }))
+                    .sort((a, b) => b.val - a.val);
+
+                let report = `RAPPORT DÉCROISSANT (${sortedReport.length} mots) :\n\n`;
+                sortedReport.forEach(item => {
+                    report += `${item.word} : ${item.val}\n`;
                 });
-                if (sorted.length === 0) report = "Aucun mot n'a encore de compteur.";
-                alert(report);
+                console.log(report);
+                alert(report + "\n\n(Vérifiez la console F12 si besoin)");
             }
         }
 
