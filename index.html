@@ -55,6 +55,10 @@
         #ai-link-container { margin-top: 25px; padding: 15px; background: #e8f4fd; border-radius: 10px; text-align: center; }
         #ai-link-container a { color: #2980b9; text-decoration: none; font-weight: bold; font-size: 18px; }
 
+        /* Style pour le lien Retour */
+        .back-link-container { margin: 20px 0; }
+        .back-link-container a { color: #95a5a6; text-decoration: none; font-size: 14px; }
+
         #custom-modal {
             display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;
@@ -92,6 +96,10 @@
 
     <div id="ai-link-container">
         <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
+    </div>
+
+    <div class="back-link-container">
+        <a href="https://sites.google.com/view/anglais-/sandbox">Retour</a>
     </div>
 
     <div id="custom-modal">
@@ -308,18 +316,15 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
-            // On filtre immédiatement pour n'avoir QUE des mots dont le compteur est <= 4
             const availablePairs = allData.filter(p => !usedIds.includes(p.id) && counters[p.vn] <= 4);
             
             if (availablePairs.length > 0) {
-                // On pioche au hasard dans le pool valide
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
                 currentPairs[indexToReplace] = newPair;
                 updateChatGPTLink();
                 renderAll();
             } else {
-                // Uniquement s'il n'y a plus aucun mot valide dans tout le fichier, on réduit l'affichage
                 currentPairs = currentPairs.filter(p => p.id !== oldId);
                 renderAll();
                 if (currentPairs.length === 0) {
