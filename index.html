@@ -359,8 +359,14 @@
 
         function execAction(action) {
             if (action === 'all') {
-                if (confirm("Réinitialiser TOUT ?")) {
-                    for (let key in counters) counters[key] = 0;
+                const scope = currentSection === "Toutes" ? "TOUT (toutes les sections)" : `la section "${currentSection}"`;
+                if (confirm(`Réinitialiser ${scope} ?`)) {
+                    // On ne réinitialise que les mots qui appartiennent à la section courante
+                    allData.forEach(item => {
+                        if (currentSection === "Toutes" || item.section === currentSection) {
+                            counters[item.vn] = 0;
+                        }
+                    });
                     saveProgress();
                     closeModal();
                     resetGameFull();
@@ -379,7 +385,7 @@
                 document.getElementById('diag-text').value = report;
                 document.getElementById('diagnostic-overlay').style.display = 'flex';
                 closeModal();
-                closeStats(); // Ferme aussi la mosaïque si ouverte
+                if (document.getElementById('stats-modal')) closeStats();
             }
         }
 
