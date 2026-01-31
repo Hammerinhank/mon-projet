@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vocabulaire & IA</title>
     <style>
-        /* Styles originaux conservés */
         * { box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
@@ -54,7 +53,6 @@
         .back-link-container { margin: 20px 0; }
         .back-link-container a { color: #95a5a6; text-decoration: none; font-size: 14px; }
 
-        /* ZONE DE DIAGNOSTIC PLEIN ÉCRAN */
         #diagnostic-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: white; z-index: 3000; padding: 20px; flex-direction: column;
@@ -81,18 +79,24 @@
             display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;
         }
-        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; }
         .modal-btn { margin: 5px 0; min-height: 50px; font-size: 16px; border: none; color: white; border-radius: 8px; width: 100%; cursor: pointer; }
         .btn-all { background: #e74c3c; }
         .btn-one { background: #f39c12; }
         .btn-top { background: #3498db; }
-        .btn-apply { background: #27ae60; } /* Nouveau bouton */
+        .btn-section { background: #9b59b6; }
+        .btn-apply { background: #27ae60; }
         .btn-cancel { background: #95a5a6; }
+
+        /* Style pour la liste des sections */
+        #section-list { display: none; margin-top: 10px; flex-direction: column; gap: 5px; }
+        .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
+        .section-item.active { background: #3498db; color: white; }
     </style>
 </head>
 <body>
 
-    <h1>Vocabulaire</h1>
+    <h1 id="main-title">Vocabulaire</h1>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -142,17 +146,27 @@
 
     <div id="custom-modal">
         <div class="modal-content">
-            <h3 id="modal-title">Actions</h3>
-            <button class="modal-btn btn-all" onclick="execAction('all')">Tout réinitialiser</button>
-            <button class="modal-btn btn-one" onclick="execAction('one')" id="btn-one-label">Réinitialiser ce mot</button>
-            <button class="modal-btn btn-top" onclick="execAction('top')">Liste des compteurs</button>
-            <button class="modal-btn btn-cancel" onclick="closeModal()">Annuler</button>
+            <div id="modal-main-actions">
+                <h3 id="modal-title">Actions</h3>
+                <button class="modal-btn btn-section" onclick="showSectionPicker()">📂 Choisir une Section</button>
+                <button class="modal-btn btn-all" onclick="execAction('all')">Tout réinitialiser</button>
+                <button class="modal-btn btn-one" onclick="execAction('one')" id="btn-one-label">Réinitialiser ce mot</button>
+                <button class="modal-btn btn-top" onclick="execAction('top')">Liste des compteurs</button>
+                <button class="modal-btn btn-cancel" onclick="closeModal()">Annuler</button>
+            </div>
+            <div id="section-list">
+                <h3>Sélectionner Section</h3>
+                <div id="section-buttons"></div>
+                <button class="modal-btn btn-cancel" onclick="hideSectionPicker()" style="margin-top:15px">Retour</button>
+            </div>
         </div>
     </div>
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
         let allData = [];
+        let sections = ["Toutes"];
+        let currentSection = "Toutes";
         let currentPairs = [];
         let selection = { left: null, right: null };
         let score = 0;
@@ -170,18 +184,100 @@
                 const savedCounters = localStorage.getItem('vocab_counters');
                 counters = savedCounters ? JSON.parse(savedCounters) : {};
 
-                allData = content.split('\n')
-                                 .filter(line => line.includes(':'))
-                                 .map((line, index) => {
-                                     const parts = line.split(':');
-                                     const vnWord = parts[0].trim();
-                                     if (counters[vnWord] === undefined) counters[vnWord] = 0;
-                                     return { id: index, vn: vnWord, fr: parts[1].trim() };
-                                 });
+                let activeSection = "Général";
+                allData = [];
+                
+                content.split('\n').forEach((line, index) => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+
+                    if (trimmedLine.toUpperCase().includes("SECTION")) {
+                        activeSection = trimmedLine.replace(/SECTION/i, "").trim();
+                        if (!sections.includes(activeSection)) sections.push(activeSection);
+                    } else if (trimmedLine.includes(':')) {
+                        const parts = trimmedLine.split(':');
+                        const vnWord = parts[0].trim();
+                        if (counters[vnWord] === undefined) counters[vnWord] = 0;
+                        allData.push({ 
+                            id: index, 
+                            vn: vnWord, 
+                            fr: parts[1].trim(), 
+                            section: activeSection 
+                        });
+                    }
+                });
+
                 updateRefreshButtonText();
                 initGame();
             } catch (e) {
                 document.getElementById('message').innerText = "Erreur de chargement.";
+            }
+        }
+
+        function showSectionPicker() {
+            document.getElementById('modal-main-actions').style.display = 'none';
+            const container = document.getElementById('section-buttons');
+            container.innerHTML = "";
+            sections.forEach(s => {
+                const div = document.createElement('div');
+                div.className = `section-item ${currentSection === s ? 'active' : ''}`;
+                div.innerText = s;
+                div.onclick = () => selectSection(s);
+                container.appendChild(div);
+            });
+            document.getElementById('section-list').style.display = 'flex';
+        }
+
+        function hideSectionPicker() {
+            document.getElementById('section-list').style.display = 'none';
+            document.getElementById('modal-main-actions').style.display = 'block';
+        }
+
+        function selectSection(name) {
+            currentSection = name;
+            document.getElementById('main-title').innerText = name === "Toutes" ? "Vocabulaire" : name;
+            closeModal();
+            resetGameFull();
+        }
+
+        function initGame() {
+            document.getElementById('message').innerText = "";
+            // Filtrage par section + score
+            const pool = allData.filter(p => 
+                (currentSection === "Toutes" || p.section === currentSection) && 
+                (counters[p.vn] || 0) <= 4
+            );
+
+            if (pool.length === 0) {
+                document.getElementById('message').innerText = currentSection === "Toutes" ? "Bravo, tout est appris !" : `Section "${currentSection}" terminée !`;
+                currentPairs = [];
+            } else {
+                currentPairs = [...pool].sort(() => 0.5 - Math.random()).slice(0, Math.min(5, pool.length));
+            }
+            updateChatGPTLink();
+            renderAll();
+        }
+
+        function updateFromReport() {
+            const text = document.getElementById('diag-text').value;
+            const lines = text.split('\n');
+            let updatedCount = 0;
+            lines.forEach(line => {
+                if (line.includes(':')) {
+                    const parts = line.split(':');
+                    const word = parts[0].trim();
+                    const value = parseInt(parts[1].trim());
+                    if (word && !isNaN(value)) {
+                        counters[word] = value;
+                        updatedCount++;
+                    }
+                }
+            });
+            if (updatedCount > 0) {
+                saveProgress();
+                alert(`${updatedCount} compteurs mis à jour !`);
+                document.getElementById('diagnostic-overlay').style.display = 'none';
+                resetGameFull();
             }
         }
 
@@ -194,46 +290,6 @@
         function saveProgress() {
             localStorage.setItem('vocab_counters', JSON.stringify(counters));
             updateRefreshButtonText();
-        }
-
-        // --- NOUVELLE FONCTION POUR RÉATTRIBUER LES VALEURS ---
-        function updateFromReport() {
-            const text = document.getElementById('diag-text').value;
-            const lines = text.split('\n');
-            let updatedCount = 0;
-
-            lines.forEach(line => {
-                if (line.includes(':')) {
-                    const parts = line.split(':');
-                    const word = parts[0].trim();
-                    const value = parseInt(parts[1].trim());
-
-                    if (word && !isNaN(value)) {
-                        counters[word] = value;
-                        updatedCount++;
-                    }
-                }
-            });
-
-            if (updatedCount > 0) {
-                saveProgress();
-                alert(`${updatedCount} compteurs mis à jour !`);
-                document.getElementById('diagnostic-overlay').style.display = 'none';
-                resetGameFull(); // Recharge le jeu pour prendre en compte les nouveaux "OK"
-            }
-        }
-
-        function initGame() {
-            document.getElementById('message').innerText = "";
-            const pool = allData.filter(p => (counters[p.vn] || 0) <= 4);
-            if (pool.length === 0) {
-                document.getElementById('message').innerText = "Bravo, tout est appris !";
-                currentPairs = [];
-            } else {
-                currentPairs = [...pool].sort(() => 0.5 - Math.random()).slice(0, Math.min(5, pool.length));
-            }
-            updateChatGPTLink();
-            renderAll();
         }
 
         function updateChatGPTLink() {
@@ -249,58 +305,71 @@
             initGame();
         }
 
-        function showVisualStats() {
+        
+function showVisualStats() {
             const modal = document.getElementById('stats-modal');
             const grid = document.getElementById('visual-grid');
             grid.innerHTML = "";
             let totalOk = 0;
             let totalSeen = 0;
-            allData.forEach(item => {
+            
+            // Filtrage des données selon la section actuelle
+            const filteredData = allData.filter(item => 
+                currentSection === "Toutes" || item.section === currentSection
+            );
+
+            filteredData.forEach(item => {
                 const c = counters[item.vn] || 0;
                 const dot = document.createElement('div');
                 dot.className = `dot v${Math.min(c, 5)}`;
-                dot.title = `${item.vn}: ${c}`;
+                dot.title = `${item.vn}: ${c} (${item.section})`;
                 grid.appendChild(dot);
                 if(c >= 5) totalOk++;
                 if(c > 0) totalSeen++;
             });
-            const percent = Math.round((totalOk / allData.length) * 100);
+
+            const percent = filteredData.length > 0 ? Math.round((totalOk / filteredData.length) * 100) : 0;
+            
+            // Mise à jour du résumé avec le nom de la section
+            const scopeName = currentSection === "Toutes" ? "mots" : `mots (${currentSection})`;
             document.getElementById('stats-summary').innerText = 
-                `${allData.length} mots • ${totalSeen} vus • ${totalOk} OK (${percent}%)`;
+                `${filteredData.length} ${scopeName} • ${totalSeen} vus • ${totalOk} OK (${percent}%)`;
+            
             modal.style.display = 'block';
         }
 
+
         function closeStats() { document.getElementById('stats-modal').style.display = 'none'; }
         function resetAllCounters() {
+            document.getElementById('modal-main-actions').style.display = 'block';
+            document.getElementById('section-list').style.display = 'none';
             document.getElementById('btn-one-label').innerText = `Reset "${lastClickedWord}"`;
             document.getElementById('custom-modal').style.display = 'flex';
         }
         function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
 
         function execAction(action) {
-            closeModal();
             if (action === 'all') {
                 if (confirm("Réinitialiser TOUT ?")) {
                     for (let key in counters) counters[key] = 0;
                     saveProgress();
+                    closeModal();
                     resetGameFull();
                 }
             } else if (action === 'one') {
                 counters[lastClickedWord] = 0;
                 saveProgress();
+                closeModal();
                 resetGameFull();
             } else if (action === 'top') {
                 const sortedData = allData
                     .map(item => ({ word: item.vn, val: counters[item.vn] || 0 }))
                     .sort((a, b) => b.val - a.val);
-
                 let report = "";
-                sortedData.forEach(item => {
-                    report += `${item.word} : ${item.val}\n`;
-                });
-
+                sortedData.forEach(item => { report += `${item.word} : ${item.val}\n`; });
                 document.getElementById('diag-text').value = report;
                 document.getElementById('diagnostic-overlay').style.display = 'flex';
+                closeModal();
             }
         }
 
@@ -379,7 +448,11 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
-            const availablePairs = allData.filter(p => !usedIds.includes(p.id) && (counters[p.vn] || 0) <= 4);
+            const availablePairs = allData.filter(p => 
+                (currentSection === "Toutes" || p.section === currentSection) && 
+                !usedIds.includes(p.id) && 
+                (counters[p.vn] || 0) <= 4
+            );
             if (availablePairs.length > 0) {
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
