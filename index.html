@@ -11,7 +11,10 @@
             display: flex; flex-direction: column; align-items: center; 
             background-color: #f4f7f6; padding: 5px; margin: 0; overflow-x: hidden; 
         }
-        h1 { font-size: 1.5rem; color: #2c3e50; margin: 5px 0 10px 0; }
+        h1 { font-size: 1.5rem; color: #2c3e50; margin: 5px 0 2px 0; }
+        /* Style pour le nom de la section discret */
+        #section-display { font-size: 0.8rem; color: #7f8c8d; margin-bottom: 8px; font-style: italic; }
+        
         .container { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
         .column { display: flex; flex-direction: column; gap: 10px; flex: 1; }
         
@@ -88,7 +91,6 @@
         .btn-apply { background: #27ae60; }
         .btn-cancel { background: #95a5a6; }
 
-        /* Style pour la liste des sections */
         #section-list { display: none; margin-top: 10px; flex-direction: column; gap: 5px; }
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
         .section-item.active { background: #3498db; color: white; }
@@ -97,6 +99,8 @@
 <body>
 
     <h1 id="main-title">Vocabulaire</h1>
+    <div id="section-display"></div>
+
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -166,7 +170,8 @@
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
         let allData = [];
         let sections = ["Toutes"];
-        let currentSection = "Toutes";
+        // Récupération de la section sauvegardée au démarrage
+        let currentSection = localStorage.getItem('vocab_current_section') || "Toutes";
         let currentPairs = [];
         let selection = { left: null, right: null };
         let score = 0;
@@ -208,10 +213,16 @@
                 });
 
                 updateRefreshButtonText();
+                // Mise à jour de l'affichage initial du titre/section
+                updateSectionDisplay();
                 initGame();
             } catch (e) {
                 document.getElementById('message').innerText = "Erreur de chargement.";
             }
+        }
+
+        function updateSectionDisplay() {
+            document.getElementById('section-display').innerText = currentSection === "Toutes" ? "" : "Section : " + currentSection;
         }
 
         function showSectionPicker() {
@@ -235,14 +246,15 @@
 
         function selectSection(name) {
             currentSection = name;
-            document.getElementById('main-title').innerText = name === "Toutes" ? "Vocabulaire" : name;
+            // Sauvegarde du choix de la section
+            localStorage.setItem('vocab_current_section', name);
+            updateSectionDisplay();
             closeModal();
             resetGameFull();
         }
 
         function initGame() {
             document.getElementById('message').innerText = "";
-            // Filtrage par section + score
             const pool = allData.filter(p => 
                 (currentSection === "Toutes" || p.section === currentSection) && 
                 (counters[p.vn] || 0) <= 4
@@ -305,19 +317,15 @@
             initGame();
         }
 
-        
-function showVisualStats() {
+        function showVisualStats() {
             const modal = document.getElementById('stats-modal');
             const grid = document.getElementById('visual-grid');
             grid.innerHTML = "";
             let totalOk = 0;
             let totalSeen = 0;
-            
-            // Filtrage des données selon la section actuelle
             const filteredData = allData.filter(item => 
                 currentSection === "Toutes" || item.section === currentSection
             );
-
             filteredData.forEach(item => {
                 const c = counters[item.vn] || 0;
                 const dot = document.createElement('div');
@@ -327,17 +335,12 @@ function showVisualStats() {
                 if(c >= 5) totalOk++;
                 if(c > 0) totalSeen++;
             });
-
             const percent = filteredData.length > 0 ? Math.round((totalOk / filteredData.length) * 100) : 0;
-            
-            // Mise à jour du résumé avec le nom de la section
             const scopeName = currentSection === "Toutes" ? "mots" : `mots (${currentSection})`;
             document.getElementById('stats-summary').innerText = 
                 `${filteredData.length} ${scopeName} • ${totalSeen} vus • ${totalOk} OK (${percent}%)`;
-            
             modal.style.display = 'block';
         }
-
 
         function closeStats() { document.getElementById('stats-modal').style.display = 'none'; }
         function resetAllCounters() {
