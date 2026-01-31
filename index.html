@@ -247,8 +247,10 @@
 
         function selectSection(name) {
             currentSection = name;
+            // Sauvegarde du choix de la section
             localStorage.setItem('vocab_current_section', name);
             updateSectionDisplay();
+            updateRefreshButtonText(); // <-- Ajout crucial pour mettre à jour le bouton Reset immédiatement
             closeModal();
             resetGameFull();
         }
