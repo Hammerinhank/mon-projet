@@ -103,6 +103,13 @@
         #section-list { display: none; margin-top: 10px; flex-direction: column; gap: 5px; }
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
         .section-item.active { background: #3498db; color: white; }
+
+        /* NOUVEAU STYLE POUR LES BOUTONS DE NAVIGATION DU JEU */
+        .game-nav-row {
+            display: flex; width: 100%; gap: 10px; margin-top: 10px;
+        }
+        .btn-game-quit { flex: 1; font-size: 14px !important; min-height: 45px !important; }
+        .btn-game-main { flex: 3; }
     </style>
 </head>
 <body>
@@ -140,9 +147,12 @@
             <div id="writing-zone" style="display:none">
                 <input type="text" id="writing-input" placeholder="Traduisez ici..." autocomplete="off">
             </div>
-            <button id="btn-action" class="modal-btn btn-apply" onclick="processGameAction()">Vérifier</button>
-            <button id="btn-next" class="modal-btn btn-top" style="display:none" onclick="nextGameWord()">Suivant</button>
-            <button class="modal-btn btn-cancel" onclick="closeGameMode()">Quitter</button>
+            
+            <div class="game-nav-row">
+                <button id="btn-quit" class="modal-btn btn-cancel btn-game-quit" onclick="closeGameMode()">Quitter</button>
+                <button id="btn-action" class="modal-btn btn-apply btn-game-main" onclick="processGameAction()">Vérifier</button>
+                <button id="btn-next" class="modal-btn btn-apply btn-game-main" style="display:none" onclick="nextGameWord()">Suivant</button>
+            </div>
         </div>
     </div>
 
