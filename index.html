@@ -12,7 +12,6 @@
             background-color: #f4f7f6; padding: 5px; margin: 0; overflow-x: hidden; 
         }
         h1 { font-size: 1.5rem; color: #2c3e50; margin: 5px 0 2px 0; }
-        /* Style pour le nom de la section discret */
         #section-display { font-size: 0.8rem; color: #7f8c8d; margin-bottom: 8px; font-style: italic; }
         
         .container { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
@@ -46,7 +45,7 @@
         #ai-link-container { margin-top: 25px; padding: 15px; background: #e8f4fd; border-radius: 10px; text-align: center; width: 100%; max-width: 500px; }
         #ai-link-container a { color: #2980b9; text-decoration: none; font-weight: bold; font-size: 18px; }
 
-        .stats-btn {
+        .menu-trigger-btn {
             width: 100%; max-width: 500px; margin-top: 20px; padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; border: none; border-radius: 25px; font-weight: bold; cursor: pointer;
@@ -88,8 +87,18 @@
         .btn-one { background: #f39c12; }
         .btn-top { background: #3498db; }
         .btn-section { background: #9b59b6; }
+        .btn-stats { background: #667eea; }
         .btn-apply { background: #27ae60; }
         .btn-cancel { background: #95a5a6; }
+
+        /* MODES DE JEU */
+        .btn-game-mode { background: #e67e22; }
+        #game-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 4000; padding: 20px; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .game-word { font-size: 2rem; font-weight: bold; color: #2c3e50; margin-bottom: 20px; }
+        #writing-input { width: 100%; padding: 15px; font-size: 1.2rem; border: 2px solid #3498db; border-radius: 10px; text-align: center; margin-bottom: 10px; }
 
         #section-list { display: none; margin-top: 10px; flex-direction: column; gap: 5px; }
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
@@ -100,7 +109,6 @@
 
     <h1 id="main-title">Vocabulaire</h1>
     <div id="section-display"></div>
-
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -119,15 +127,27 @@
         <a id="chatgpt-link" href="#" target="_blank">🔍 En savoir plus sur ces mots</a>
     </div>
 
-    <button class="stats-btn" onclick="showVisualStats()">📊 Ma Progression Visuelle</button>
+    <button class="menu-trigger-btn" onclick="openMenu()">⚙️ Options et Progression</button>
 
     <div class="back-link-container">
         <a href="https://sites.google.com/view/anglais-/sandbox">Retour</a>
     </div>
 
+    <div id="game-overlay">
+        <div id="game-content" style="width: 100%; max-width: 400px; text-align: center;">
+            <div id="game-question" class="game-word">---</div>
+            <div id="game-answer" style="font-size: 1.2rem; color: #27ae60; margin: 20px 0; min-height: 1.6rem;"></div>
+            <div id="writing-zone" style="display:none">
+                <input type="text" id="writing-input" placeholder="Traduisez ici..." autocomplete="off">
+            </div>
+            <button id="btn-action" class="modal-btn btn-apply" onclick="processGameAction()">Vérifier</button>
+            <button id="btn-next" class="modal-btn btn-top" style="display:none" onclick="nextGameWord()">Suivant</button>
+            <button class="modal-btn btn-cancel" onclick="closeGameMode()">Quitter</button>
+        </div>
+    </div>
+
     <div id="diagnostic-overlay">
         <h3>Rapport Complet</h3>
-        <p>Modifiez les valeurs manuellement (Format "Mot : Valeur") :</p>
         <textarea id="diag-text"></textarea>
         <button class="modal-btn btn-apply" onclick="updateFromReport()">Appliquer les modifications</button>
         <button class="modal-btn btn-cancel" onclick="document.getElementById('diagnostic-overlay').style.display='none'">Fermer</button>
@@ -135,31 +155,27 @@
 
     <div id="stats-modal">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button class="modal-btn btn-cancel" onclick="closeStats()" style="width: auto; padding: 10px 20px;">Fermer la vue</button>
-            <button class="modal-btn btn-top" onclick="execAction('top')" style="width: auto; padding: 10px 20px; font-size: 13px;">Liste des compteurs</button>
+            <button class="modal-btn btn-cancel" onclick="closeStats()" style="width: auto; padding: 10px 20px;">Fermer</button>
+            <button class="modal-btn btn-top" onclick="execAction('top')" style="width: auto; padding: 10px 20px; font-size: 13px;">Compteurs</button>
         </div>
         <h2 style="text-align:center">Nuage de Maîtrise</h2>
         <p id="stats-summary" style="text-align:center; font-size: 0.9rem; color: #a2a2c2;"></p>
         <div id="visual-grid" class="stats-grid"></div>
-        <div style="margin-top: 30px; font-size: 0.8rem; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-            <span><span style="color:#2e2e48">■</span> Neuf (0)</span>
-            <span><span style="color:#3498db; opacity: 0.5">■</span> Vu (1)</span>
-            <span><span style="color:#3498db">■</span> Appris (2)</span>
-            <span><span style="color:#d4edda">■</span> Solide (3)</span>
-            <span><span style="color:#27ae60">■</span> Maîtrisé (4)</span>
-            <span><span style="color:#2ecc71; text-shadow: 0 0 5px #2ecc71; border: 1px solid #fff; padding: 0 2px;">■</span> Expert (5)</span>
-        </div>
     </div>
 
     <div id="custom-modal">
         <div class="modal-content">
             <div id="modal-main-actions">
                 <h3 id="modal-title">Actions</h3>
+                <button class="modal-btn btn-game-mode" onclick="startFlashcards()">🧠 Auto-Évaluation (Flashcards)</button>
+                <button class="modal-btn btn-game-mode" onclick="startWritingMode()">✍️ Défi Écriture</button>
+                <hr>
+                <button class="modal-btn btn-stats" onclick="showVisualStats()">📊 Voir la Mosaïque Visuelle</button>
                 <button class="modal-btn btn-section" onclick="showSectionPicker()">📂 Choisir une Section</button>
-                <button class="modal-btn btn-all" onclick="execAction('all')">Tout réinitialiser</button>
-                <button class="modal-btn btn-one" onclick="execAction('one')" id="btn-one-label">Réinitialiser ce mot</button>
+                <button class="modal-btn btn-one" id="btn-one-label" onclick="execAction('one')">Réinitialiser ce mot</button>
+                <button class="modal-btn btn-all" onclick="execAction('all')">Réinitialiser la section</button>
                 <button class="modal-btn btn-top" onclick="execAction('top')">Liste des compteurs</button>
-                <button class="modal-btn btn-cancel" onclick="closeModal()">Annuler</button>
+                <button class="modal-btn btn-cancel" onclick="closeModal()">Fermer</button>
             </div>
             <div id="section-list">
                 <h3>Sélectionner Section</h3>
@@ -179,9 +195,9 @@
         let score = 0;
         let counters = {};
         let hideMode = false;
-        let lastClickedId = null;
         let lastClickedWord = null;
-        let clickCount = 0;
+        let gameMode = ""; 
+        let currentObject = null;
 
         async function loadGistData() {
             try {
@@ -190,14 +206,11 @@
                 const content = gist.files[Object.keys(gist.files)[0]].content;
                 const savedCounters = localStorage.getItem('vocab_counters');
                 counters = savedCounters ? JSON.parse(savedCounters) : {};
-
                 let activeSection = "Général";
                 allData = [];
-                
                 content.split('\n').forEach((line, index) => {
                     const trimmedLine = line.trim();
                     if (!trimmedLine) return;
-
                     if (trimmedLine.toUpperCase().includes("SECTION")) {
                         activeSection = trimmedLine.replace(/SECTION/i, "").trim();
                         if (!sections.includes(activeSection)) sections.push(activeSection);
@@ -205,21 +218,13 @@
                         const parts = trimmedLine.split(':');
                         const vnWord = parts[0].trim();
                         if (counters[vnWord] === undefined) counters[vnWord] = 0;
-                        allData.push({ 
-                            id: index, 
-                            vn: vnWord, 
-                            fr: parts[1].trim(), 
-                            section: activeSection 
-                        });
+                        allData.push({ id: index, vn: vnWord, fr: parts[1].trim(), section: activeSection });
                     }
                 });
-
                 updateRefreshButtonText();
                 updateSectionDisplay();
                 initGame();
-            } catch (e) {
-                document.getElementById('message').innerText = "Erreur de chargement.";
-            }
+            } catch (e) { document.getElementById('message').innerText = "Erreur chargement."; }
         }
 
         function updateSectionDisplay() {
@@ -247,23 +252,18 @@
 
         function selectSection(name) {
             currentSection = name;
-            // Sauvegarde du choix de la section
             localStorage.setItem('vocab_current_section', name);
             updateSectionDisplay();
-            updateRefreshButtonText(); // <-- Ajout crucial pour mettre à jour le bouton Reset immédiatement
+            updateRefreshButtonText();
             closeModal();
             resetGameFull();
         }
 
         function initGame() {
             document.getElementById('message').innerText = "";
-            const pool = allData.filter(p => 
-                (currentSection === "Toutes" || p.section === currentSection) && 
-                (counters[p.vn] || 0) <= 4
-            );
-
+            const pool = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection) && (counters[p.vn] || 0) <= 4);
             if (pool.length === 0) {
-                document.getElementById('message').innerText = currentSection === "Toutes" ? "Bravo, tout est appris !" : `Section "${currentSection}" terminée !`;
+                document.getElementById('message').innerText = "Bravo, section terminée !";
                 currentPairs = [];
             } else {
                 currentPairs = [...pool].sort(() => 0.5 - Math.random()).slice(0, Math.min(5, pool.length));
@@ -281,28 +281,16 @@
                     const parts = line.split(':');
                     const word = parts[0].trim();
                     const value = parseInt(parts[1].trim());
-                    if (word && !isNaN(value)) {
-                        counters[word] = value;
-                        updatedCount++;
-                    }
+                    if (word && !isNaN(value)) { counters[word] = value; updatedCount++; }
                 }
             });
-            if (updatedCount > 0) {
-                saveProgress();
-                alert(`${updatedCount} compteurs mis à jour !`);
-                document.getElementById('diagnostic-overlay').style.display = 'none';
-                resetGameFull();
-            }
+            if (updatedCount > 0) { saveProgress(); alert("Mis à jour !"); document.getElementById('diagnostic-overlay').style.display = 'none'; resetGameFull(); }
         }
 
         function updateRefreshButtonText() {
-            const sectionWords = allData.filter(p => 
-                currentSection === "Toutes" || p.section === currentSection
-            ).map(p => p.vn);
-
+            const sectionWords = allData.filter(p => currentSection === "Toutes" || p.section === currentSection).map(p => p.vn);
             const countStarted = sectionWords.filter(word => (counters[word] || 0) > 0).length;
             const countIgnored = sectionWords.filter(word => (counters[word] || 0) > 4).length;
-            
             document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} ok)`;
         }
 
@@ -313,81 +301,62 @@
 
         function updateChatGPTLink() {
             const words = currentPairs.map(p => p.vn).join(', ');
-            const query = encodeURIComponent(`Peux-tu m'expliquer les mots vietnamiens suivants en français (et quand les mots ont deux syllables, me donner en plus une explication spécifique pour chacune des syllables) : ${words}`);
+            const query = encodeURIComponent(`Peux-tu m'expliquer les mots vietnamiens suivants en français : ${words}`);
             document.getElementById('chatgpt-link').href = `https://chatgpt.com/?q=${query}`;
         }
 
         function resetGameFull() {
-            score = 0;
-            selection = { left: null, right: null };
+            score = 0; selection = { left: null, right: null };
             document.getElementById('score-val').innerText = score;
             initGame();
         }
 
         function showVisualStats() {
+            closeModal();
             const modal = document.getElementById('stats-modal');
             const grid = document.getElementById('visual-grid');
             grid.innerHTML = "";
             let totalOk = 0;
-            let totalSeen = 0;
-            const filteredData = allData.filter(item => 
-                currentSection === "Toutes" || item.section === currentSection
-            );
+            const filteredData = allData.filter(item => currentSection === "Toutes" || item.section === currentSection);
             filteredData.forEach(item => {
                 const c = counters[item.vn] || 0;
                 const dot = document.createElement('div');
                 dot.className = `dot v${Math.min(c, 5)}`;
-                dot.title = `${item.vn}: ${c} (${item.section})`;
                 grid.appendChild(dot);
                 if(c >= 5) totalOk++;
-                if(c > 0) totalSeen++;
             });
             const percent = filteredData.length > 0 ? Math.round((totalOk / filteredData.length) * 100) : 0;
-            const scopeName = currentSection === "Toutes" ? "mots" : `mots (${currentSection})`;
-            document.getElementById('stats-summary').innerText = 
-                `${filteredData.length} ${scopeName} • ${totalSeen} vus • ${totalOk} OK (${percent}%)`;
+            document.getElementById('stats-summary').innerText = `${filteredData.length} mots • ${totalOk} OK (${percent}%)`;
             modal.style.display = 'block';
         }
 
         function closeStats() { document.getElementById('stats-modal').style.display = 'none'; }
         
-        function resetAllCounters() {
+        function openMenu() {
             document.getElementById('modal-main-actions').style.display = 'block';
             document.getElementById('section-list').style.display = 'none';
-            document.getElementById('btn-one-label').innerText = `Reset "${lastClickedWord}"`;
+            const labelBtn = document.getElementById('btn-one-label');
+            if (lastClickedWord) { labelBtn.style.display = 'block'; labelBtn.innerText = `Réinitialiser "${lastClickedWord}"`; } 
+            else { labelBtn.style.display = 'none'; }
             document.getElementById('custom-modal').style.display = 'flex';
         }
+
         function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
 
         function execAction(action) {
             if (action === 'all') {
-                const scope = currentSection === "Toutes" ? "TOUT (toutes les sections)" : `la section "${currentSection}"`;
-                if (confirm(`Réinitialiser ${scope} ?`)) {
-                    // On ne réinitialise que les mots qui appartiennent à la section courante
-                    allData.forEach(item => {
-                        if (currentSection === "Toutes" || item.section === currentSection) {
-                            counters[item.vn] = 0;
-                        }
-                    });
-                    saveProgress();
-                    closeModal();
-                    resetGameFull();
+                if (confirm(`Réinitialiser la section ?`)) {
+                    allData.forEach(item => { if (currentSection === "Toutes" || item.section === currentSection) counters[item.vn] = 0; });
+                    saveProgress(); closeModal(); resetGameFull();
                 }
             } else if (action === 'one') {
-                counters[lastClickedWord] = 0;
-                saveProgress();
-                closeModal();
-                resetGameFull();
+                if (lastClickedWord) { counters[lastClickedWord] = 0; saveProgress(); closeModal(); resetGameFull(); }
             } else if (action === 'top') {
-                const sortedData = allData
-                    .map(item => ({ word: item.vn, val: counters[item.vn] || 0 }))
-                    .sort((a, b) => b.val - a.val);
-                let report = "";
-                sortedData.forEach(item => { report += `${item.word} : ${item.val}\n`; });
+                const sortedData = allData.map(item => ({ word: item.vn, val: counters[item.vn] || 0 })).sort((a, b) => b.val - a.val);
+                let report = ""; sortedData.forEach(item => { report += `${item.word} : ${item.val}\n`; });
                 document.getElementById('diag-text').value = report;
                 document.getElementById('diagnostic-overlay').style.display = 'flex';
                 closeModal();
-                if (document.getElementById('stats-modal')) closeStats();
             }
         }
 
@@ -412,33 +381,19 @@
             const btn = document.createElement('button');
             if (side === 'left' && hideMode && !isAnythingSelected) { btn.innerText = "-"; } 
             else { btn.innerText = (side === 'left') ? pair.vn : pair.fr; }
-            if ((counters[pair.vn] || 0) >= 4) { btn.classList.add('completed'); } 
-            else if ((counters[pair.vn] || 0) >= 2) { btn.classList.add('mastered'); }
+            if ((counters[pair.vn] || 0) >= 4) btn.classList.add('completed');
+            else if ((counters[pair.vn] || 0) >= 2) btn.classList.add('mastered');
             if ((selection.left && side === 'left' && selection.left.vn === pair.vn) || 
-                (selection.right && side === 'right' && selection.right.id === pair.id)) {
-                btn.classList.add('selected');
-            }
+                (selection.right && side === 'right' && selection.right.id === pair.id)) { btn.classList.add('selected'); }
             btn.onclick = () => handleSelection(pair, btn, side);
             document.getElementById(containerId).appendChild(btn);
         }
 
         function handleSelection(pair, element, side) {
-            const currentId = side + pair.id;
-            if (lastClickedId === currentId) {
-                clickCount++;
-                if (clickCount === 4) {
-                    clickCount = 0;
-                    lastClickedWord = pair.vn;
-                    resetAllCounters();
-                    return;
-                }
-            } else {
-                lastClickedId = currentId; lastClickedWord = pair.vn; clickCount = 1;
-            }
+            lastClickedWord = pair.vn;
             if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
                 element.classList.remove('selected'); selection[side] = null;
-                if (hideMode) renderAll();
-                return;
+                if (hideMode) renderAll(); return;
             }
             if (selection[side]) selection[side].element.classList.remove('selected');
             element.classList.add('selected');
@@ -448,13 +403,10 @@
                 const msgDiv = document.getElementById('message');
                 if (selection.left.id === selection.right.id) {
                     msgDiv.innerText = "✅ OK"; msgDiv.className = "ok";
-                    score++; 
-                    counters[selection.left.vn] = (counters[selection.left.vn] || 0) + 1; 
-                    saveProgress();
-                    document.getElementById('score-val').innerText = score;
+                    score++; counters[selection.left.vn] = (counters[selection.left.vn] || 0) + 1; 
+                    saveProgress(); document.getElementById('score-val').innerText = score;
                     setTimeout(() => {
-                        const oldId = selection.left.id;
-                        selection = { left: null, right: null };
+                        const oldId = selection.left.id; selection = { left: null, right: null };
                         replacePair(oldId); msgDiv.innerText = "";
                     }, 500);
                 } else {
@@ -466,22 +418,58 @@
 
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
-            const availablePairs = allData.filter(p => 
-                (currentSection === "Toutes" || p.section === currentSection) && 
-                !usedIds.includes(p.id) && 
-                (counters[p.vn] || 0) <= 4
-            );
+            const availablePairs = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection) && !usedIds.includes(p.id) && (counters[p.vn] || 0) <= 4);
             if (availablePairs.length > 0) {
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
-                const indexToReplace = currentPairs.findIndex(p => p.id === oldId);
-                currentPairs[indexToReplace] = newPair;
+                currentPairs[currentPairs.findIndex(p => p.id === oldId)] = newPair;
                 updateChatGPTLink(); renderAll();
+            } else { currentPairs = currentPairs.filter(p => p.id !== oldId); renderAll(); }
+        }
+
+        // --- FONCTIONS MODES SPECIFIQUES ---
+        function startFlashcards() { gameMode = "flash"; openGameOverlay(); }
+        function startWritingMode() { gameMode = "write"; openGameOverlay(); }
+        function openGameOverlay() { closeModal(); document.getElementById('game-overlay').style.display = 'flex'; nextGameWord(); }
+        function closeGameMode() { document.getElementById('game-overlay').style.display = 'none'; resetGameFull(); }
+
+        function nextGameWord() {
+            const pool = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection));
+            if (pool.length === 0) return closeGameMode();
+            currentObject = pool[Math.floor(Math.random() * pool.length)];
+            document.getElementById('game-answer').innerText = "";
+            document.getElementById('btn-next').style.display = "none";
+            document.getElementById('btn-action').style.display = "block";
+            document.getElementById('writing-zone').style.display = (gameMode === "write") ? "block" : "none";
+            document.getElementById('writing-input').value = "";
+            const secTag = `<div style="font-size:0.7rem; color:#95a5a6; margin-bottom:5px;">Section : ${currentObject.section}</div>`;
+            if (gameMode === "flash") {
+                document.getElementById('game-question').innerHTML = secTag + currentObject.vn;
+                document.getElementById('btn-action').innerText = "Révéler la réponse";
             } else {
-                currentPairs = currentPairs.filter(p => p.id !== oldId);
-                renderAll();
-                if (currentPairs.length === 0) { document.getElementById('message').innerText = "Session terminée !"; }
+                document.getElementById('game-question').innerHTML = secTag + currentObject.fr;
+                document.getElementById('btn-action').innerText = "Vérifier";
+                setTimeout(() => document.getElementById('writing-input').focus(), 150);
             }
         }
+
+        function processGameAction() {
+            const ansDiv = document.getElementById('game-answer');
+            if (gameMode === "flash") {
+                ansDiv.innerText = currentObject.fr;
+            } else {
+                const user = document.getElementById('writing-input').value.trim().toLowerCase();
+                const target = currentObject.vn.toLowerCase();
+                if (user === target) {
+                    ansDiv.innerHTML = `<span style="color:#27ae60">✨ Correct : ${currentObject.vn}</span><br><small style="color:#27ae60">Ligne passée au niveau EXPERT (Compteur à 5)</small>`;
+                    counters[currentObject.vn] = 5; saveProgress();
+                } else {
+                    ansDiv.innerHTML = `<span style="color:#e74c3c; text-decoration:line-through">${user || '...'}</span><br><span style="color:#2c3e50">👉 ${currentObject.vn}</span>`;
+                }
+            }
+            document.getElementById('btn-action').style.display = "none";
+            document.getElementById('btn-next').style.display = "block";
+        }
+
         loadGistData();
     </script>
 </body>
