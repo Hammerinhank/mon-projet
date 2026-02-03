@@ -433,7 +433,7 @@
         function closeGameMode() { document.getElementById('game-overlay').style.display = 'none'; resetGameFull(); }
 
         function nextGameWord() {
-            const pool = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection));
+            const pool = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection) && (counters[p.vn] || 0) <= 4);
             if (pool.length === 0) return closeGameMode();
             currentObject = pool[Math.floor(Math.random() * pool.length)];
             document.getElementById('game-answer').innerText = "";
@@ -469,6 +469,20 @@
             document.getElementById('btn-action').style.display = "none";
             document.getElementById('btn-next').style.display = "block";
         }
+
+        // --- GESTION DE LA TOUCHE ENTRÉE ---
+        document.getElementById('writing-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const btnAction = document.getElementById('btn-action');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (btnAction.style.display !== 'none') {
+                    processGameAction();
+                } else if (btnNext.style.display !== 'none') {
+                    nextGameWord();
+                }
+            }
+        });
 
         loadGistData();
     </script>
