@@ -409,7 +409,7 @@
                 if (clickTracker.word === pair.vn) {
                     clickTracker.count++;
                     if (clickTracker.count === 4) {
-                        const prompt = `Peux-tu m'expliquer le mot suivant, et chacune de ses syllables s'il en comporte plus d'une, me donner des exemple d'utilisation et me dire comment les vietnamiens l'utilisent dans la vie courante : ${pair.vn}`;
+                        const prompt = `Peux-tu m’expliquer le mot suivant - s’il comporte plusieurs syllabes m’expliquer chacune d’elles - , me donner des exemples d’utilisation et m’indiquer comment les Vietnamiens l’emploient dans la vie courante ? : "${pair.vn}"`;
                         window.open(`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`, '_blank');
                         clickTracker.count = 0; // Reset après action
                     }
