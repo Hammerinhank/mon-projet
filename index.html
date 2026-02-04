@@ -104,7 +104,6 @@
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
         .section-item.active { background: #3498db; color: white; }
 
-        /* NOUVEAU STYLE POUR LES BOUTONS DE NAVIGATION DU JEU */
         .game-nav-row {
             display: flex; width: 100%; gap: 10px; margin-top: 10px;
         }
@@ -208,6 +207,9 @@
         let lastClickedWord = null;
         let gameMode = ""; 
         let currentObject = null;
+        
+        // Système pour détecter les clics multiples
+        let clickTracker = { word: null, count: 0 };
 
         async function loadGistData() {
             try {
@@ -401,6 +403,22 @@
 
         function handleSelection(pair, element, side) {
             lastClickedWord = pair.vn;
+
+            // Gestion du quadruple clic sur la colonne de gauche
+            if (side === 'left') {
+                if (clickTracker.word === pair.vn) {
+                    clickTracker.count++;
+                    if (clickTracker.count === 4) {
+                        const prompt = `Peux-tu m'expliquer le mot suivant, et chacune de ses syllables s'il en comporte plus d'une, me donner des exemple d'utilisation et me dire comment les vietnamiens l'utilisent dans la vie courante : ${pair.vn}`;
+                        window.open(`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`, '_blank');
+                        clickTracker.count = 0; // Reset après action
+                    }
+                } else {
+                    clickTracker.word = pair.vn;
+                    clickTracker.count = 1;
+                }
+            }
+
             if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
                 element.classList.remove('selected'); selection[side] = null;
                 if (hideMode) renderAll(); return;
@@ -436,7 +454,6 @@
             } else { currentPairs = currentPairs.filter(p => p.id !== oldId); renderAll(); }
         }
 
-        // --- FONCTIONS MODES SPECIFIQUES ---
         function startFlashcards() { gameMode = "flash"; openGameOverlay(); }
         function startWritingMode() { gameMode = "write"; openGameOverlay(); }
         function openGameOverlay() { closeModal(); document.getElementById('game-overlay').style.display = 'flex'; nextGameWord(); }
@@ -480,17 +497,12 @@
             document.getElementById('btn-next').style.display = "block";
         }
 
-        // --- GESTION DE LA TOUCHE ENTRÉE ---
         document.getElementById('writing-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const btnAction = document.getElementById('btn-action');
                 const btnNext = document.getElementById('btn-next');
-                
-                if (btnAction.style.display !== 'none') {
-                    processGameAction();
-                } else if (btnNext.style.display !== 'none') {
-                    nextGameWord();
-                }
+                if (btnAction.style.display !== 'none') processGameAction();
+                else if (btnNext.style.display !== 'none') nextGameWord();
             }
         });
 
