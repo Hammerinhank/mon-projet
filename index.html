@@ -301,10 +301,12 @@
         }
 
         function updateRefreshButtonText() {
-            const sectionWords = allData.filter(p => currentSection === "Toutes" || p.section === currentSection).map(p => p.vn);
-            const countStarted = sectionWords.filter(word => (counters[word] || 0) > 0).length;
-            const countIgnored = sectionWords.filter(word => (counters[word] || 0) > 4).length;
-            document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} ok)`;
+            const sectionWords = allData.filter(p => currentSection === "Toutes" || p.section === currentSection);
+            const totalInSelection = sectionWords.length;
+            const countStarted = sectionWords.filter(p => (counters[p.vn] || 0) > 0).length;
+            const countIgnored = sectionWords.filter(p => (counters[p.vn] || 0) > 4).length;
+            
+            document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} / ${totalInSelection} ok)`;
         }
 
         function saveProgress() {
