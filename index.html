@@ -98,6 +98,9 @@
         }
         .game-word { font-size: 2rem; font-weight: bold; color: #2c3e50; margin-bottom: 20px; }
         #writing-input { width: 100%; padding: 15px; font-size: 1.2rem; border: 2px solid #3498db; border-radius: 10px; text-align: center; margin-bottom: 10px; }
+        
+        /* Stats dans le mode jeu */
+        #game-stats-info { font-size: 0.85rem; color: #7f8c8d; margin-top: 15px; font-weight: normal; }
 
         #section-list { display: none; margin-top: 10px; flex-direction: column; gap: 5px; }
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
@@ -151,6 +154,7 @@
                 <button id="btn-action" class="modal-btn btn-apply btn-game-main" onclick="processGameAction()">Vérifier</button>
                 <button id="btn-next" class="modal-btn btn-apply btn-game-main" style="display:none" onclick="nextGameWord()">Suivant</button>
             </div>
+            <div id="game-stats-info"></div>
         </div>
     </div>
 
@@ -306,7 +310,9 @@
             const countStarted = sectionWords.filter(p => (counters[p.vn] || 0) > 0).length;
             const countIgnored = sectionWords.filter(p => (counters[p.vn] || 0) > 4).length;
             
-            document.getElementById('refresh-btn').innerText = `Reset (${countStarted} vus, ${countIgnored} / ${totalInSelection} ok)`;
+            const statsStr = `(${countStarted} vus, ${countIgnored} / ${totalInSelection} ok)`;
+            document.getElementById('refresh-btn').innerText = `Reset ${statsStr}`;
+            document.getElementById('game-stats-info').innerText = statsStr;
         }
 
         function saveProgress() {
@@ -484,6 +490,14 @@
 
         function processGameAction() {
             const ansDiv = document.getElementById('game-answer');
+            
+            // Logique d'incrémentation du nombre de "vus" dès la soumission
+            // Si le mot est à 0, on le passe à 1 pour qu'il soit comptabilisé comme "vu"
+            if ((counters[currentObject.vn] || 0) === 0) {
+                counters[currentObject.vn] = 1;
+                saveProgress(); // Cela met à jour les textes des stats immédiatement
+            }
+
             if (gameMode === "flash") {
                 ansDiv.innerText = currentObject.fr;
             } else {
