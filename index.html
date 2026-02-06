@@ -366,12 +366,20 @@
 
         function execAction(action) {
             if (action === 'all') {
-                if (confirm(`Réinitialiser la section ?`)) {
+                if (confirm(`Réinitialiser la section "${currentSection}" ?`)) {
                     allData.forEach(item => { if (currentSection === "Toutes" || item.section === currentSection) counters[item.vn] = 0; });
                     saveProgress(); closeModal(); resetGameFull();
                 }
             } else if (action === 'one') {
-                if (lastClickedWord) { counters[lastClickedWord] = 0; saveProgress(); closeModal(); resetGameFull(); }
+                // Ajout de la confirmation pour le mot individuel
+                if (lastClickedWord) {
+                    if (confirm(`Réinitialiser le compteur pour "${lastClickedWord}" ?`)) {
+                        counters[lastClickedWord] = 0; 
+                        saveProgress(); 
+                        closeModal(); 
+                        resetGameFull();
+                    }
+                }
             } else if (action === 'top') {
                 const sortedData = allData.map(item => ({ word: item.vn, val: counters[item.vn] || 0 })).sort((a, b) => b.val - a.val);
                 let report = ""; sortedData.forEach(item => { report += `${item.word} : ${item.val}\n`; });
