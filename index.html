@@ -28,7 +28,8 @@
         button.mastered { background-color: #d4edda; border-color: #c3e6cb; } 
         button.completed { background-color: #219150; border-color: #1e7e45; color: white; }
         button.selected { background-color: #3498db !important; color: white !important; border-color: #2980b9 !important; }
-        
+        button.long-press-hint { background-color: #f1c40f !important; border-color: #f39c12 !important; color: #2c3e50 !important; box-shadow: 0 0 10px #f1c40f; }
+
         #message { margin: 5px 0 10px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
         .error { color: #e74c3c; }
@@ -213,6 +214,9 @@
         let currentObject = null;
         
         let clickTracker = { word: null, count: 0 };
+
+        const LONG_PRESS_MS = 3000;
+        const HINT_DURATION_MS = 5000;
 
         async function loadGistData() {
             try {
@@ -418,8 +422,40 @@
             else if ((counters[pair.vn] || 0) >= 2) btn.classList.add('mastered');
             if ((selection.left && side === 'left' && selection.left.vn === pair.vn) || 
                 (selection.right && side === 'right' && selection.right.id === pair.id)) { btn.classList.add('selected'); }
+            btn.dataset.pairId = pair.id;
+            btn.dataset.side = side;
             btn.onclick = () => handleSelection(pair, btn, side);
+            setupLongPress(btn, pair, side);
             document.getElementById(containerId).appendChild(btn);
+        }
+
+        // Appui long (> LONG_PRESS_MS) sur une touche : surligne pendant HINT_DURATION_MS
+        // la touche correspondante (le partenaire de la paire) dans l'autre colonne.
+        function setupLongPress(btn, pair, side) {
+            let pressTimer = null;
+            const start = () => {
+                clearTimeout(pressTimer);
+                pressTimer = setTimeout(() => {
+                    highlightCorresponding(pair, side);
+                }, LONG_PRESS_MS);
+            };
+            const cancel = () => {
+                clearTimeout(pressTimer);
+                pressTimer = null;
+            };
+            btn.addEventListener('pointerdown', start);
+            btn.addEventListener('pointerup', cancel);
+            btn.addEventListener('pointerleave', cancel);
+            btn.addEventListener('pointercancel', cancel);
+        }
+
+        function highlightCorresponding(pair, side) {
+            const oppositeContainerId = side === 'left' ? 'right-col' : 'left-col';
+            const container = document.getElementById(oppositeContainerId);
+            const target = Array.from(container.children).find(b => b.dataset.pairId == pair.id);
+            if (!target) return;
+            target.classList.add('long-press-hint');
+            setTimeout(() => target.classList.remove('long-press-hint'), HINT_DURATION_MS);
         }
 
         function handleSelection(pair, element, side) {
