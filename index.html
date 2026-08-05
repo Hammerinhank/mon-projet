@@ -208,7 +208,7 @@
         let selection = { left: null, right: null };
         let score = 0;
         let counters = {};
-        let hideMode = false;
+        let hideMode = 'off'; // 'off' | 'version' (masque la colonne de droite) | 'theme' (masque la colonne de gauche)
         let lastClickedWord = null;
         let gameMode = ""; 
         let currentObject = null;
@@ -395,8 +395,11 @@
         }
 
         function toggleHideMode() {
-            hideMode = !hideMode;
-            document.getElementById('mode-toggle').innerText = `Masqué : ${hideMode ? 'ON' : 'OFF'}`;
+            if (hideMode === 'off') hideMode = 'version';
+            else if (hideMode === 'version') hideMode = 'theme';
+            else hideMode = 'off';
+            const labels = { off: 'OFF', version: 'Version', theme: 'Thème' };
+            document.getElementById('mode-toggle').innerText = `Masqué : ${labels[hideMode]}`;
             renderAll();
         }
 
@@ -413,7 +416,11 @@
 
         function createBtn(pair, containerId, side, isAnythingSelected) {
             const btn = document.createElement('button');
-            if (side === 'left' && hideMode && !isAnythingSelected) { 
+            const shouldHide = !isAnythingSelected && (
+                (side === 'left' && hideMode === 'theme') ||
+                (side === 'right' && hideMode === 'version')
+            );
+            if (shouldHide) { 
                 btn.innerText = "-"; 
             } else { 
                 btn.innerText = (side === 'left') ? pair.vn : pair.fr; 
