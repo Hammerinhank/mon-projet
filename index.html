@@ -436,7 +436,7 @@
             const start = () => {
                 clearTimeout(pressTimer);
                 pressTimer = setTimeout(() => {
-                    highlightCorresponding(pair, side);
+                    highlightCorresponding(btn, pair, side);
                 }, LONG_PRESS_MS);
             };
             const cancel = () => {
@@ -449,13 +449,16 @@
             btn.addEventListener('pointercancel', cancel);
         }
 
-        function highlightCorresponding(pair, side) {
+        function highlightCorresponding(pressedBtn, pair, side) {
             const oppositeContainerId = side === 'left' ? 'right-col' : 'left-col';
             const container = document.getElementById(oppositeContainerId);
             const target = Array.from(container.children).find(b => b.dataset.pairId == pair.id);
-            if (!target) return;
-            target.classList.add('long-press-hint');
-            setTimeout(() => target.classList.remove('long-press-hint'), HINT_DURATION_MS);
+            pressedBtn.classList.add('long-press-hint');
+            if (target) target.classList.add('long-press-hint');
+            setTimeout(() => {
+                pressedBtn.classList.remove('long-press-hint');
+                if (target) target.classList.remove('long-press-hint');
+            }, HINT_DURATION_MS);
         }
 
         function handleSelection(pair, element, side) {
