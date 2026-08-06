@@ -173,7 +173,7 @@
     "khỏe mạnh": 2,
     "dễ chịu": 0,
     "dễ dàng": 1,
-    "tỉnh táo": 0,
+    "tỉnh táo": 1,
     "vận động": 0,
     "động tác": 3,
     "kéo giãn": 3,
@@ -213,8 +213,8 @@
     "mới": 0,
     "cũ": 1,
     "thêm": 2,
-    "khác": 1,
-    "tương lai": 1,
+    "khác": 2,
+    "tương lai": 2,
     "lành mạnh": 0,
     "năng lượng": 0,
     "nước ấm": 0,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-06T15:02:11.284Z",
-  "appVersion": "1.6.0"
+  "updatedAt": "2026-08-06T15:51:59.183Z",
+  "appVersion": "1.7.0"
 }
