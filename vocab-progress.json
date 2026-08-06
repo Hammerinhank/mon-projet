@@ -195,7 +195,7 @@
     "hỗ trợ / giúp đỡ": 2,
     "tự nhiên": 0,
     "mới sinh": 0,
-    "ăn uống": 3,
+    "ăn uống": 4,
     "cảm thấy": 1,
     "lo lắng": 1,
     "đau": 1,
@@ -212,7 +212,7 @@
     "tối": 4,
     "mới": 0,
     "cũ": 1,
-    "thêm": 1,
+    "thêm": 2,
     "khác": 1,
     "tương lai": 1,
     "lành mạnh": 0,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-06T12:08:14.648Z",
+  "updatedAt": "2026-08-06T12:10:40.717Z",
   "appVersion": "1.6.0"
 }
