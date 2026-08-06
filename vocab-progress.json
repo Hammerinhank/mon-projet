@@ -196,7 +196,7 @@
     "tự nhiên": 0,
     "mới sinh": 0,
     "ăn uống": 3,
-    "cảm thấy": 0,
+    "cảm thấy": 1,
     "lo lắng": 1,
     "đau": 0,
     "kháng sinh": 1,
@@ -792,7 +792,7 @@
     "Cái đĩa3": 0
   },
   "currentSection": "50 mots",
-  "sectionUpdatedAt": "0",
-  "updatedAt": "2026-08-06T10:24:42.953Z",
+  "sectionUpdatedAt": "1786002805820",
+  "updatedAt": "2026-08-06T11:43:06.726Z",
   "appVersion": "1.6.0"
 }
