@@ -12,7 +12,7 @@
             background-color: #f4f7f6; padding: 5px; margin: 0; overflow-x: hidden; 
         }
         h1 { font-size: 1.5rem; color: #2c3e50; margin: 5px 0 2px 0; }
-        #section-display { font-size: 0.8rem; color: #7f8c8d; margin-bottom: 8px; font-style: italic; }
+        #section-display { font-size: 1rem; color: #2c3e50; margin-bottom: 8px; font-weight: 600; }
         
         .container { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
         .column { display: flex; flex-direction: column; gap: 10px; flex: 1; }
@@ -155,7 +155,7 @@
         <a href="https://gist.github.com/Hammerinhank/19d9495bea22ee681aa829d908a4f41e/edit" target="_blank" style="margin-left: 20px;">Edit data</a>
     </div>
 
-    <div id="app-version">v1.1.0</div>
+    <div id="app-version">v1.2.0</div>
 
     <div id="game-overlay">
         <div id="game-content" style="width: 100%; max-width: 400px; text-align: center;">
@@ -234,12 +234,15 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.1.0';
+        const APP_VERSION = '1.2.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let allData = [];
         let sections = ["Toutes"];
         let currentSection = localStorage.getItem('vocab_current_section') || "Toutes";
+        if (!localStorage.getItem('vocab_section_changed_at')) {
+            localStorage.setItem('vocab_section_changed_at', '0');
+        }
         let currentPairs = [];
         let leftOrder = [];
         let rightOrder = [];
@@ -314,10 +317,12 @@
         function selectSection(name) {
             currentSection = name;
             localStorage.setItem('vocab_current_section', name);
+            localStorage.setItem('vocab_section_changed_at', String(Date.now()));
             updateSectionDisplay();
             updateRefreshButtonText();
             closeModal();
             resetGameFull();
+            scheduleGithubPush();
         }
 
         function initGame() {
@@ -741,7 +746,21 @@
                         const remoteVal = file.data.counters[word];
                         if ((counters[word] || 0) < remoteVal) { counters[word] = remoteVal; changed = true; }
                     });
-                    if (changed) {
+
+                    let sectionChanged = false;
+                    if (file.data.currentSection && file.data.currentSection !== currentSection) {
+                        const localTs = parseInt(localStorage.getItem('vocab_section_changed_at') || '0', 10);
+                        const remoteTs = parseInt(file.data.sectionUpdatedAt || '0', 10);
+                        if (remoteTs > localTs) {
+                            currentSection = file.data.currentSection;
+                            localStorage.setItem('vocab_current_section', currentSection);
+                            localStorage.setItem('vocab_section_changed_at', String(remoteTs));
+                            updateSectionDisplay();
+                            sectionChanged = true;
+                        }
+                    }
+
+                    if (changed || sectionChanged) {
                         localStorage.setItem('vocab_counters', JSON.stringify(counters));
                         updateRefreshButtonText();
                         resetGameFull();
@@ -766,7 +785,13 @@
                 Object.keys(counters).forEach(word => {
                     merged[word] = Math.max(merged[word] || 0, counters[word] || 0);
                 });
-                const payload = { counters: merged, currentSection, updatedAt: new Date().toISOString(), appVersion: APP_VERSION };
+                const payload = {
+                    counters: merged,
+                    currentSection,
+                    sectionUpdatedAt: localStorage.getItem('vocab_section_changed_at') || '0',
+                    updatedAt: new Date().toISOString(),
+                    appVersion: APP_VERSION
+                };
                 await githubWriteFile(cfg, payload, file.sha);
                 setGithubStatus("✅ Envoyé avec succès.");
             } catch (e) {
