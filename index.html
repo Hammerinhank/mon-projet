@@ -155,7 +155,7 @@
         <a href="https://gist.github.com/Hammerinhank/19d9495bea22ee681aa829d908a4f41e/edit" target="_blank" style="margin-left: 20px;">Edit data</a>
     </div>
 
-    <div id="app-version">v1.2.0</div>
+    <div id="app-version">v1.3.0</div>
 
     <div id="game-overlay">
         <div id="game-content" style="width: 100%; max-width: 400px; text-align: center;">
@@ -234,7 +234,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.2.0';
+        const APP_VERSION = '1.3.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let allData = [];
@@ -557,16 +557,27 @@
         function replacePair(oldId) {
             const usedIds = currentPairs.map(p => p.id);
             const availablePairs = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection) && !usedIds.includes(p.id) && (counters[p.vn] || 0) <= 4);
+            const li = leftOrder.findIndex(p => p.id === oldId);
+            const ri = rightOrder.findIndex(p => p.id === oldId);
+            const samePosition = li !== -1 && li === ri;
             if (availablePairs.length > 0) {
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 currentPairs[currentPairs.findIndex(p => p.id === oldId)] = newPair;
-                const li = leftOrder.findIndex(p => p.id === oldId); if (li !== -1) leftOrder[li] = newPair;
-                const ri = rightOrder.findIndex(p => p.id === oldId); if (ri !== -1) rightOrder[ri] = newPair;
+                if (li !== -1) leftOrder[li] = newPair;
+                if (ri !== -1) rightOrder[ri] = newPair;
+                if (samePosition) {
+                    leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
+                    rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
+                }
                 updateChatGPTLink(); renderAll();
             } else {
                 currentPairs = currentPairs.filter(p => p.id !== oldId);
                 leftOrder = leftOrder.filter(p => p.id !== oldId);
                 rightOrder = rightOrder.filter(p => p.id !== oldId);
+                if (samePosition) {
+                    leftOrder = [...leftOrder].sort(() => 0.5 - Math.random());
+                    rightOrder = [...rightOrder].sort(() => 0.5 - Math.random());
+                }
                 renderAll();
             }
         }
