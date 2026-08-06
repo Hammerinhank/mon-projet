@@ -205,6 +205,8 @@
         let sections = ["Toutes"];
         let currentSection = localStorage.getItem('vocab_current_section') || "Toutes";
         let currentPairs = [];
+        let leftOrder = [];
+        let rightOrder = [];
         let selection = { left: null, right: null };
         let score = 0;
         let counters = {};
@@ -290,6 +292,8 @@
             } else {
                 currentPairs = [...pool].sort(() => 0.5 - Math.random()).slice(0, Math.min(5, pool.length));
             }
+            leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
+            rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             updateChatGPTLink();
             renderAll();
         }
@@ -407,8 +411,6 @@
             document.getElementById('left-col').innerHTML = "";
             document.getElementById('right-col').innerHTML = "";
             if (currentPairs.length === 0) return;
-            const leftOrder = [...currentPairs].sort(() => 0.5 - Math.random());
-            const rightOrder = [...currentPairs].sort(() => 0.5 - Math.random());
             const isAnythingSelected = selection.left !== null || selection.right !== null;
             leftOrder.forEach(pair => createBtn(pair, 'left-col', 'left', isAnythingSelected));
             rightOrder.forEach(pair => createBtn(pair, 'right-col', 'right', isAnythingSelected));
@@ -485,12 +487,12 @@
             }
             if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
                 element.classList.remove('selected'); selection[side] = null;
-                if (hideMode) renderAll(); return;
+                if (hideMode !== 'off') renderAll(); return;
             }
             if (selection[side]) selection[side].element.classList.remove('selected');
             element.classList.add('selected');
             selection[side] = { id: pair.id, vn: pair.vn, element };
-            if (hideMode) renderAll();
+            if (hideMode !== 'off') renderAll();
             if (selection.left && selection.right) {
                 const msgDiv = document.getElementById('message');
                 if (selection.left.id === selection.right.id) {
@@ -514,8 +516,15 @@
             if (availablePairs.length > 0) {
                 const newPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
                 currentPairs[currentPairs.findIndex(p => p.id === oldId)] = newPair;
+                const li = leftOrder.findIndex(p => p.id === oldId); if (li !== -1) leftOrder[li] = newPair;
+                const ri = rightOrder.findIndex(p => p.id === oldId); if (ri !== -1) rightOrder[ri] = newPair;
                 updateChatGPTLink(); renderAll();
-            } else { currentPairs = currentPairs.filter(p => p.id !== oldId); renderAll(); }
+            } else {
+                currentPairs = currentPairs.filter(p => p.id !== oldId);
+                leftOrder = leftOrder.filter(p => p.id !== oldId);
+                rightOrder = rightOrder.filter(p => p.id !== oldId);
+                renderAll();
+            }
         }
 
         function startFlashcards() { gameMode = "flash"; openGameOverlay(); }
