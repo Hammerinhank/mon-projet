@@ -210,7 +210,7 @@
     "ngắn": 2,
     "dài": 4,
     "tối": 5,
-    "mới": 0,
+    "mới": 1,
     "cũ": 1,
     "thêm": 2,
     "khác": 2,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-07T16:54:35.267Z",
-  "appVersion": "1.8.3"
+  "updatedAt": "2026-08-07T21:33:07.834Z",
+  "appVersion": "1.8.4"
 }
