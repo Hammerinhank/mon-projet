@@ -178,7 +178,7 @@
     "động tác": 3,
     "kéo giãn": 3,
     "nhẹ": 2,
-    "dọn dẹp": 3,
+    "dọn dẹp": 4,
     "gọn gàng": 0,
     "ngăn nắp": 2,
     "sẵn sàng": 3,
@@ -209,7 +209,7 @@
     "thực hành": 0,
     "ngắn": 1,
     "dài": 2,
-    "tối": 4,
+    "tối": 5,
     "mới": 0,
     "cũ": 1,
     "thêm": 2,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-07T15:09:12.608Z",
+  "updatedAt": "2026-08-07T16:18:37.602Z",
   "appVersion": "1.8.3"
 }
