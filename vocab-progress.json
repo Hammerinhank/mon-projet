@@ -206,7 +206,7 @@
     "nói chuyện": 3,
     "chia sẻ": 3,
     "chuẩn bị": 2,
-    "thực hành": 0,
+    "thực hành": 1,
     "ngắn": 2,
     "dài": 4,
     "tối": 5,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-07T21:33:07.834Z",
-  "appVersion": "1.8.4"
+  "updatedAt": "2026-08-07T21:47:34.092Z",
+  "appVersion": "1.8.6"
 }
