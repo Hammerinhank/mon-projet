@@ -139,7 +139,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.2</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.3</span></h1>
     <div id="section-display"></div>
     <div id="message">Chargement...</div>
 
@@ -243,7 +243,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.8.2';
+        const APP_VERSION = '1.8.3';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -716,10 +716,10 @@
             document.getElementById('modal-main-actions').style.display = 'none';
             document.getElementById('github-panel').style.display = 'flex';
             const cfg = loadGithubConfig();
-            document.getElementById('gh-owner').value = cfg.owner || '';
-            document.getElementById('gh-repo').value = cfg.repo || '';
+            document.getElementById('gh-owner').value = cfg.owner || 'Hammerinhank';
+            document.getElementById('gh-repo').value = cfg.repo || 'mon-projet';
             document.getElementById('gh-path').value = cfg.path || 'vocab-progress.json';
-            document.getElementById('gh-branch').value = cfg.branch || '';
+            document.getElementById('gh-branch').value = cfg.branch || 'main';
             document.getElementById('gh-token').value = cfg.token || '';
             setGithubStatus(githubConfigured() ? "Configuration chargée." : "Configuration non renseignée.");
         }
