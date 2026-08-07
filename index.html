@@ -28,6 +28,8 @@
             cursor: pointer; border: 2px solid #3498db; background: white; 
             border-radius: 10px; transition: all 0.2s; word-wrap: break-word;
             -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-touch-callout: none;
         }
         
         button.mastered { background-color: #d4edda; border-color: #c3e6cb; } 
@@ -137,7 +139,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.7.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.0</span></h1>
     <div id="section-display"></div>
     <div id="message">Chargement...</div>
 
@@ -241,7 +243,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.7.0';
+        const APP_VERSION = '1.8.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
