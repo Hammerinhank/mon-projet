@@ -12,7 +12,12 @@
             background-color: #f4f7f6; padding: 5px; margin: 0; overflow-x: hidden; 
         }
         h1 { font-size: 1.5rem; color: #2c3e50; margin: 5px 0 2px 0; }
-        #section-display { font-size: 1rem; color: #2c3e50; margin-bottom: 8px; font-weight: 600; }
+        #section-display {
+            font-size: 1.1rem; color: #ffffff; margin-bottom: 12px; font-weight: 700;
+            background: linear-gradient(135deg, #3498db 0%, #2c80b4 100%);
+            padding: 8px 18px; border-radius: 20px; display: inline-block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); letter-spacing: 0.3px;
+        }
         
         .container { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
         .column { display: flex; flex-direction: column; gap: 10px; flex: 1; }
@@ -299,7 +304,7 @@
         }
 
         function updateSectionDisplay() {
-            document.getElementById('section-display').innerText = currentSection === "Toutes" ? "" : "Section : " + currentSection;
+            document.getElementById('section-display').innerText = "📂 Section : " + currentSection;
         }
 
         function showSectionPicker() {
