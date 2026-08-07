@@ -383,7 +383,22 @@
         function updateChatGPTLink() {
             const words = currentPairs.map(p => p.vn).join(', ');
             const query = encodeURIComponent(`Peux-tu m'expliquer les mots vietnamiens suivants en français : ${words}`);
-            document.getElementById('chatgpt-link').href = `https://chatgpt.com/?q=${query}`;
+            const link = document.getElementById('chatgpt-link');
+            link.href = `https://chatgpt.com/?q=${query}`;
+            link.innerText = "🔍 En savoir plus sur ces mots";
+        }
+
+        function refreshChatGPTLink() {
+            const selectedCount = (selection.left ? 1 : 0) + (selection.right ? 1 : 0);
+            if (selectedCount === 1) {
+                const word = (selection.left || selection.right).vn;
+                const query = encodeURIComponent(`Peux-tu m'expliquer le mot vietnamien suivant en français : ${word}`);
+                const link = document.getElementById('chatgpt-link');
+                link.href = `https://chatgpt.com/?q=${query}`;
+                link.innerText = `🔍 Pour en savoir plus sur ce mot : ${word}`;
+            } else {
+                updateChatGPTLink();
+            }
         }
 
         function resetGameFull() {
@@ -539,12 +554,15 @@
             }
             if (selection[side] && selection[side].id === pair.id && (side === 'right' || selection[side].vn === pair.vn)) {
                 element.classList.remove('selected'); selection[side] = null;
-                if (hideMode !== 'off') renderAll(); return;
+                if (hideMode !== 'off') renderAll();
+                refreshChatGPTLink();
+                return;
             }
             if (selection[side]) selection[side].element.classList.remove('selected');
             element.classList.add('selected');
             selection[side] = { id: pair.id, vn: pair.vn, element };
             if (hideMode !== 'off') renderAll();
+            refreshChatGPTLink();
             if (selection.left && selection.right) {
                 const msgDiv = document.getElementById('message');
                 if (selection.left.id === selection.right.id) {
@@ -554,6 +572,7 @@
                     setTimeout(() => {
                         const oldId = selection.left.id; selection = { left: null, right: null };
                         replacePair(oldId); msgDiv.innerText = "";
+                        refreshChatGPTLink();
                     }, 500);
                 } else {
                     msgDiv.innerText = "❌ ERROR"; msgDiv.className = "error";
