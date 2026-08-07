@@ -190,7 +190,7 @@
     "quan trọng": 3,
     "chơi / vui chơi": 2,
     "thiếu ngủ": 2,
-    "khóc": 3,
+    "khóc": 4,
     "trực tiếp": 0,
     "hỗ trợ / giúp đỡ": 2,
     "tự nhiên": 0,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-07T21:47:34.092Z",
+  "updatedAt": "2026-08-07T21:48:34.093Z",
   "appVersion": "1.8.6"
 }
