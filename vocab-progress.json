@@ -202,9 +202,9 @@
     "kháng sinh": 1,
     "bị nhiễm trùng": 0,
     "hại": 4,
-    "học": 4,
+    "học": 5,
     "nói chuyện": 4,
-    "chia sẻ": 3,
+    "chia sẻ": 4,
     "chuẩn bị": 3,
     "thực hành": 1,
     "ngắn": 5,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-08T07:51:35.916Z",
+  "updatedAt": "2026-08-08T07:52:35.841Z",
   "appVersion": "1.8.6"
 }
