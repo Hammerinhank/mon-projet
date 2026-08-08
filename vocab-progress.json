@@ -188,7 +188,7 @@
     "tin tức": 3,
     "nhân vật": 1,
     "quan trọng": 5,
-    "chơi / vui chơi": 3,
+    "chơi / vui chơi": 4,
     "thiếu ngủ": 2,
     "khóc": 4,
     "trực tiếp": 0,
@@ -198,7 +198,7 @@
     "ăn uống": 5,
     "cảm thấy": 2,
     "lo lắng": 2,
-    "đau": 4,
+    "đau": 5,
     "kháng sinh": 1,
     "bị nhiễm trùng": 0,
     "hại": 4,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-08T07:52:35.841Z",
+  "updatedAt": "2026-08-08T07:53:35.927Z",
   "appVersion": "1.8.6"
 }
