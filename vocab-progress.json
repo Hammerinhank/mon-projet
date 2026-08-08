@@ -188,7 +188,7 @@
     "tin tức": 3,
     "nhân vật": 1,
     "quan trọng": 5,
-    "chơi / vui chơi": 4,
+    "chơi / vui chơi": 5,
     "thiếu ngủ": 2,
     "khóc": 4,
     "trực tiếp": 0,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-08T08:01:00.842Z",
+  "updatedAt": "2026-08-08T12:39:43.731Z",
   "appVersion": "1.8.6"
 }
