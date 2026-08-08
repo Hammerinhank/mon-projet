@@ -107,7 +107,7 @@
     "nhau": 0,
     "Đột nhiên": 0,
     "Thì ra...": 0,
-    "tiếp tục": 2,
+    "tiếp tục": 3,
     "qua lại": 0,
     "với nhau": 0,
     "Vậy là": 0,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-08T06:53:03.605Z",
+  "updatedAt": "2026-08-08T07:41:31.442Z",
   "appVersion": "1.8.6"
 }
