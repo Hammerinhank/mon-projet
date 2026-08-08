@@ -198,7 +198,7 @@
     "ăn uống": 5,
     "cảm thấy": 2,
     "lo lắng": 1,
-    "đau": 1,
+    "đau": 2,
     "kháng sinh": 1,
     "bị nhiễm trùng": 0,
     "hại": 4,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-07T21:48:34.093Z",
+  "updatedAt": "2026-08-08T06:53:03.605Z",
   "appVersion": "1.8.6"
 }
