@@ -99,7 +99,7 @@
     "đính": 0,
     "viên đá": 1,
     "mỉm cười": 0,
-    "sáng": 2,
+    "sáng": 3,
     "hôm sau": 1,
     "lại": 0,
     "sang": 0,
@@ -793,6 +793,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786002805820",
-  "updatedAt": "2026-08-08T12:39:43.731Z",
+  "updatedAt": "2026-08-08T12:40:44.127Z",
   "appVersion": "1.8.6"
 }
