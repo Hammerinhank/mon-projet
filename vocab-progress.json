@@ -813,7 +813,7 @@
     "* tinh xảo": 0,
     "tọa lạc": 0,
     "huyện": 0,
-    "vùng": 0,
+    "vùng": 1,
     "xung quanh": 0,
     "bao bọc": 0,
     "nền đất": 0,
@@ -835,6 +835,6 @@
   },
   "currentSection": "Livre Chi et François",
   "sectionUpdatedAt": "1786283608984",
-  "updatedAt": "2026-08-09T13:53:34.000Z",
+  "updatedAt": "2026-08-09T14:03:29.116Z",
   "appVersion": "1.8.6"
 }
