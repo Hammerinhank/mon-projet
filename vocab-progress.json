@@ -820,7 +820,7 @@
     "mênh mông": 0,
     "xanh mướt": 1,
     "đặc biệt": 0,
-    "nổi tiếng": 0,
+    "nổi tiếng": 2,
     "nét đặc trưng": 0,
     "quen thuộc": 0,
     "cánh cổng": 0,
@@ -835,6 +835,6 @@
   },
   "currentSection": "Livre Chi et François",
   "sectionUpdatedAt": "1786283608984",
-  "updatedAt": "2026-08-09T17:08:12.352Z",
+  "updatedAt": "2026-08-09T17:10:11.903Z",
   "appVersion": "1.8.6"
 }
