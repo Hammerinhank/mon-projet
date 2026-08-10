@@ -845,7 +845,7 @@
     "* rất muộn": 2,
     "* rất sớm": 0,
     "* trong … ngày": 1,
-    "* bảo tàng": 1,
+    "* bảo tàng": 2,
     "* vùng núi": 0,
     "* cảnh đẹp": 0,
     "* gần": 1,
@@ -861,7 +861,7 @@
     "* đồng ý": 1,
     "* nghe": 0,
     "* nói": 1,
-    "* tại sao": 1,
+    "* tại sao": 2,
     "* người giúp việc": 1,
     "* nhân viên": 2,
     "* doanh nhân": 0,
@@ -880,6 +880,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786374333066",
-  "updatedAt": "2026-08-10T17:31:13.960Z",
+  "updatedAt": "2026-08-10T17:33:16.168Z",
   "appVersion": "1.8.6"
 }
