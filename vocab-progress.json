@@ -854,7 +854,7 @@
     "* xem lại": 0,
     "* xóa": 1,
     "* giữ lại": 2,
-    "* giải thích": 0,
+    "* giải thích": 1,
     "* trả lời": 2,
     "* có nghĩa là": 0,
     "* hiểu": 2,
@@ -880,6 +880,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786374333066",
-  "updatedAt": "2026-08-10T17:35:54.826Z",
+  "updatedAt": "2026-08-10T17:38:28.150Z",
   "appVersion": "1.8.6"
 }
