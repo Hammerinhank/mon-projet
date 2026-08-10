@@ -799,7 +799,7 @@
     "* mênh mông": 0,
     "* xanh mướt": 0,
     "* đặc biệt": 0,
-    "* nổi tiếng": 1,
+    "* nổi tiếng": 2,
     "* nét đặc trưng": 0,
     "* quen thuộc": 0,
     "* cánh cổng": 0,
@@ -859,7 +859,7 @@
     "* có nghĩa là": 0,
     "* hiểu": 2,
     "* đồng ý": 1,
-    "* nghe": 0,
+    "* nghe": 1,
     "* nói": 1,
     "* tại sao": 2,
     "* người giúp việc": 1,
@@ -873,13 +873,13 @@
     "* đôi khi": 0,
     "* luôn luôn": 0,
     "* không phải lúc nào cũng": 0,
-    "* có thể": 1,
+    "* có thể": 2,
     "* bởi vì": 0,
     "* vì … nên …": 0,
     "* chỉ": 3
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786374333066",
-  "updatedAt": "2026-08-10T17:38:28.150Z",
+  "updatedAt": "2026-08-10T17:39:29.282Z",
   "appVersion": "1.8.6"
 }
