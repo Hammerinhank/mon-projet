@@ -79,7 +79,7 @@
             background: white; z-index: 3500; padding: 20px; flex-direction: column; align-items: center;
         }
         #data-mgmt-overlay .modal-btn { max-width: 400px; }
-        #data-mgmt-overlay p, #data-mgmt-overlay input { width: 100%; max-width: 400px; }
+        #data-mgmt-overlay p { width: 100%; max-width: 400px; }
 
         #stats-modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
@@ -122,6 +122,7 @@
             width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px;
             border: 1px solid #bdc3c7; font-size: 14px; box-sizing: border-box;
         }
+        .gh-label { font-size: 0.75rem; color: #7f8c8d; text-align: left; margin: 8px 0 0 0; font-weight: bold; }
         #github-status { font-size: 0.8rem; color: #34495e; min-height: 1.2rem; margin: 8px 0; }
         #game-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -146,7 +147,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.7</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.0</span></h1>
     <div id="section-display"></div>
     <div id="message">Chargement...</div>
 
@@ -198,13 +199,11 @@
 
     <div id="data-mgmt-overlay">
         <h3>🗂️ Gérer les données</h3>
-        <button class="modal-btn btn-top" onclick="window.open('https://gist.github.com/Hammerinhank/19d9495bea22ee681aa829d908a4f41e/edit', '_blank')">📝 Edit data</button>
+        <button class="modal-btn btn-top" onclick="openEditDataPage()">📝 Edit data</button>
         <hr style="width:100%; max-width:400px;">
         <p style="font-size:0.8rem; color:#7f8c8d; text-align:left;">
-            Le nettoyage supprime les « * » situés en tout début de ligne dans le fichier de données (toutes sections confondues), sans autre modification. Nécessite un token GitHub avec le scope "gist".
+            Le nettoyage lit le fichier de données (toutes sections confondues) dans le dépôt GitHub configuré, supprime les « * » situés en tout début de ligne, sans autre modification, puis enregistre une nouvelle version du fichier sur GitHub.
         </p>
-        <input type="password" id="gist-token-input" class="gh-input" placeholder="Token GitHub (scope gist)" autocomplete="off">
-        <button class="modal-btn btn-apply" onclick="saveGistToken()">💾 Enregistrer le token</button>
         <button class="modal-btn btn-one" onclick="runDataCleansing()">🧹 Data cleansing</button>
         <p id="data-mgmt-status" style="font-size:0.8rem; color:#34495e; min-height:1.2rem; text-align:center;"></p>
         <button class="modal-btn btn-cancel" style="margin-top:10px;" onclick="backFromDataManagement()">↩️ Retour</button>
@@ -246,27 +245,29 @@
                 <h3>☁️ Synchronisation GitHub</h3>
                 <p style="font-size:0.8rem; color:#7f8c8d; text-align:left; margin-top:0;">
                     Renseigne un dépôt GitHub (privé de préférence) et un token d'accès personnel
-                    (droit "repo" ou "contents") pour retrouver ta progression sur un autre appareil.
+                    (droit "repo" ou "contents") pour lire/écrire tes données de vocabulaire et ta progression, et les retrouver sur un autre appareil.
                 </p>
                 <input type="text" id="gh-owner" class="gh-input" placeholder="Utilisateur GitHub" autocomplete="off">
                 <input type="text" id="gh-repo" class="gh-input" placeholder="Nom du dépôt" autocomplete="off">
+                <p class="gh-label">Fichier de données (vocabulaire)</p>
+                <input type="text" id="gh-data-path" class="gh-input" placeholder="Fichier (ex: vocab-data.txt)" autocomplete="off">
+                <p class="gh-label">Fichier de progression</p>
                 <input type="text" id="gh-path" class="gh-input" placeholder="Fichier (ex: vocab-progress.json)" autocomplete="off">
                 <input type="text" id="gh-branch" class="gh-input" placeholder="Branche (défaut: main)" autocomplete="off">
                 <input type="password" id="gh-token" class="gh-input" placeholder="Token d'accès personnel" autocomplete="off">
                 <p id="github-status">Configuration non renseignée.</p>
                 <button class="modal-btn btn-apply" onclick="saveGithubConfigFromForm()">💾 Enregistrer & Synchroniser</button>
-                <button class="modal-btn btn-top" onclick="githubPull()">⬇️ Récupérer depuis GitHub</button>
-                <button class="modal-btn btn-one" onclick="githubPush()">⬆️ Envoyer vers GitHub</button>
+                <button class="modal-btn btn-top" onclick="githubPull()">⬇️ Récupérer la progression</button>
+                <button class="modal-btn btn-one" onclick="githubPush()">⬆️ Envoyer la progression</button>
                 <button class="modal-btn btn-cancel" onclick="hideGithubPanel()" style="margin-top:5px">Retour</button>
             </div>
         </div>
     </div>
 
     <script>
-        const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.8.7';
+        const APP_VERSION = '1.9.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
-        const GIST_TOKEN_KEY = 'vocab_gist_token';
+        const DATA_CACHE_KEY = 'vocab_data_raw';
         let githubPushTimer = null;
         let githubPushInFlight = false;
         let githubPushQueued = false;
@@ -295,36 +296,58 @@
         const LONG_PRESS_MS = 1000;
         const HINT_DURATION_MS = 5000;
 
-        async function loadGistData() {
+        // ===================== SOURCE DES DONNÉES (dépôt GitHub) =====================
+        // Les données de vocabulaire ne sont plus lues depuis un Gist mais depuis un
+        // fichier d'un dépôt GitHub, via la même API "contents" et le même token
+        // que ceux déjà utilisés pour synchroniser la progression.
+
+        function parseVocabContent(content) {
+            const savedCounters = localStorage.getItem('vocab_counters');
+            counters = savedCounters ? JSON.parse(savedCounters) : {};
+            let activeSection = "Général";
+            allData = [];
+            sections = ["Toutes"];
+            content.split('\n').forEach((line, index) => {
+                const trimmedLine = line.trim();
+                if (!trimmedLine) return;
+
+                if (!trimmedLine.toUpperCase().includes("SECTION") && !trimmedLine.includes(':')) return;
+
+                if (trimmedLine.toUpperCase().includes("SECTION")) {
+                    activeSection = trimmedLine.replace(/SECTION/i, "").trim();
+                    if (!sections.includes(activeSection)) sections.push(activeSection);
+                } else if (trimmedLine.includes(':')) {
+                    const parts = trimmedLine.split(':');
+                    const vnWord = parts[0].trim();
+                    if (counters[vnWord] === undefined) counters[vnWord] = 0;
+                    allData.push({ id: index, vn: vnWord, fr: parts[1].trim(), section: activeSection });
+                }
+            });
+            updateRefreshButtonText();
+            updateSectionDisplay();
+            initGame();
+        }
+
+        async function loadVocabData() {
+            const cfg = loadGithubConfig();
+            const cached = localStorage.getItem(DATA_CACHE_KEY);
+            if (cached) parseVocabContent(cached);
+
+            if (!dataSourceConfigured()) {
+                if (!cached) document.getElementById('message').innerText = "Configure le fichier de données dans ☁️ Synchronisation GitHub.";
+                return;
+            }
             try {
-                const response = await fetch(`https://api.github.com/gists/${GIST_ID}`);
-                const gist = await response.json();
-                const content = gist.files[Object.keys(gist.files)[0]].content;
-                const savedCounters = localStorage.getItem('vocab_counters');
-                counters = savedCounters ? JSON.parse(savedCounters) : {};
-                let activeSection = "Général";
-                allData = [];
-                content.split('\n').forEach((line, index) => {
-                    const trimmedLine = line.trim();
-                    if (!trimmedLine) return;
-
-                    if (!trimmedLine.toUpperCase().includes("SECTION") && !trimmedLine.includes(':')) return;
-
-                    if (trimmedLine.toUpperCase().includes("SECTION")) {
-                        activeSection = trimmedLine.replace(/SECTION/i, "").trim();
-                        if (!sections.includes(activeSection)) sections.push(activeSection);
-                    } else if (trimmedLine.includes(':')) {
-                        const parts = trimmedLine.split(':');
-                        const vnWord = parts[0].trim();
-                        if (counters[vnWord] === undefined) counters[vnWord] = 0;
-                        allData.push({ id: index, vn: vnWord, fr: parts[1].trim(), section: activeSection });
-                    }
-                });
-                updateRefreshButtonText();
-                updateSectionDisplay();
-                initGame();
-                if (githubConfigured()) githubPull(false);
-            } catch (e) { document.getElementById('message').innerText = "Erreur chargement."; }
+                const file = await githubGetFile(cfg, cfg.dataPath);
+                if (file.exists && file.text !== null) {
+                    localStorage.setItem(DATA_CACHE_KEY, file.text);
+                    parseVocabContent(file.text);
+                } else if (!cached) {
+                    document.getElementById('message').innerText = "Fichier de données introuvable sur GitHub.";
+                }
+            } catch (e) {
+                if (!cached) document.getElementById('message').innerText = "Erreur chargement.";
+            }
         }
 
         function updateSectionDisplay() {
@@ -715,16 +738,19 @@
         });
 
         // ===================== GESTION DES DONNÉES =====================
-        // Nouvelle page "Gérer les données" : remplace le lien "Edit data" de
-        // la page d'accueil et ajoute un nettoyage automatisé du fichier
-        // source (suppression des « * » en début de ligne).
+        // Page "Gérer les données" : ouvre l'éditeur GitHub du fichier de données
+        // du dépôt configuré, et propose un nettoyage automatisé du fichier
+        // (suppression des « * » en début de ligne), via l'API "contents" (même
+        // mode que la synchronisation de la progression, sans passer par un Gist).
 
         function showDataManagement() {
             closeModal();
-            const tokenInput = document.getElementById('gist-token-input');
-            const saved = localStorage.getItem(GIST_TOKEN_KEY) || '';
-            tokenInput.value = saved;
-            setDataMgmtStatus(saved ? 'Token chargé.' : 'Aucun token enregistré (nécessaire pour "Data cleansing").');
+            const cfg = loadGithubConfig();
+            if (!dataSourceConfigured()) {
+                setDataMgmtStatus('⚠️ Configure le fichier de données dans ☁️ Synchronisation GitHub.');
+            } else {
+                setDataMgmtStatus(`Fichier configuré : ${cfg.dataPath}`);
+            }
             document.getElementById('data-mgmt-overlay').style.display = 'flex';
         }
 
@@ -738,28 +764,30 @@
             if (el) el.innerText = text;
         }
 
-        function saveGistToken() {
-            const token = document.getElementById('gist-token-input').value.trim();
-            if (!token) { setDataMgmtStatus('⚠️ Renseigne un token.'); return; }
-            localStorage.setItem(GIST_TOKEN_KEY, token);
-            setDataMgmtStatus('✅ Token enregistré.');
+        function openEditDataPage() {
+            const cfg = loadGithubConfig();
+            if (!cfg.owner || !cfg.repo || !cfg.dataPath) {
+                setDataMgmtStatus('⚠️ Configure d\'abord le fichier de données (menu ☁️ Synchronisation GitHub).');
+                return;
+            }
+            const branch = cfg.branch || 'main';
+            const url = `https://github.com/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/edit/${encodeURIComponent(branch)}/${cfg.dataPath}`;
+            window.open(url, '_blank');
         }
 
         async function runDataCleansing() {
-            const token = localStorage.getItem(GIST_TOKEN_KEY);
-            if (!token) { setDataMgmtStatus('⚠️ Enregistre d\'abord un token (scope "gist").'); return; }
+            const cfg = loadGithubConfig();
+            if (!dataSourceConfigured()) {
+                setDataMgmtStatus('⚠️ Configure d\'abord le fichier de données (menu ☁️ Synchronisation GitHub).');
+                return;
+            }
             if (!confirm('Nettoyer le fichier de données (suppression des "*" en début de ligne) ?')) return;
             setDataMgmtStatus('⏳ Lecture du fichier...');
             try {
-                const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' }
-                });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const gist = await res.json();
-                const filename = Object.keys(gist.files)[0];
-                const original = gist.files[filename].content;
+                const file = await githubGetFile(cfg, cfg.dataPath);
+                if (!file.exists) throw new Error('Fichier introuvable sur GitHub.');
                 let changedCount = 0;
-                const cleaned = original.split('\n').map(line => {
+                const cleaned = file.text.split('\n').map(line => {
                     if (/^\*+/.test(line)) { changedCount++; return line.replace(/^\*+/, ''); }
                     return line;
                 }).join('\n');
@@ -767,16 +795,9 @@
                 if (changedCount === 0) { setDataMgmtStatus('ℹ️ Aucune ligne à nettoyer.'); return; }
 
                 setDataMgmtStatus(`⏳ Envoi du fichier nettoyé (${changedCount} ligne(s))...`);
-                const patchRes = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ files: { [filename]: { content: cleaned } } })
-                });
-                if (!patchRes.ok) { const t = await patchRes.text(); throw new Error(`HTTP ${patchRes.status} ${t}`); }
+                await githubPutFile(cfg, cfg.dataPath, cleaned, file.sha, `Data cleansing (v${APP_VERSION})`);
+                localStorage.setItem(DATA_CACHE_KEY, cleaned);
+                parseVocabContent(cleaned);
                 setDataMgmtStatus(`✅ Nettoyage terminé (${changedCount} ligne(s) corrigée(s)).`);
             } catch (e) {
                 setDataMgmtStatus(`❌ Erreur : ${e.message}`);
@@ -790,6 +811,9 @@
         // autre appareil. La fusion se fait mot par mot en gardant la valeur
         // la plus avancée (max) entre local et distant, pour ne jamais perdre
         // de progression si la synchro a lieu depuis plusieurs appareils.
+        // Le même dépôt/token sert aussi de source pour le fichier de données
+        // de vocabulaire (voir plus haut), via les mêmes fonctions génériques
+        // githubGetFile / githubPutFile (API "contents", pas de Gist).
 
         function loadGithubConfig() {
             try { return JSON.parse(localStorage.getItem(GITHUB_CONFIG_KEY)) || {}; }
@@ -801,10 +825,9 @@
             return !!(c.owner && c.repo && c.token && c.path);
         }
 
-        function githubContentsUrl(cfg, withRef) {
-            let url = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodeURIComponent(cfg.path)}`;
-            if (withRef && cfg.branch) url += `?ref=${encodeURIComponent(cfg.branch)}`;
-            return url;
+        function dataSourceConfigured() {
+            const c = loadGithubConfig();
+            return !!(c.owner && c.repo && c.token && c.dataPath);
         }
 
         function utf8ToBase64(str) {
@@ -812,6 +835,57 @@
         }
         function base64ToUtf8(str) {
             return decodeURIComponent(escape(atob(str.replace(/\n/g, ''))));
+        }
+
+        // Lit un fichier quelconque du dépôt configuré via l'API "contents".
+        async function githubGetFile(cfg, path) {
+            let url = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodeURIComponent(path)}`;
+            if (cfg.branch) url += `?ref=${encodeURIComponent(cfg.branch)}`;
+            const headers = { 'Accept': 'application/vnd.github+json' };
+            if (cfg.token) headers['Authorization'] = `token ${cfg.token}`;
+            const res = await fetch(url, { headers });
+            if (res.status === 404) return { exists: false, sha: null, text: null };
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const json = await res.json();
+            return { exists: true, sha: json.sha, text: base64ToUtf8(json.content) };
+        }
+
+        // Écrit (crée ou met à jour) un fichier quelconque du dépôt configuré.
+        async function githubPutFile(cfg, path, text, sha, message) {
+            const body = {
+                message: message || `Mise à jour (v${APP_VERSION}) ${new Date().toISOString()}`,
+                content: utf8ToBase64(text)
+            };
+            if (sha) body.sha = sha;
+            if (cfg.branch) body.branch = cfg.branch;
+            const url = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodeURIComponent(path)}`;
+            const res = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${cfg.token}`,
+                    'Accept': 'application/vnd.github+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) {
+                const t = await res.text();
+                throw new Error(`HTTP ${res.status} ${t}`);
+            }
+            return res.json();
+        }
+
+        // Wrappers dédiés au fichier de progression (JSON), au-dessus des
+        // fonctions génériques ci-dessus.
+        async function githubFetchFile(cfg) {
+            const file = await githubGetFile(cfg, cfg.path);
+            if (!file.exists) return { exists: false, sha: null, data: null };
+            return { exists: true, sha: file.sha, data: JSON.parse(file.text) };
+        }
+
+        async function githubWriteFile(cfg, dataObj, sha) {
+            const message = `Sync progression (v${APP_VERSION}) ${new Date().toISOString()}`;
+            return githubPutFile(cfg, cfg.path, JSON.stringify(dataObj, null, 2), sha, message);
         }
 
         function setGithubStatus(text) {
@@ -825,6 +899,7 @@
             const cfg = loadGithubConfig();
             document.getElementById('gh-owner').value = cfg.owner || 'Hammerinhank';
             document.getElementById('gh-repo').value = cfg.repo || 'mon-projet';
+            document.getElementById('gh-data-path').value = cfg.dataPath || 'vocab-data.txt';
             document.getElementById('gh-path').value = cfg.path || 'vocab-progress.json';
             document.getElementById('gh-branch').value = cfg.branch || 'main';
             document.getElementById('gh-token').value = cfg.token || '';
@@ -840,6 +915,7 @@
             const cfg = {
                 owner: document.getElementById('gh-owner').value.trim(),
                 repo: document.getElementById('gh-repo').value.trim(),
+                dataPath: document.getElementById('gh-data-path').value.trim() || 'vocab-data.txt',
                 path: document.getElementById('gh-path').value.trim() || 'vocab-progress.json',
                 branch: document.getElementById('gh-branch').value.trim(),
                 token: document.getElementById('gh-token').value.trim()
@@ -850,41 +926,8 @@
             }
             localStorage.setItem(GITHUB_CONFIG_KEY, JSON.stringify(cfg));
             setGithubStatus("✅ Configuration enregistrée. Synchronisation...");
+            loadVocabData();
             githubPull(false).then(() => githubPush(false));
-        }
-
-        async function githubFetchFile(cfg) {
-            const res = await fetch(githubContentsUrl(cfg, true), {
-                headers: { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' }
-            });
-            if (res.status === 404) return { exists: false, sha: null, data: null };
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const json = await res.json();
-            const content = base64ToUtf8(json.content);
-            return { exists: true, sha: json.sha, data: JSON.parse(content) };
-        }
-
-        async function githubWriteFile(cfg, dataObj, sha) {
-            const body = {
-                message: `Sync progression (v${APP_VERSION}) ${new Date().toISOString()}`,
-                content: utf8ToBase64(JSON.stringify(dataObj, null, 2))
-            };
-            if (sha) body.sha = sha;
-            if (cfg.branch) body.branch = cfg.branch;
-            const res = await fetch(githubContentsUrl(cfg, false), {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${cfg.token}`,
-                    'Accept': 'application/vnd.github+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            });
-            if (!res.ok) {
-                const t = await res.text();
-                throw new Error(`HTTP ${res.status} ${t}`);
-            }
-            return res.json();
         }
 
         async function githubPull(interactive = true) {
@@ -989,7 +1032,8 @@
         // =================== FIN SYNCHRONISATION GITHUB ===================
 
         document.getElementById('app-version').innerText = 'v' + APP_VERSION;
-        loadGistData();
+        loadVocabData();
+        if (githubConfigured()) githubPull(false);
     </script>
 </body>
 </html>
