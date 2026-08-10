@@ -835,7 +835,7 @@
     "* lái xe": 2,
     "* đoạn đường": 0,
     "* rời": 1,
-    "* mất": 0,
+    "* mất": 1,
     "* đi tham quan": 1,
     "* trở về": 2,
     "* đi bộ": 0,
@@ -880,6 +880,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786374333066",
-  "updatedAt": "2026-08-10T17:26:59.324Z",
+  "updatedAt": "2026-08-10T17:28:46.877Z",
   "appVersion": "1.8.6"
 }
