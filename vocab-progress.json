@@ -799,7 +799,7 @@
     "* mênh mông": 0,
     "* xanh mướt": 0,
     "* đặc biệt": 0,
-    "* nổi tiếng": 0,
+    "* nổi tiếng": 1,
     "* nét đặc trưng": 0,
     "* quen thuộc": 0,
     "* cánh cổng": 0,
@@ -880,6 +880,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786374333066",
-  "updatedAt": "2026-08-10T17:15:34.664Z",
+  "updatedAt": "2026-08-10T17:16:35.324Z",
   "appVersion": "1.8.6"
 }
