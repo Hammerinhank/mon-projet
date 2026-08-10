@@ -849,7 +849,7 @@
     "* vùng núi": 0,
     "* cảnh đẹp": 0,
     "* gần": 1,
-    "* bức ảnh": 1,
+    "* bức ảnh": 2,
     "* chụp ảnh": 0,
     "* xem lại": 0,
     "* xóa": 1,
@@ -880,6 +880,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786374333066",
-  "updatedAt": "2026-08-10T17:28:46.877Z",
+  "updatedAt": "2026-08-10T17:31:13.960Z",
   "appVersion": "1.8.6"
 }
