@@ -839,7 +839,7 @@
     "* đi tham quan": 1,
     "* trở về": 2,
     "* đi bộ": 0,
-    "* bắt đầu": 0,
+    "* bắt đầu": 1,
     "* lúc": 1,
     "* sau đó": 0,
     "* rất muộn": 2,
@@ -880,6 +880,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786374333066",
-  "updatedAt": "2026-08-10T17:16:35.324Z",
+  "updatedAt": "2026-08-10T17:17:36.175Z",
   "appVersion": "1.8.6"
 }
