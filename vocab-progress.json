@@ -1,8 +1,8 @@
 {
   "counters": {
-    "một": 1,
-    "hai": 1,
-    "ba": 0,
+    "một": 3,
+    "hai": 4,
+    "ba": 4,
     "ban công": 1,
     "trên": 0,
     "Love on the Bacony": 1,
@@ -922,8 +922,8 @@
     "vì … nên …": 0,
     "chỉ": 2
   },
-  "currentSection": "Livre Chi et François",
-  "sectionUpdatedAt": "1786433680594",
-  "updatedAt": "2026-08-11T07:34:45.609Z",
+  "currentSection": "TEST",
+  "sectionUpdatedAt": "1786433692718",
+  "updatedAt": "2026-08-11T07:35:46.124Z",
   "appVersion": "1.9.0"
 }
