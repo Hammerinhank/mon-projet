@@ -38,6 +38,7 @@
         button.completed { background-color: #219150; border-color: #1e7e45; color: white; }
         button.selected { background-color: #3498db !important; color: white !important; border-color: #2980b9 !important; }
         button.long-press-hint { background-color: #f1c40f !important; border-color: #f39c12 !important; color: #2c3e50 !important; box-shadow: 0 0 10px #f1c40f; }
+        button.expert-flash { background-color: #e74c3c !important; border-color: #c0392b !important; color: #ffffff !important; }
 
         #message { margin: 5px 0 10px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
@@ -148,7 +149,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.1</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.3</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -266,7 +267,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.1';
+        const APP_VERSION = '1.9.3';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -292,6 +293,7 @@
         let currentObject = null;
         
         let clickTracker = { word: null, count: 0 };
+        let hintedPairId = null;
 
         const LONG_PRESS_MS = 1000;
         const HINT_DURATION_MS = 5000;
@@ -583,6 +585,7 @@
             const target = Array.from(container.children).find(b => b.dataset.pairId == pair.id);
             pressedBtn.classList.add('long-press-hint');
             if (target) target.classList.add('long-press-hint');
+            hintedPairId = pair.id;
 
             // Révèle temporairement le mot masqué (mode "Version" ou "Thème")
             // tant que les boutons restent colorés.
@@ -596,6 +599,7 @@
                 if (target) target.classList.remove('long-press-hint');
                 if (pressedWasHidden) pressedBtn.innerText = '-';
                 if (targetWasHidden) target.innerText = '-';
+                if (hintedPairId === pair.id) hintedPairId = null;
             }, HINT_DURATION_MS);
         }
 
@@ -628,8 +632,18 @@
             if (selection.left && selection.right) {
                 const msgDiv = document.getElementById('message');
                 if (selection.left.id === selection.right.id) {
-                    msgDiv.innerText = "✅ OK"; msgDiv.className = "ok";
-                    score++; counters[selection.left.vn] = (counters[selection.left.vn] || 0) + 1; 
+                    const wasHinted = hintedPairId === selection.left.id;
+                    if (wasHinted) {
+                        msgDiv.innerText = "⭐ OK — Expert !"; msgDiv.className = "ok";
+                        counters[selection.left.vn] = 5;
+                        hintedPairId = null;
+                        if (selection.left.element) selection.left.element.classList.add('expert-flash');
+                        if (selection.right.element) selection.right.element.classList.add('expert-flash');
+                    } else {
+                        msgDiv.innerText = "✅ OK"; msgDiv.className = "ok";
+                        counters[selection.left.vn] = (counters[selection.left.vn] || 0) + 1;
+                    }
+                    score++;
                     saveProgress(); document.getElementById('score-val').innerText = score;
                     setTimeout(() => {
                         const oldId = selection.left.id; selection = { left: null, right: null };
