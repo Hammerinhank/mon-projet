@@ -149,7 +149,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.4</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.5</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -267,7 +267,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.4';
+        const APP_VERSION = '1.9.5';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -294,6 +294,8 @@
         
         let clickTracker = { word: null, count: 0 };
         let hintedPairId = null;
+        let hintedTapSides = { left: false, right: false };
+        let suppressClickForPairId = null;
 
         const LONG_PRESS_MS = 1000;
         const HINT_DURATION_MS = 5000;
@@ -561,6 +563,9 @@
 
         // Appui long (> LONG_PRESS_MS) sur une touche : surligne pendant HINT_DURATION_MS
         // la touche correspondante (le partenaire de la paire) dans l'autre colonne.
+        // On s'appuie sur pointerup (et non sur "click") pour détecter de façon fiable
+        // l'appui sur chacun des deux boutons colorés : après un appui long, le clic natif
+        // du bouton maintenu n'est pas toujours déclenché par le système.
         function setupLongPress(btn, pair, side) {
             let pressTimer = null;
             const start = () => {
@@ -573,8 +578,12 @@
                 clearTimeout(pressTimer);
                 pressTimer = null;
             };
+            const release = () => {
+                cancel();
+                if (hintedPairId === pair.id) registerHintedTap(pair, side);
+            };
             btn.addEventListener('pointerdown', start);
-            btn.addEventListener('pointerup', cancel);
+            btn.addEventListener('pointerup', release);
             btn.addEventListener('pointerleave', cancel);
             btn.addEventListener('pointercancel', cancel);
         }
@@ -586,6 +595,9 @@
             pressedBtn.classList.add('long-press-hint');
             if (target) target.classList.add('long-press-hint');
             hintedPairId = pair.id;
+            // L'appui long en cours vaut déjà comme appui sur ce côté ; il ne manque
+            // plus qu'un appui sur le bouton partenaire pour valider la paire.
+            hintedTapSides = { left: side === 'left', right: side === 'right' };
 
             // Révèle temporairement le mot masqué (mode "Version" ou "Thème")
             // tant que les boutons restent colorés.
@@ -599,13 +611,29 @@
                 if (target) target.classList.remove('long-press-hint');
                 if (pressedWasHidden) pressedBtn.innerText = '-';
                 if (targetWasHidden) target.innerText = '-';
-                if (hintedPairId === pair.id) hintedPairId = null;
+                if (hintedPairId === pair.id) {
+                    hintedPairId = null;
+                    hintedTapSides = { left: false, right: false };
+                }
             }, HINT_DURATION_MS);
         }
 
+        // Enregistre l'appui sur un des deux boutons colorés ; dès que les DEUX côtés
+        // ont été touchés (systématiquement, quel que soit l'ordre), valide la paire.
+        function registerHintedTap(pair, side) {
+            if (hintedPairId !== pair.id) return;
+            hintedTapSides[side] = true;
+            if (hintedTapSides.left && hintedTapSides.right) {
+                const leftBtn = document.querySelector(`#left-col button[data-pair-id="${pair.id}"]`);
+                const rightBtn = document.querySelector(`#right-col button[data-pair-id="${pair.id}"]`);
+                completeExpertMatch(pair, leftBtn, rightBtn);
+            }
+        }
+
         function handleSelection(pair, element, side) {
-            if (hintedPairId === pair.id) {
-                completeExpertMatch(pair, element, side);
+            if (hintedPairId === pair.id || suppressClickForPairId === pair.id) {
+                // Déjà pris en charge par registerHintedTap (pointerup) ; on ignore
+                // le clic natif correspondant pour ne pas dupliquer le traitement.
                 return;
             }
             lastClickedWord = pair.vn;
@@ -636,17 +664,8 @@
             if (selection.left && selection.right) {
                 const msgDiv = document.getElementById('message');
                 if (selection.left.id === selection.right.id) {
-                    const wasHinted = hintedPairId === selection.left.id;
-                    if (wasHinted) {
-                        msgDiv.innerText = "⭐ OK — Expert !"; msgDiv.className = "ok";
-                        counters[selection.left.vn] = 5;
-                        hintedPairId = null;
-                        if (selection.left.element) selection.left.element.classList.add('expert-flash');
-                        if (selection.right.element) selection.right.element.classList.add('expert-flash');
-                    } else {
-                        msgDiv.innerText = "✅ OK"; msgDiv.className = "ok";
-                        counters[selection.left.vn] = (counters[selection.left.vn] || 0) + 1;
-                    }
+                    msgDiv.innerText = "✅ OK"; msgDiv.className = "ok";
+                    counters[selection.left.vn] = (counters[selection.left.vn] || 0) + 1;
                     score++;
                     saveProgress(); document.getElementById('score-val').innerText = score;
                     setTimeout(() => {
@@ -669,8 +688,12 @@
             }
         }
 
-        function completeExpertMatch(pair, clickedElement, side) {
+        function completeExpertMatch(pair, leftBtn, rightBtn) {
             hintedPairId = null;
+            hintedTapSides = { left: false, right: false };
+            suppressClickForPairId = pair.id;
+            setTimeout(() => { if (suppressClickForPairId === pair.id) suppressClickForPairId = null; }, 400);
+
             const msgDiv = document.getElementById('message');
             msgDiv.innerText = "⭐ OK — Expert !"; msgDiv.className = "ok";
             counters[pair.vn] = 5;
@@ -678,16 +701,8 @@
             saveProgress();
             document.getElementById('score-val').innerText = score;
 
-            const oppositeContainerId = side === 'left' ? 'right-col' : 'left-col';
-            const oppositeContainer = document.getElementById(oppositeContainerId);
-            const partnerBtn = oppositeContainer ? Array.from(oppositeContainer.children).find(b => b.dataset.pairId == pair.id) : null;
-
-            clickedElement.classList.remove('long-press-hint', 'selected');
-            clickedElement.classList.add('expert-flash');
-            if (partnerBtn) {
-                partnerBtn.classList.remove('long-press-hint', 'selected');
-                partnerBtn.classList.add('expert-flash');
-            }
+            if (leftBtn) { leftBtn.classList.remove('long-press-hint', 'selected'); leftBtn.classList.add('expert-flash'); }
+            if (rightBtn) { rightBtn.classList.remove('long-press-hint', 'selected'); rightBtn.classList.add('expert-flash'); }
 
             if (selection.left && selection.left.element) selection.left.element.classList.remove('selected');
             if (selection.right && selection.right.element) selection.right.element.classList.remove('selected');
