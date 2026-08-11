@@ -148,7 +148,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.1</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -193,6 +193,7 @@
 
     <div id="diagnostic-overlay">
         <h3>Rapport Complet</h3>
+        <button class="modal-btn btn-top" id="counters-sort-btn" onclick="toggleCountersOrder()">🔀 Trier : Ordre fichier</button>
         <textarea id="diag-text"></textarea>
         <button class="modal-btn btn-apply" onclick="updateFromReport()">Appliquer les modifications</button>
         <button class="modal-btn btn-cancel" onclick="document.getElementById('diagnostic-overlay').style.display='none'">Fermer</button>
@@ -265,7 +266,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.0';
+        const APP_VERSION = '1.9.1';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -488,12 +489,35 @@
                     }
                 }
             } else if (action === 'top') {
-                const sortedData = allData.map(item => ({ word: item.vn, val: counters[item.vn] || 0 })).sort((a, b) => b.val - a.val);
-                let report = ""; sortedData.forEach(item => { report += `${item.word} : ${item.val}\n`; });
-                document.getElementById('diag-text').value = report;
+                refreshCountersReport();
                 document.getElementById('diagnostic-overlay').style.display = 'flex';
                 closeModal();
             }
+        }
+
+        let countersSortOrder = 'file'; // 'file' | 'alpha'
+
+        function buildCountersReport(order) {
+            const list = allData.map(item => ({ word: item.vn, val: counters[item.vn] || 0, id: item.id }));
+            if (order === 'alpha') {
+                list.sort((a, b) => a.word.localeCompare(b.word, 'vi'));
+            } else {
+                list.sort((a, b) => a.id - b.id);
+            }
+            let report = "";
+            list.forEach(item => { report += `${item.word} : ${item.val}\n`; });
+            return report;
+        }
+
+        function refreshCountersReport() {
+            document.getElementById('diag-text').value = buildCountersReport(countersSortOrder);
+            const labels = { file: 'Ordre fichier', alpha: 'Alphabétique' };
+            document.getElementById('counters-sort-btn').innerText = `🔀 Trier : ${labels[countersSortOrder]}`;
+        }
+
+        function toggleCountersOrder() {
+            countersSortOrder = countersSortOrder === 'file' ? 'alpha' : 'file';
+            refreshCountersReport();
         }
 
         function toggleHideMode() {
