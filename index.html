@@ -146,7 +146,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.8</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.9</span></h1>
     <div id="section-display"></div>
     <div id="message">Chargement...</div>
 
@@ -205,6 +205,9 @@
         </p>
         <button class="modal-btn btn-one" onclick="runDataCleansing()">🧹 Data cleansing</button>
         <p id="data-mgmt-status" style="font-size:0.8rem; color:#34495e; min-height:1.2rem; text-align:center;"></p>
+        <hr style="width:100%; max-width:400px;">
+        <button class="modal-btn btn-top" onclick="showCountersFromDataMgmt()">📋 Liste des compteurs</button>
+        <button class="modal-btn btn-github" onclick="showGithubPanel()">☁️ Synchronisation GitHub</button>
         <button class="modal-btn btn-cancel" style="margin-top:10px;" onclick="backFromDataManagement()">↩️ Retour</button>
     </div>
 
@@ -229,10 +232,7 @@
                 <button class="modal-btn btn-top" onclick="showSectionPicker()">📂 Choisir une Section</button>
                 <button class="modal-btn btn-one" id="btn-one-label" onclick="execAction('one')">Réinitialiser ce mot</button>
                 <button class="modal-btn btn-all" onclick="execAction('all')">Réinitialiser la section</button>
-                <button class="modal-btn btn-top" onclick="execAction('top')">Liste des compteurs</button>
                 <button class="modal-btn btn-top" onclick="showDataManagement()">🗂️ Gérer les données</button>
-                <hr>
-                <button class="modal-btn btn-github" onclick="showGithubPanel()">☁️ Synchronisation GitHub</button>
                 <button class="modal-btn btn-cancel" onclick="closeModal()">Fermer</button>
             </div>
             <div id="section-list">
@@ -263,7 +263,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.8.8';
+        const APP_VERSION = '1.8.9';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -736,6 +736,11 @@
             if (el) el.innerText = text;
         }
 
+        function showCountersFromDataMgmt() {
+            document.getElementById('data-mgmt-overlay').style.display = 'none';
+            execAction('top');
+        }
+
         async function runDataCleansing() {
             const cfg = loadGithubConfig();
             const token = cfg.token;
@@ -813,8 +818,11 @@
         }
 
         function showGithubPanel() {
+            document.getElementById('data-mgmt-overlay').style.display = 'none';
             document.getElementById('modal-main-actions').style.display = 'none';
+            document.getElementById('section-list').style.display = 'none';
             document.getElementById('github-panel').style.display = 'flex';
+            document.getElementById('custom-modal').style.display = 'flex';
             const cfg = loadGithubConfig();
             document.getElementById('gh-owner').value = cfg.owner || 'Hammerinhank';
             document.getElementById('gh-repo').value = cfg.repo || 'mon-projet';
@@ -825,8 +833,9 @@
         }
 
         function hideGithubPanel() {
+            document.getElementById('custom-modal').style.display = 'none';
             document.getElementById('github-panel').style.display = 'none';
-            document.getElementById('modal-main-actions').style.display = 'block';
+            showDataManagement();
         }
 
         function saveGithubConfigFromForm() {
