@@ -17,6 +17,8 @@
             background: linear-gradient(135deg, #3498db 0%, #2c80b4 100%);
             padding: 8px 18px; border-radius: 20px; display: inline-block;
             box-shadow: 0 2px 5px rgba(0,0,0,0.15); letter-spacing: 0.3px;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         }
         
         .container { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
@@ -146,8 +148,8 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.9</span></h1>
-    <div id="section-display"></div>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.0</span></h1>
+    <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -263,7 +265,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.8.9';
+        const APP_VERSION = '1.9.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -331,6 +333,7 @@
 
         function showSectionPicker() {
             document.getElementById('modal-main-actions').style.display = 'none';
+            document.getElementById('github-panel').style.display = 'none';
             const container = document.getElementById('section-buttons');
             container.innerHTML = "";
             sections.forEach(s => {
@@ -341,6 +344,7 @@
                 container.appendChild(div);
             });
             document.getElementById('section-list').style.display = 'flex';
+            document.getElementById('custom-modal').style.display = 'flex';
         }
 
         function hideSectionPicker() {
