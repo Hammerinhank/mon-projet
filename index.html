@@ -149,7 +149,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.3</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.4</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -267,7 +267,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.3';
+        const APP_VERSION = '1.9.4';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -604,6 +604,10 @@
         }
 
         function handleSelection(pair, element, side) {
+            if (hintedPairId === pair.id) {
+                completeExpertMatch(pair, element, side);
+                return;
+            }
             lastClickedWord = pair.vn;
             if (side === 'left') {
                 if (clickTracker.word === pair.vn) {
@@ -663,6 +667,37 @@
                     }, 800);
                 }
             }
+        }
+
+        function completeExpertMatch(pair, clickedElement, side) {
+            hintedPairId = null;
+            const msgDiv = document.getElementById('message');
+            msgDiv.innerText = "⭐ OK — Expert !"; msgDiv.className = "ok";
+            counters[pair.vn] = 5;
+            score++;
+            saveProgress();
+            document.getElementById('score-val').innerText = score;
+
+            const oppositeContainerId = side === 'left' ? 'right-col' : 'left-col';
+            const oppositeContainer = document.getElementById(oppositeContainerId);
+            const partnerBtn = oppositeContainer ? Array.from(oppositeContainer.children).find(b => b.dataset.pairId == pair.id) : null;
+
+            clickedElement.classList.remove('long-press-hint', 'selected');
+            clickedElement.classList.add('expert-flash');
+            if (partnerBtn) {
+                partnerBtn.classList.remove('long-press-hint', 'selected');
+                partnerBtn.classList.add('expert-flash');
+            }
+
+            if (selection.left && selection.left.element) selection.left.element.classList.remove('selected');
+            if (selection.right && selection.right.element) selection.right.element.classList.remove('selected');
+            selection = { left: null, right: null };
+
+            setTimeout(() => {
+                replacePair(pair.id);
+                msgDiv.innerText = "";
+                refreshChatGPTLink();
+            }, 500);
         }
 
         function replacePair(oldId) {
