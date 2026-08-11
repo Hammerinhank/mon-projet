@@ -2,7 +2,7 @@
   "counters": {
     "một": 4,
     "hai": 4,
-    "ba": 4,
+    "ba": 5,
     "ban công": 1,
     "trên": 0,
     "Love on the Bacony": 1,
@@ -924,6 +924,6 @@
   },
   "currentSection": "TEST",
   "sectionUpdatedAt": "1786433692718",
-  "updatedAt": "2026-08-11T07:45:58.400Z",
-  "appVersion": "1.9.3"
+  "updatedAt": "2026-08-11T08:04:01.364Z",
+  "appVersion": "1.9.4"
 }
