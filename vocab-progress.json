@@ -880,7 +880,7 @@
     "lái xe": 5,
     "đoạn đường": 2,
     "rời": 2,
-    "mất": 2,
+    "mất": 5,
     "đi tham quan": 0,
     "trở về": 2,
     "đi bộ": 5,
@@ -923,7 +923,7 @@
     "chỉ": 2
   },
   "currentSection": "Trang 4 août",
-  "sectionUpdatedAt": "1786441307917",
-  "updatedAt": "2026-08-11T09:43:18.253Z",
+  "sectionUpdatedAt": "1786435849944",
+  "updatedAt": "2026-08-11T10:40:33.014Z",
   "appVersion": "1.9.5"
 }
