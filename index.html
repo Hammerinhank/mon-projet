@@ -146,7 +146,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.7</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.8.8</span></h1>
     <div id="section-display"></div>
     <div id="message">Chargement...</div>
 
@@ -201,10 +201,8 @@
         <button class="modal-btn btn-top" onclick="window.open('https://gist.github.com/Hammerinhank/19d9495bea22ee681aa829d908a4f41e/edit', '_blank')">📝 Edit data</button>
         <hr style="width:100%; max-width:400px;">
         <p style="font-size:0.8rem; color:#7f8c8d; text-align:left;">
-            Le nettoyage supprime les « * » situés en tout début de ligne dans le fichier de données (toutes sections confondues), sans autre modification. Nécessite un token GitHub avec le scope "gist".
+            Le nettoyage supprime les « * » situés en tout début de ligne dans le fichier de données (toutes sections confondues), sans autre modification. Utilise le token GitHub renseigné dans « ☁️ Synchronisation GitHub » (aucune saisie séparée n'est nécessaire ici).
         </p>
-        <input type="password" id="gist-token-input" class="gh-input" placeholder="Token GitHub (scope gist)" autocomplete="off">
-        <button class="modal-btn btn-apply" onclick="saveGistToken()">💾 Enregistrer le token</button>
         <button class="modal-btn btn-one" onclick="runDataCleansing()">🧹 Data cleansing</button>
         <p id="data-mgmt-status" style="font-size:0.8rem; color:#34495e; min-height:1.2rem; text-align:center;"></p>
         <button class="modal-btn btn-cancel" style="margin-top:10px;" onclick="backFromDataManagement()">↩️ Retour</button>
@@ -247,6 +245,7 @@
                 <p style="font-size:0.8rem; color:#7f8c8d; text-align:left; margin-top:0;">
                     Renseigne un dépôt GitHub (privé de préférence) et un token d'accès personnel
                     (droit "repo" ou "contents") pour retrouver ta progression sur un autre appareil.
+                    Ce même token est aussi utilisé pour le « Data cleansing » du gist.
                 </p>
                 <input type="text" id="gh-owner" class="gh-input" placeholder="Utilisateur GitHub" autocomplete="off">
                 <input type="text" id="gh-repo" class="gh-input" placeholder="Nom du dépôt" autocomplete="off">
@@ -264,9 +263,8 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.8.7';
+        const APP_VERSION = '1.8.8';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
-        const GIST_TOKEN_KEY = 'vocab_gist_token';
         let githubPushTimer = null;
         let githubPushInFlight = false;
         let githubPushQueued = false;
@@ -715,16 +713,16 @@
         });
 
         // ===================== GESTION DES DONNÉES =====================
-        // Nouvelle page "Gérer les données" : remplace le lien "Edit data" de
-        // la page d'accueil et ajoute un nettoyage automatisé du fichier
-        // source (suppression des « * » en début de ligne).
+        // Page "Gérer les données" : remplace l'ancien lien "Edit data" de la
+        // page d'accueil et ajoute un nettoyage automatisé du fichier source
+        // (suppression des « * » en début de ligne). Le token utilisé est
+        // celui déjà renseigné dans la section « Synchronisation GitHub »
+        // (plus de saisie de token en doublon ici).
 
         function showDataManagement() {
             closeModal();
-            const tokenInput = document.getElementById('gist-token-input');
-            const saved = localStorage.getItem(GIST_TOKEN_KEY) || '';
-            tokenInput.value = saved;
-            setDataMgmtStatus(saved ? 'Token chargé.' : 'Aucun token enregistré (nécessaire pour "Data cleansing").');
+            const cfg = loadGithubConfig();
+            setDataMgmtStatus(cfg.token ? 'Token GitHub (Synchronisation) disponible.' : 'Aucun token GitHub configuré : renseigne-le dans « ☁️ Synchronisation GitHub ».');
             document.getElementById('data-mgmt-overlay').style.display = 'flex';
         }
 
@@ -738,16 +736,10 @@
             if (el) el.innerText = text;
         }
 
-        function saveGistToken() {
-            const token = document.getElementById('gist-token-input').value.trim();
-            if (!token) { setDataMgmtStatus('⚠️ Renseigne un token.'); return; }
-            localStorage.setItem(GIST_TOKEN_KEY, token);
-            setDataMgmtStatus('✅ Token enregistré.');
-        }
-
         async function runDataCleansing() {
-            const token = localStorage.getItem(GIST_TOKEN_KEY);
-            if (!token) { setDataMgmtStatus('⚠️ Enregistre d\'abord un token (scope "gist").'); return; }
+            const cfg = loadGithubConfig();
+            const token = cfg.token;
+            if (!token) { setDataMgmtStatus('⚠️ Configure d\'abord un token dans « ☁️ Synchronisation GitHub ».'); return; }
             if (!confirm('Nettoyer le fichier de données (suppression des "*" en début de ligne) ?')) return;
             setDataMgmtStatus('⏳ Lecture du fichier...');
             try {
@@ -790,6 +782,7 @@
         // autre appareil. La fusion se fait mot par mot en gardant la valeur
         // la plus avancée (max) entre local et distant, pour ne jamais perdre
         // de progression si la synchro a lieu depuis plusieurs appareils.
+        // Le token saisi ici sert aussi au "Data cleansing" du gist.
 
         function loadGithubConfig() {
             try { return JSON.parse(localStorage.getItem(GITHUB_CONFIG_KEY)) || {}; }
