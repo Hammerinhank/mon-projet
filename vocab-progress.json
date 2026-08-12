@@ -177,7 +177,7 @@
     "vận động": 0,
     "động tác": 3,
     "kéo giãn": 3,
-    "nhẹ": 2,
+    "nhẹ": 3,
     "dọn dẹp": 4,
     "gọn gàng": 1,
     "ngăn nắp": 4,
@@ -924,6 +924,6 @@
   },
   "currentSection": "50 mots",
   "sectionUpdatedAt": "1786463840124",
-  "updatedAt": "2026-08-11T15:58:25.617Z",
+  "updatedAt": "2026-08-12T13:55:14.366Z",
   "appVersion": "1.9.5"
 }
