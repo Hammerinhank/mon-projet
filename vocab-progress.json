@@ -926,7 +926,7 @@
     "cháu nội": 0,
     "cháu trai": 5,
     "cháu gái": 5,
-    "đầu tiên": 0,
+    "đầu tiên": 1,
     "mỗi ngày": 5,
     "rưỡi": 0,
     "mấy": 0,
@@ -971,6 +971,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786637016395",
-  "updatedAt": "2026-08-13T16:16:26.534Z",
+  "updatedAt": "2026-08-13T16:23:57.001Z",
   "appVersion": "1.9.5"
 }
