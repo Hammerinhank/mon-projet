@@ -959,7 +959,7 @@
     "mà": 1,
     "một điều nữa": 5,
     "so với": 1,
-    "ở đó": 0,
+    "ở đó": 5,
     "cho": 5,
     "gia đình": 2,
     "sống": 0,
@@ -971,6 +971,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786637016395",
-  "updatedAt": "2026-08-13T17:46:37.097Z",
+  "updatedAt": "2026-08-14T10:22:23.198Z",
   "appVersion": "1.9.5"
 }
