@@ -827,7 +827,7 @@
     "kiến trúc": 0,
     "hoa văn": 0,
     "họa tiết": 0,
-    "tượng": 2,
+    "tượng": 3,
     "công trình": 0,
     "uốn lượn": 0,
     "tháp": 2,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Livre Chi et François",
   "sectionUpdatedAt": "1786825607709",
-  "updatedAt": "2026-08-15T20:27:24.625Z",
+  "updatedAt": "2026-08-15T20:28:24.748Z",
   "appVersion": "1.13.1"
 }
