@@ -956,7 +956,7 @@
     "không khí không tốt": 5,
     "tức giận": 0,
     "khó": 5,
-    "mà": 1,
+    "mà": 5,
     "một điều nữa": 5,
     "so với": 1,
     "ở đó": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786786231753",
-  "updatedAt": "2026-08-15T10:00:33.050Z",
+  "updatedAt": "2026-08-15T10:01:33.735Z",
   "appVersion": "1.11.2"
 }
