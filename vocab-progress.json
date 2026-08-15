@@ -946,7 +946,7 @@
     "sử dụng": 2,
     "gọi": 5,
     "xem": 5,
-    "máy tính": 3,
+    "máy tính": 5,
     "điện thoại": 5,
     "dùng": 5,
     "bị ho": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786786231753",
-  "updatedAt": "2026-08-15T10:16:48.621Z",
+  "updatedAt": "2026-08-15T10:17:49.092Z",
   "appVersion": "1.11.4"
 }
