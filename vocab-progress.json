@@ -73,7 +73,7 @@
     "cũng": 0,
     "Lúc này": 0,
     "kéo": 1,
-    "ghế": 1,
+    "ghế": 5,
     "thưởng thức": 0,
     "khung cảnh": 0,
     "buổi tối": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Lobe on the balcony",
   "sectionUpdatedAt": "1786816336026",
-  "updatedAt": "2026-08-15T17:53:21.642Z",
+  "updatedAt": "2026-08-15T17:54:21.668Z",
   "appVersion": "1.12.0"
 }
