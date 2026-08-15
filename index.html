@@ -167,7 +167,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.4</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.12.0</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -264,6 +264,7 @@
             </div>
             <div id="section-list">
                 <h3>Sélectionner Section</h3>
+                <button class="modal-btn btn-top" id="progress-toggle-btn" onclick="toggleSectionProgress()">📊 Afficher la progression</button>
                 <div id="section-buttons"></div>
                 <button class="modal-btn btn-cancel" onclick="hideSectionPicker()" style="margin-top:15px">Retour</button>
             </div>
@@ -290,7 +291,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.11.4';
+        const APP_VERSION = '1.12.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -363,13 +364,21 @@
             document.getElementById('section-display').innerText = "📂 Section : " + currentSection;
         }
 
-        function showSectionPicker() {
-            document.getElementById('modal-main-actions').style.display = 'none';
-            document.getElementById('github-panel').style.display = 'none';
+        let showSectionProgress = false;
+
+        function toggleSectionProgress() {
+            showSectionProgress = !showSectionProgress;
+            const btn = document.getElementById('progress-toggle-btn');
+            if (btn) btn.innerText = showSectionProgress ? '🎨 Masquer la progression' : '📊 Afficher la progression';
+            renderSectionButtons();
+        }
+
+        function renderSectionButtons() {
             const container = document.getElementById('section-buttons');
             container.innerHTML = "";
             sections.forEach(s => {
-                const count = (s === "Toutes") ? allData.length : allData.filter(p => p.section === s).length;
+                const wordsInSection = (s === "Toutes") ? allData : allData.filter(p => p.section === s);
+                const count = wordsInSection.length;
                 const row = document.createElement('div');
                 row.className = 'section-row';
 
@@ -377,6 +386,21 @@
                 div.className = `section-item ${currentSection === s ? 'active' : ''}`;
                 div.innerText = `${s} (${count} mot${count > 1 ? 's' : ''})`;
                 div.onclick = () => selectSection(s);
+
+                if (showSectionProgress) {
+                    const masteredCount = wordsInSection.filter(p => (counters[p.vn] || 0) >= 5).length;
+                    const percent = count > 0 ? Math.round((masteredCount / count) * 100) : 0;
+                    // Remplissage horizontal proportionnel au % de mots au niveau 5 (Expert) ;
+                    // le texte (couleur foncée fixe) reste lisible sur les deux teintes claires.
+                    div.style.background = `linear-gradient(to right, #a8e6b0 ${percent}%, #ecf0f1 ${percent}%)`;
+                    div.style.border = (currentSection === s) ? '3px solid #2980b9' : '1px solid #bdc3c7';
+                    div.title = `${masteredCount}/${count} mots au niveau 5 (${percent}%)`;
+                } else {
+                    div.style.background = '';
+                    div.style.border = '';
+                    div.title = '';
+                }
+
                 row.appendChild(div);
 
                 if (s !== "Toutes") {
@@ -390,6 +414,12 @@
 
                 container.appendChild(row);
             });
+        }
+
+        function showSectionPicker() {
+            document.getElementById('modal-main-actions').style.display = 'none';
+            document.getElementById('github-panel').style.display = 'none';
+            renderSectionButtons();
             document.getElementById('section-list').style.display = 'flex';
             document.getElementById('custom-modal').style.display = 'flex';
         }
