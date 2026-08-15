@@ -167,7 +167,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.2</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.3</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -203,7 +203,7 @@
                 <button type="button" class="font-size-btn" onclick="changeAnswerFontSize(2, this)">A+</button>
             </div>
             <div id="writing-zone" style="display:none">
-                <input type="text" id="writing-input" placeholder="Traduisez ici..." autocomplete="off">
+                <input type="text" id="writing-input" placeholder="Traduisez ici..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
             
             <div class="game-nav-row">
@@ -290,7 +290,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.11.2';
+        const APP_VERSION = '1.11.3';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
