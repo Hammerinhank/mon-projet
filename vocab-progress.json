@@ -1016,7 +1016,7 @@
     "nấu ăn": 5,
     "bữa ăn": 1,
     "kết thúc": 0,
-    "kết thúc bữa ăn": 0,
+    "kết thúc bữa ăn": 5,
     "cuối bữa ăn": 0,
     "cuối cùng": 1,
     "xe ôm": 0,
@@ -1031,7 +1031,7 @@
     "tại nhà": 5,
     "rất nhiều": 5,
     "rất ít khi": 5,
-    "lâu": 0,
+    "lâu": 5,
     "lâu chưa": 5,
     "tại": 5,
     "do": 5,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T17:07:12.262Z",
+  "updatedAt": "2026-08-15T17:09:12.513Z",
   "appVersion": "1.12.0"
 }
