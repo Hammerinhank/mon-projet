@@ -148,12 +148,18 @@
 
         #section-list { display: none; margin-top: 10px; flex-direction: column; gap: 5px; }
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
-        .section-item.active { background: #3498db; color: white; }
+        .section-item.active { background: #3498db; color: #1b2631; }
         .section-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
         .section-row .section-item { flex: 1 1 auto; min-width: 0; margin: 0; }
         .section-delete-btn {
             flex: 0 0 34px; width: 34px; min-height: 34px; height: 34px; padding: 0;
             background: #ecf0f1; color: #c0392b; border: 1px solid #d5dbdb;
+            border-radius: 6px; font-size: 15px; line-height: 1; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .section-edit-btn {
+            flex: 0 0 34px; width: 34px; min-height: 34px; height: 34px; padding: 0;
+            background: #eaf2fb; color: #2980b9; border: 1px solid #cfe0f3;
             border-radius: 6px; font-size: 15px; line-height: 1; cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
@@ -167,7 +173,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.12.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.13.0</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -291,7 +297,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.12.0';
+        const APP_VERSION = '1.13.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -385,6 +391,7 @@
                 const div = document.createElement('div');
                 div.className = `section-item ${currentSection === s ? 'active' : ''}`;
                 div.innerText = `${s} (${count} mot${count > 1 ? 's' : ''})`;
+                div.style.color = '#2c3e50'; // toujours foncé, y compris pour la section sélectionnée
                 div.onclick = () => selectSection(s);
 
                 if (showSectionProgress) {
@@ -404,6 +411,13 @@
                 row.appendChild(div);
 
                 if (s !== "Toutes") {
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'section-edit-btn';
+                    editBtn.innerText = '✏️';
+                    editBtn.title = `Renommer la section "${s}"`;
+                    editBtn.onclick = (e) => { e.stopPropagation(); editSectionName(s); };
+                    row.appendChild(editBtn);
+
                     const delBtn = document.createElement('button');
                     delBtn.className = 'section-delete-btn';
                     delBtn.innerText = '🗑️';
@@ -414,6 +428,74 @@
 
                 container.appendChild(row);
             });
+        }
+
+        // Renomme une section : trouve la ligne "SECTION <nom>" correspondante
+        // dans le fichier gist et la remplace, en conservant l'indentation
+        // éventuelle en début de ligne.
+        async function editSectionName(oldName) {
+            const cfg = loadGithubConfig();
+            const token = cfg.token;
+            if (!token) {
+                alert('⚠️ Configure d\'abord un token dans « ☁️ Synchronisation GitHub » pour pouvoir modifier le fichier de données.');
+                return;
+            }
+            const newNameRaw = prompt('Nouveau nom de la section :', oldName);
+            if (newNameRaw === null) return; // annulé
+            const newName = newNameRaw.trim();
+            if (!newName || newName === oldName) return;
+            if (!confirm(`Renommer la section "${oldName}" en "${newName}" ?`)) return;
+
+            try {
+                const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' }
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const gist = await res.json();
+                const filename = Object.keys(gist.files)[0];
+                const original = gist.files[filename].content;
+                const lines = original.split('\n');
+
+                let targetIndex = -1;
+                for (let i = 0; i < lines.length; i++) {
+                    const trimmed = lines[i].trim();
+                    if (trimmed.toUpperCase().includes('SECTION')) {
+                        const name = trimmed.replace(/SECTION/i, '').trim();
+                        if (name === oldName) { targetIndex = i; break; }
+                    }
+                }
+                if (targetIndex === -1) { alert('⚠️ Section introuvable dans le fichier de données.'); return; }
+
+                const originalLine = lines[targetIndex];
+                const leadingWhitespace = (originalLine.match(/^\s*/) || [''])[0];
+                lines[targetIndex] = `${leadingWhitespace}SECTION ${newName}`;
+                const cleaned = lines.join('\n');
+
+                const patchRes = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ files: { [filename]: { content: cleaned } } })
+                });
+                if (!patchRes.ok) { const t = await patchRes.text(); throw new Error(`HTTP ${patchRes.status} ${t}`); }
+
+                alert(`✅ Section renommée en "${newName}".`);
+
+                if (currentSection === oldName) {
+                    currentSection = newName;
+                    localStorage.setItem('vocab_current_section', currentSection);
+                    localStorage.setItem('vocab_section_changed_at', String(Date.now()));
+                }
+                sections = ["Toutes"];
+                closeModal();
+                await loadGistData();
+                showSectionPicker();
+            } catch (e) {
+                alert(`❌ Erreur lors du renommage : ${e.message}`);
+            }
         }
 
         function showSectionPicker() {
