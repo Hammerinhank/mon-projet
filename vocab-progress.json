@@ -1019,13 +1019,13 @@
     "kết thúc bữa ăn": 5,
     "cuối bữa ăn": 5,
     "cuối cùng": 5,
-    "xe ôm": 3,
+    "xe ôm": 4,
     "Grab": 5,
     "GrabFood": 5,
     "shiper": 5,
     "lắp": 2,
     "wifi": 5,
-    "gọi đồ ăn": 2,
+    "gọi đồ ăn": 3,
     "làng quê": 5,
     "thường": 5,
     "tại nhà": 5,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T17:41:37.244Z",
+  "updatedAt": "2026-08-15T17:43:11.161Z",
   "appVersion": "1.12.0"
 }
