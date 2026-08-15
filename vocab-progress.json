@@ -922,7 +922,7 @@
     "vì … nên …": 0,
     "chỉ": 5,
     "con dâu": 5,
-    "bằng tuổi": 2,
+    "bằng tuổi": 5,
     "cháu nội": 5,
     "cháu trai": 5,
     "cháu gái": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786786231753",
-  "updatedAt": "2026-08-15T10:09:36.534Z",
-  "appVersion": "1.11.3"
+  "updatedAt": "2026-08-15T10:16:48.621Z",
+  "appVersion": "1.11.4"
 }
