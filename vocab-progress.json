@@ -929,9 +929,9 @@
     "đầu tiên": 5,
     "mỗi ngày": 5,
     "rưỡi": 1,
-    "mấy": 2,
+    "mấy": 5,
     "nhiều tuổi hơn": 1,
-    "tuổi": 0,
+    "tuổi": 5,
     "chăm sóc": 1,
     "đi làm": 5,
     "tốt": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786769481302",
-  "updatedAt": "2026-08-15T05:00:04.575Z",
-  "appVersion": "1.9.8"
+  "updatedAt": "2026-08-15T05:03:57.428Z",
+  "appVersion": "1.9.9"
 }
