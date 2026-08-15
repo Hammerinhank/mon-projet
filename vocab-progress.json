@@ -7,7 +7,7 @@
     "trên": 0,
     "Love on the Bacony": 1,
     "chú": 0,
-    "uống cà phê": 0,
+    "uống cà phê": 5,
     "một mình": 5,
     "Bỗng nhiên": 0,
     "(trái) tim": 1,
@@ -18,7 +18,7 @@
     "cô gái": 0,
     "hôn gió": 0,
     "về phía": 0,
-    "bay": 1,
+    "bay": 5,
     "qua": 0,
     "chàng trai": 0,
     "cứ như vậy": 1,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Lobe on the balcony",
   "sectionUpdatedAt": "1786816336026",
-  "updatedAt": "2026-08-15T17:56:23.683Z",
+  "updatedAt": "2026-08-15T17:58:21.676Z",
   "appVersion": "1.12.0"
 }
