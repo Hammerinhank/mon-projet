@@ -140,10 +140,11 @@
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
         .section-item.active { background: #3498db; color: white; }
         .section-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-        .section-row .section-item { flex: 1; margin: 0; }
+        .section-row .section-item { flex: 1 1 auto; min-width: 0; margin: 0; }
         .section-delete-btn {
-            flex: none; background: #e74c3c; color: white; border: none;
-            border-radius: 5px; padding: 10px 12px; font-size: 16px; cursor: pointer;
+            flex: 0 0 34px; width: 34px; min-height: 34px; height: 34px; padding: 0;
+            background: #ecf0f1; color: #c0392b; border: 1px solid #d5dbdb;
+            border-radius: 6px; font-size: 15px; line-height: 1; cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -156,7 +157,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.6</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.7</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -274,7 +275,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.6';
+        const APP_VERSION = '1.9.7';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
