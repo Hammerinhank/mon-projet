@@ -133,6 +133,14 @@
         }
         .game-word { font-size: 2rem; font-weight: bold; color: #2c3e50; margin-bottom: 20px; }
         #writing-input { width: 100%; padding: 15px; font-size: 1.2rem; border: 2px solid #3498db; border-radius: 10px; text-align: center; margin-bottom: 10px; }
+        #font-size-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+        .font-size-btn {
+            flex: none; width: 34px; min-height: 34px; height: 34px; padding: 0;
+            background: #ecf0f1; color: #34495e; border: 1px solid #d5dbdb;
+            border-radius: 6px; font-size: 15px; font-weight: bold; line-height: 1; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #font-size-label { font-size: 0.8rem; color: #7f8c8d; min-width: 40px; }
         
         /* Stats dans le mode jeu */
         #game-stats-info { font-size: 0.85rem; color: #7f8c8d; margin-top: 15px; font-weight: normal; }
@@ -158,7 +166,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.10.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.0</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -187,7 +195,12 @@
     <div id="game-overlay">
         <div id="game-content" style="width: 100%; max-width: 400px; text-align: center;">
             <div id="game-question" class="game-word">---</div>
-            <div id="game-answer" style="font-size: 1.2rem; color: #27ae60; margin: 20px 0; min-height: 1.6rem;"></div>
+            <div id="game-answer" style="color: #27ae60; margin: 20px 0; min-height: 1.6rem; font-weight: bold; line-height: 1.4;"></div>
+            <div id="font-size-controls">
+                <button type="button" class="font-size-btn" onclick="changeAnswerFontSize(-2)">A-</button>
+                <span id="font-size-label">24 px</span>
+                <button type="button" class="font-size-btn" onclick="changeAnswerFontSize(2)">A+</button>
+            </div>
             <div id="writing-zone" style="display:none">
                 <input type="text" id="writing-input" placeholder="Traduisez ici..." autocomplete="off">
             </div>
@@ -276,8 +289,12 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.10.0';
+        const APP_VERSION = '1.11.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
+        const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
+        const GAME_FONT_MIN = 16;
+        const GAME_FONT_MAX = 48;
+        let gameAnswerFontSize = parseInt(localStorage.getItem(GAME_FONT_SIZE_KEY), 10) || 24;
         let githubPushTimer = null;
         let githubPushInFlight = false;
         let githubPushQueued = false;
@@ -875,8 +892,24 @@
 
         function startFlashcards() { gameMode = "flash"; openGameOverlay(); }
         function startWritingMode() { gameMode = "write"; openGameOverlay(); }
-        function openGameOverlay() { closeModal(); document.getElementById('game-overlay').style.display = 'flex'; nextGameWord(); }
+        function openGameOverlay() { closeModal(); document.getElementById('game-overlay').style.display = 'flex'; applyGameAnswerFontSize(); nextGameWord(); }
         function closeGameMode() { document.getElementById('game-overlay').style.display = 'none'; resetGameFull(); }
+
+        // Taille de police du texte affiché après validation (ce qu'on a écrit +
+        // le correctif), réglable et mémorisée uniquement en local (localStorage),
+        // jamais synchronisée via GitHub.
+        function applyGameAnswerFontSize() {
+            const ansDiv = document.getElementById('game-answer');
+            if (ansDiv) ansDiv.style.fontSize = gameAnswerFontSize + 'px';
+            const label = document.getElementById('font-size-label');
+            if (label) label.innerText = gameAnswerFontSize + ' px';
+        }
+
+        function changeAnswerFontSize(delta) {
+            gameAnswerFontSize = Math.min(GAME_FONT_MAX, Math.max(GAME_FONT_MIN, gameAnswerFontSize + delta));
+            localStorage.setItem(GAME_FONT_SIZE_KEY, String(gameAnswerFontSize));
+            applyGameAnswerFontSize();
+        }
 
         function nextGameWord() {
             const pool = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection) && (counters[p.vn] || 0) <= 4);
@@ -1212,6 +1245,7 @@
         // =================== FIN SYNCHRONISATION GITHUB ===================
 
         document.getElementById('app-version').innerText = 'v' + APP_VERSION;
+        applyGameAnswerFontSize();
         loadGistData();
     </script>
 </body>
