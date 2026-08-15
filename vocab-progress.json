@@ -1017,7 +1017,7 @@
     "bữa ăn": 1,
     "kết thúc": 0,
     "kết thúc bữa ăn": 5,
-    "cuối bữa ăn": 0,
+    "cuối bữa ăn": 5,
     "cuối cùng": 1,
     "xe ôm": 0,
     "Grab": 5,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T17:09:12.513Z",
+  "updatedAt": "2026-08-15T17:23:29.351Z",
   "appVersion": "1.12.0"
 }
