@@ -1020,7 +1020,7 @@
     "cuối bữa ăn": 0,
     "cuối cùng": 0,
     "xe ôm": 0,
-    "Grab": 0,
+    "Grab": 1,
     "GrabFood": 0,
     "shiper": 0,
     "lắp": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T14:52:20.347Z",
+  "updatedAt": "2026-08-15T16:44:00.584Z",
   "appVersion": "1.12.0"
 }
