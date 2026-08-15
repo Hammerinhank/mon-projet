@@ -1032,16 +1032,16 @@
     "rất nhiều": 5,
     "rất ít khi": 5,
     "lâu": 0,
-    "lâu chưa": 0,
+    "lâu chưa": 5,
     "tại": 5,
     "do": 5,
     "mọi người": 5,
-    "còn": 0,
+    "còn": 5,
     "khi": 5,
     "con trai": 5
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T17:05:12.629Z",
+  "updatedAt": "2026-08-15T17:07:12.262Z",
   "appVersion": "1.12.0"
 }
