@@ -167,7 +167,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.3</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.4</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -290,7 +290,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.11.3';
+        const APP_VERSION = '1.11.4';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -924,9 +924,18 @@
             setTimeout(() => btn.classList.remove('font-size-btn-active'), 333);
         }
 
+        let avoidRepeatNext = false; // évite de re-proposer immédiatement le même mot après une soumission vide en Défi Écriture
+
         function nextGameWord() {
-            const pool = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection) && (counters[p.vn] || 0) <= 4);
+            let pool = allData.filter(p => (currentSection === "Toutes" || p.section === currentSection) && (counters[p.vn] || 0) <= 4);
             if (pool.length === 0) return closeGameMode();
+            // Si la dernière soumission était vide, on écarte le mot en cours pour
+            // ne pas le reproposer immédiatement — sauf s'il est le seul restant.
+            if (avoidRepeatNext && currentObject && pool.length > 1) {
+                const filtered = pool.filter(p => p.id !== currentObject.id);
+                if (filtered.length > 0) pool = filtered;
+            }
+            avoidRepeatNext = false;
             currentObject = pool[Math.floor(Math.random() * pool.length)];
             document.getElementById('game-answer').innerText = "";
             document.getElementById('btn-next').style.display = "none";
@@ -956,9 +965,11 @@
 
             if (gameMode === "flash") {
                 ansDiv.innerText = currentObject.fr;
+                avoidRepeatNext = false;
             } else {
                 const user = document.getElementById('writing-input').value.trim().toLowerCase();
                 const target = currentObject.vn.toLowerCase();
+                avoidRepeatNext = (user === '');
                 if (user === target) {
                     ansDiv.innerHTML = `<span style="color:#27ae60">✨ Correct : ${currentObject.vn}</span><br><small style="color:#27ae60">Ligne passée au niveau EXPERT (Compteur à 5)</small>`;
                     counters[currentObject.vn] = 5; saveProgress();
