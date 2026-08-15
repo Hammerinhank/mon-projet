@@ -897,7 +897,7 @@
     "bức ảnh": 5,
     "xem lại": 5,
     "xóa": 5,
-    "giữ lại": 2,
+    "giữ lại": 5,
     "giải thích": 5,
     "trả lời": 5,
     "có nghĩa là": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786789246242",
-  "updatedAt": "2026-08-15T13:18:23.999Z",
+  "updatedAt": "2026-08-15T13:19:23.858Z",
   "appVersion": "1.11.4"
 }
