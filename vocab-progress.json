@@ -28,7 +28,7 @@
     "người": 0,
     "khắp người": 0,
     "có vẻ": 1,
-    "không vui": 0,
+    "không vui": 5,
     "vào": 0,
     "đóng sầm cửa lại": 0,
     "Một hôm": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Lobe on the balcony",
   "sectionUpdatedAt": "1786816336026",
-  "updatedAt": "2026-08-15T17:58:21.676Z",
+  "updatedAt": "2026-08-15T18:00:05.844Z",
   "appVersion": "1.12.0"
 }
