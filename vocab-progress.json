@@ -1030,7 +1030,7 @@
     "thường": 5,
     "tại nhà": 5,
     "rất nhiều": 5,
-    "rất ít khi": 0,
+    "rất ít khi": 5,
     "lâu": 0,
     "lâu chưa": 0,
     "tại": 5,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T17:02:40.819Z",
+  "updatedAt": "2026-08-15T17:05:12.629Z",
   "appVersion": "1.12.0"
 }
