@@ -101,7 +101,7 @@
     "mỉm cười": 0,
     "sáng": 5,
     "hôm sau": 1,
-    "lại": 0,
+    "lại": 5,
     "sang": 0,
     "hôn": 0,
     "nhau": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Lobe on the balcony",
   "sectionUpdatedAt": "1786816336026",
-  "updatedAt": "2026-08-15T17:55:22.145Z",
+  "updatedAt": "2026-08-15T17:56:23.683Z",
   "appVersion": "1.12.0"
 }
