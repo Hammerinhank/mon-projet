@@ -1028,12 +1028,12 @@
     "gọi đồ ăn": 0,
     "làng quê": 1,
     "thường": 5,
-    "tại nhà": 0,
+    "tại nhà": 5,
     "rất nhiều": 5,
     "rất ít khi": 0,
     "lâu": 0,
     "lâu chưa": 0,
-    "tại": 1,
+    "tại": 5,
     "do": 0,
     "mọi người": 5,
     "còn": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T16:52:50.393Z",
+  "updatedAt": "2026-08-15T16:54:49.131Z",
   "appVersion": "1.12.0"
 }
