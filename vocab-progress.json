@@ -930,7 +930,7 @@
     "mỗi ngày": 5,
     "rưỡi": 1,
     "mấy": 5,
-    "nhiều tuổi hơn": 1,
+    "nhiều tuổi hơn": 5,
     "tuổi": 5,
     "chăm sóc": 1,
     "đi làm": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786786231753",
-  "updatedAt": "2026-08-15T09:35:40.211Z",
-  "appVersion": "1.10.0"
+  "updatedAt": "2026-08-15T10:00:33.050Z",
+  "appVersion": "1.11.2"
 }
