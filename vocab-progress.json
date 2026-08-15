@@ -86,7 +86,7 @@
     "chỉ có": 0,
     "nhớ": 1,
     "quyết định": 0,
-    "leo": 0,
+    "leo": 1,
     "ra ngoài": 0,
     "bước": 0,
     "từng + noun": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Love on the balcony",
   "sectionUpdatedAt": "1786822099504",
-  "updatedAt": "2026-08-15T20:08:58.794Z",
+  "updatedAt": "2026-08-15T20:09:58.736Z",
   "appVersion": "1.13.1"
 }
