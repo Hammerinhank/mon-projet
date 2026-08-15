@@ -999,7 +999,7 @@
     "Việt Nam": 5,
     "khác nhau": 0,
     "quán": 0,
-    "quán ăn": 0,
+    "quán ăn": 5,
     "món ăn": 5,
     "bữa trưa": 0,
     "bữa tối": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T16:51:34.922Z",
+  "updatedAt": "2026-08-15T16:52:50.393Z",
   "appVersion": "1.12.0"
 }
