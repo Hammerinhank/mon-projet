@@ -1000,7 +1000,7 @@
     "khác nhau": 0,
     "quán": 0,
     "quán ăn": 0,
-    "món ăn": 0,
+    "món ăn": 1,
     "bữa trưa": 0,
     "bữa tối": 0,
     "khách sạn": 0,
@@ -1033,7 +1033,7 @@
     "rất ít khi": 0,
     "lâu": 0,
     "lâu chưa": 0,
-    "tại": 0,
+    "tại": 1,
     "do": 0,
     "mọi người": 5,
     "còn": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "- Thu : 15 août 2026",
   "sectionUpdatedAt": "1786805035348",
-  "updatedAt": "2026-08-15T16:45:01.140Z",
+  "updatedAt": "2026-08-15T16:48:35.753Z",
   "appVersion": "1.12.0"
 }
