@@ -953,7 +953,7 @@
     "bị ô nhiễm": 2,
     "ô nhiễm": 5,
     "không khí": 5,
-    "không khí không tốt": 2,
+    "không khí không tốt": 5,
     "tức giận": 0,
     "khó": 5,
     "mà": 1,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786769481302",
-  "updatedAt": "2026-08-15T05:03:57.428Z",
+  "updatedAt": "2026-08-15T07:04:37.240Z",
   "appVersion": "1.9.9"
 }
