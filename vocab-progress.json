@@ -949,7 +949,7 @@
     "máy tính": 2,
     "điện thoại": 5,
     "dùng": 5,
-    "bị ho": 2,
+    "bị ho": 5,
     "bị ô nhiễm": 2,
     "ô nhiễm": 5,
     "không khí": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786769481302",
-  "updatedAt": "2026-08-15T04:51:26.317Z",
-  "appVersion": "1.9.7"
+  "updatedAt": "2026-08-15T05:00:04.575Z",
+  "appVersion": "1.9.8"
 }
