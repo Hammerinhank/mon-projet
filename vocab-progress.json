@@ -918,8 +918,8 @@
     "luôn luôn": 5,
     "không phải lúc nào cũng": 2,
     "có thể": 5,
-    "bởi vì": 2,
-    "vì … nên …": 0,
+    "bởi vì": 5,
+    "vì … nên …": 1,
     "chỉ": 5,
     "con dâu": 5,
     "bằng tuổi": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786789246242",
-  "updatedAt": "2026-08-15T13:02:07.110Z",
+  "updatedAt": "2026-08-15T13:04:07.206Z",
   "appVersion": "1.11.4"
 }
