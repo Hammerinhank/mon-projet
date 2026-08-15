@@ -907,7 +907,7 @@
     "nói": 5,
     "tại sao": 5,
     "người giúp việc": 5,
-    "nhân viên": 2,
+    "nhân viên": 5,
     "doanh nhân": 1,
     "người nước ngoài": 5,
     "lịch sự": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786789246242",
-  "updatedAt": "2026-08-15T13:07:25.572Z",
+  "updatedAt": "2026-08-15T13:12:23.915Z",
   "appVersion": "1.11.4"
 }
