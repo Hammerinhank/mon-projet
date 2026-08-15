@@ -112,7 +112,7 @@
     "với nhau": 0,
     "Vậy là": 0,
     "tìm được": 0,
-    "một nửa": 0,
+    "một nửa": 5,
     "đoạn văn": 0,
     "hoạt động": 1,
     "tức là": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Lobe on the balcony",
   "sectionUpdatedAt": "1786816336026",
-  "updatedAt": "2026-08-15T18:00:05.844Z",
+  "updatedAt": "2026-08-15T18:01:32.441Z",
   "appVersion": "1.12.0"
 }
