@@ -167,7 +167,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.1</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.11.2</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -290,7 +290,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.11.1';
+        const APP_VERSION = '1.11.2';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -902,6 +902,8 @@
         function applyGameAnswerFontSize() {
             const ansDiv = document.getElementById('game-answer');
             if (ansDiv) ansDiv.style.fontSize = gameAnswerFontSize + 'px';
+            const input = document.getElementById('writing-input');
+            if (input) input.style.fontSize = gameAnswerFontSize + 'px';
             const label = document.getElementById('font-size-label');
             if (label) label.innerText = gameAnswerFontSize + ' px';
         }
