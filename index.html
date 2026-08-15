@@ -158,7 +158,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.8</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.9</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -276,7 +276,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.8';
+        const APP_VERSION = '1.9.9';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -637,7 +637,7 @@
 
         function createBtn(pair, containerId, side) {
             const btn = document.createElement('button');
-            const shouldHide = (side === 'left' && hideMode === 'theme') ||
+            const shouldHide = (side === 'left' && (hideMode === 'theme' || hideMode === 'theme+')) ||
                                 (side === 'right' && hideMode === 'version');
             if (shouldHide) { 
                 btn.innerText = "-"; 
