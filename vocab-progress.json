@@ -906,7 +906,7 @@
     "nghe": 5,
     "nói": 5,
     "tại sao": 5,
-    "người giúp việc": 2,
+    "người giúp việc": 5,
     "nhân viên": 2,
     "doanh nhân": 1,
     "người nước ngoài": 5,
@@ -954,7 +954,7 @@
     "ô nhiễm": 5,
     "không khí": 5,
     "không khí không tốt": 5,
-    "tức giận": 0,
+    "tức giận": 1,
     "khó": 5,
     "mà": 5,
     "một điều nữa": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786786231753",
-  "updatedAt": "2026-08-15T10:01:33.735Z",
+  "updatedAt": "2026-08-15T10:02:33.875Z",
   "appVersion": "1.11.2"
 }
