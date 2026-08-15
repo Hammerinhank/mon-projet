@@ -139,6 +139,13 @@
         #section-list { display: none; margin-top: 10px; flex-direction: column; gap: 5px; }
         .section-item { padding: 10px; background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer; font-weight: bold; color: #2c3e50; }
         .section-item.active { background: #3498db; color: white; }
+        .section-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .section-row .section-item { flex: 1; margin: 0; }
+        .section-delete-btn {
+            flex: none; background: #e74c3c; color: white; border: none;
+            border-radius: 5px; padding: 10px 12px; font-size: 16px; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         .game-nav-row {
             display: flex; width: 100%; gap: 10px; margin-top: 10px;
@@ -149,7 +156,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.5</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.6</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -267,7 +274,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.5';
+        const APP_VERSION = '1.9.6';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -342,11 +349,26 @@
             const container = document.getElementById('section-buttons');
             container.innerHTML = "";
             sections.forEach(s => {
+                const count = (s === "Toutes") ? allData.length : allData.filter(p => p.section === s).length;
+                const row = document.createElement('div');
+                row.className = 'section-row';
+
                 const div = document.createElement('div');
                 div.className = `section-item ${currentSection === s ? 'active' : ''}`;
-                div.innerText = s;
+                div.innerText = `${s} (${count} mot${count > 1 ? 's' : ''})`;
                 div.onclick = () => selectSection(s);
-                container.appendChild(div);
+                row.appendChild(div);
+
+                if (s !== "Toutes") {
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'section-delete-btn';
+                    delBtn.innerText = '🗑️';
+                    delBtn.title = `Supprimer la section "${s}" du fichier de données`;
+                    delBtn.onclick = (e) => { e.stopPropagation(); deleteSectionFromGist(s); };
+                    row.appendChild(delBtn);
+                }
+
+                container.appendChild(row);
             });
             document.getElementById('section-list').style.display = 'flex';
             document.getElementById('custom-modal').style.display = 'flex';
@@ -355,6 +377,75 @@
         function hideSectionPicker() {
             document.getElementById('section-list').style.display = 'none';
             document.getElementById('modal-main-actions').style.display = 'block';
+        }
+
+        async function deleteSectionFromGist(sectionName) {
+            const cfg = loadGithubConfig();
+            const token = cfg.token;
+            if (!token) {
+                alert('⚠️ Configure d\'abord un token dans « ☁️ Synchronisation GitHub » pour pouvoir modifier le fichier de données.');
+                return;
+            }
+            if (!confirm(`Supprimer définitivement toutes les lignes de la section "${sectionName}" dans le fichier de données ? Cette action est irréversible.`)) return;
+
+            try {
+                const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' }
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const gist = await res.json();
+                const filename = Object.keys(gist.files)[0];
+                const original = gist.files[filename].content;
+                const lines = original.split('\n');
+
+                // Repère la ligne "SECTION <nom>" correspondante, avec la même
+                // logique de nommage que le chargement (parsing dans loadGistData).
+                let startIndex = -1;
+                for (let i = 0; i < lines.length; i++) {
+                    const trimmed = lines[i].trim();
+                    if (trimmed.toUpperCase().includes('SECTION')) {
+                        const name = trimmed.replace(/SECTION/i, '').trim();
+                        if (name === sectionName) { startIndex = i; break; }
+                    }
+                }
+                if (startIndex === -1) { alert('⚠️ Section introuvable dans le fichier de données.'); return; }
+
+                // La section se termine juste avant la prochaine ligne "SECTION",
+                // ou à la fin du fichier s'il n'y en a pas d'autre après.
+                let endIndex = lines.length;
+                for (let i = startIndex + 1; i < lines.length; i++) {
+                    const trimmed = lines[i].trim();
+                    if (trimmed.toUpperCase().includes('SECTION')) { endIndex = i; break; }
+                }
+
+                const newLines = lines.slice(0, startIndex).concat(lines.slice(endIndex));
+                const cleaned = newLines.join('\n');
+
+                const patchRes = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ files: { [filename]: { content: cleaned } } })
+                });
+                if (!patchRes.ok) { const t = await patchRes.text(); throw new Error(`HTTP ${patchRes.status} ${t}`); }
+
+                alert(`✅ Section "${sectionName}" supprimée du fichier de données.`);
+
+                if (currentSection === sectionName) {
+                    currentSection = "Toutes";
+                    localStorage.setItem('vocab_current_section', currentSection);
+                    localStorage.setItem('vocab_section_changed_at', String(Date.now()));
+                }
+                sections = ["Toutes"];
+                closeModal();
+                await loadGistData();
+                showSectionPicker();
+            } catch (e) {
+                alert(`❌ Erreur lors de la suppression : ${e.message}`);
+            }
         }
 
         function selectSection(name) {
