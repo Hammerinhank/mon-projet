@@ -896,7 +896,7 @@
     "gần": 5,
     "bức ảnh": 5,
     "xem lại": 5,
-    "xóa": 2,
+    "xóa": 5,
     "giữ lại": 2,
     "giải thích": 5,
     "trả lời": 5,
@@ -911,8 +911,8 @@
     "doanh nhân": 1,
     "người nước ngoài": 5,
     "lịch sự": 5,
-    "tôn trọng": 1,
-    "thật ra": 2,
+    "tôn trọng": 5,
+    "thật ra": 5,
     "thực sự": 1,
     "đôi khi": 5,
     "luôn luôn": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786789246242",
-  "updatedAt": "2026-08-15T13:12:23.915Z",
+  "updatedAt": "2026-08-15T13:14:23.440Z",
   "appVersion": "1.11.4"
 }
