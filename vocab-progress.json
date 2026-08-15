@@ -928,7 +928,7 @@
     "cháu gái": 5,
     "đầu tiên": 5,
     "mỗi ngày": 5,
-    "rưỡi": 1,
+    "rưỡi": 5,
     "mấy": 5,
     "nhiều tuổi hơn": 5,
     "tuổi": 5,
@@ -958,7 +958,7 @@
     "khó": 5,
     "mà": 5,
     "một điều nữa": 5,
-    "so với": 1,
+    "so với": 5,
     "ở đó": 5,
     "cho": 5,
     "gia đình": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786786231753",
-  "updatedAt": "2026-08-15T10:02:33.875Z",
-  "appVersion": "1.11.2"
+  "updatedAt": "2026-08-15T10:07:36.346Z",
+  "appVersion": "1.11.3"
 }
