@@ -637,7 +637,7 @@
     "Thiếu niên": 1,
     "Thu nhập": 0,
     "Thuê": 3,
-    "Thành phố": 2,
+    "Thành phố": 3,
     "Thân thiện": 1,
     "Thêm": 1,
     "Thêm (verb)": 2,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "normale",
   "sectionUpdatedAt": "1786777633562",
-  "updatedAt": "2026-08-15T07:10:33.786Z",
+  "updatedAt": "2026-08-15T07:23:28.484Z",
   "appVersion": "1.9.9"
 }
