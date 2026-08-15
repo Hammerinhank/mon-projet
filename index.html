@@ -39,6 +39,7 @@
         button.selected { background-color: #3498db !important; color: white !important; border-color: #2980b9 !important; }
         button.long-press-hint { background-color: #f1c40f !important; border-color: #f39c12 !important; color: #2c3e50 !important; box-shadow: 0 0 10px #f1c40f; }
         button.expert-flash { background-color: #e74c3c !important; border-color: #c0392b !important; color: #ffffff !important; }
+        button.theme-plus-btn { background-color: #8e44ad !important; border-color: #6c3483 !important; color: #ffffff !important; }
 
         #message { margin: 5px 0 10px 0; font-size: 20px; font-weight: bold; min-height: 25px; text-align: center; }
         .ok { color: #27ae60; }
@@ -157,7 +158,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.7</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.9.8</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -275,7 +276,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.9.7';
+        const APP_VERSION = '1.9.8';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -619,8 +620,9 @@
         function toggleHideMode() {
             if (hideMode === 'off') hideMode = 'version';
             else if (hideMode === 'version') hideMode = 'theme';
+            else if (hideMode === 'theme') hideMode = 'theme+';
             else hideMode = 'off';
-            const labels = { off: 'OFF', version: 'Version', theme: 'Thème' };
+            const labels = { off: 'OFF', version: 'Version', theme: 'Thème', 'theme+': 'Thème+' };
             document.getElementById('mode-toggle').innerText = `Masqué : ${labels[hideMode]}`;
             renderAll();
         }
@@ -648,9 +650,37 @@
                 (selection.right && side === 'right' && selection.right.id === pair.id)) { btn.classList.add('selected'); }
             btn.dataset.pairId = pair.id;
             btn.dataset.side = side;
-            btn.onclick = () => handleSelection(pair, btn, side);
-            setupLongPress(btn, pair, side);
+            const isThemePlusRight = (side === 'right' && hideMode === 'theme+');
+            if (isThemePlusRight) {
+                btn.classList.add('theme-plus-btn');
+                btn.onclick = () => themePlusComplete(pair, btn);
+            } else {
+                btn.onclick = () => handleSelection(pair, btn, side);
+                setupLongPress(btn, pair, side);
+            }
             document.getElementById(containerId).appendChild(btn);
+        }
+
+        // Mode "Thème+" : la colonne de droite est entièrement colorée ; un
+        // simple tap sur l'un de ces boutons fait passer immédiatement le
+        // compteur du mot associé au niveau EXPERT (5), sans devoir faire
+        // correspondre la paire manuellement.
+        function themePlusComplete(pair, btn) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.innerText = "⭐ OK — Expert !"; msgDiv.className = "ok";
+            counters[pair.vn] = 5;
+            score++;
+            saveProgress();
+            document.getElementById('score-val').innerText = score;
+            if (btn) { btn.classList.remove('theme-plus-btn'); btn.classList.add('expert-flash'); }
+            if (selection.left && selection.left.element) selection.left.element.classList.remove('selected');
+            if (selection.right && selection.right.element) selection.right.element.classList.remove('selected');
+            selection = { left: null, right: null };
+            setTimeout(() => {
+                replacePair(pair.id);
+                msgDiv.innerText = "";
+                refreshChatGPTLink();
+            }, 500);
         }
 
         // Appui long (> LONG_PRESS_MS) sur une touche : surligne pendant HINT_DURATION_MS
