@@ -54,7 +54,7 @@
     "tặng": 0,
     "chiếc nhan": 0,
     "cầu hôn": 0,
-    "buộc": 1,
+    "buộc": 5,
     "cái hộp": 0,
     "sợ dây": 0,
     "đi vào": 1,
@@ -78,7 +78,7 @@
     "khung cảnh": 0,
     "buổi tối": 0,
     "thật + adj/adv": 0,
-    "cảm thấy, thây": 1,
+    "cảm thấy, thây": 5,
     "hai bên": 0,
     "nữa": 0,
     "trôi qua": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Lobe on the balcony",
   "sectionUpdatedAt": "1786816336026",
-  "updatedAt": "2026-08-15T17:54:21.668Z",
+  "updatedAt": "2026-08-15T17:55:22.145Z",
   "appVersion": "1.12.0"
 }
