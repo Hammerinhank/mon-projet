@@ -910,8 +910,8 @@
     "nhân viên": 2,
     "doanh nhân": 1,
     "người nước ngoài": 5,
-    "lịch sự": 2,
-    "tôn trọng": 0,
+    "lịch sự": 5,
+    "tôn trọng": 1,
     "thật ra": 2,
     "thực sự": 0,
     "đôi khi": 0,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "Trang 4 août",
   "sectionUpdatedAt": "1786789246242",
-  "updatedAt": "2026-08-15T10:28:49.826Z",
+  "updatedAt": "2026-08-15T10:29:50.401Z",
   "appVersion": "1.11.4"
 }
