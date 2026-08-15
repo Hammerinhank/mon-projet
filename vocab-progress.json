@@ -943,7 +943,7 @@
     "chơi": 5,
     "đi chơi": 5,
     "mua sắm": 5,
-    "sử dụng": 2,
+    "sử dụng": 5,
     "gọi": 5,
     "xem": 5,
     "máy tính": 5,
@@ -1016,6 +1016,6 @@
   },
   "currentSection": "- Thu 13 août 2026",
   "sectionUpdatedAt": "1786786231753",
-  "updatedAt": "2026-08-15T10:17:49.092Z",
+  "updatedAt": "2026-08-15T10:18:49.351Z",
   "appVersion": "1.11.4"
 }
