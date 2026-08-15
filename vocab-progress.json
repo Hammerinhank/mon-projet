@@ -72,7 +72,7 @@
     "bị từ chối": 0,
     "cũng": 1,
     "Lúc này": 0,
-    "kéo": 1,
+    "kéo": 2,
     "ghế": 5,
     "thưởng thức": 0,
     "khung cảnh": 0,
@@ -1042,6 +1042,6 @@
   },
   "currentSection": "Love on the balcony",
   "sectionUpdatedAt": "1786822099504",
-  "updatedAt": "2026-08-15T19:31:13.559Z",
-  "appVersion": "1.13.0"
+  "updatedAt": "2026-08-15T20:07:58.196Z",
+  "appVersion": "1.13.1"
 }
