@@ -200,7 +200,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.4</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.5</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -360,7 +360,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.16.4';
+        const APP_VERSION = '1.16.5';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -1372,7 +1372,8 @@
 
             // Un tap sur une ligne SECTION masque (bandeau + texte transparent)
             // toutes les lignes jusqu'à la section suivante (ou la fin du
-            // fichier) ; un nouveau tap les fait réapparaître.
+            // fichier) ; un nouveau tap les fait réapparaître. Repliées par
+            // défaut à l'ouverture de la fenêtre.
             divs.forEach((div, i) => {
                 if (div.dataset.isSection !== '1') return;
                 let end = divs.length;
@@ -1380,16 +1381,19 @@
                     if (divs[j].dataset.isSection === '1') { end = j; break; }
                 }
                 const group = divs.slice(i, end);
-                div.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                    const willMask = !div.classList.contains('raw-line-section-active');
+                const applyMask = (mask) => {
                     group.forEach((gDiv, idx) => {
                         if (idx === 0) {
-                            gDiv.classList.toggle('raw-line-section-active', willMask);
+                            gDiv.classList.toggle('raw-line-section-active', mask);
                         } else {
-                            gDiv.classList.toggle('raw-line-follower-masked', willMask);
+                            gDiv.classList.toggle('raw-line-follower-masked', mask);
                         }
                     });
+                };
+                applyMask(true);
+                div.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    applyMask(!div.classList.contains('raw-line-section-active'));
                 });
             });
         }
