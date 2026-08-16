@@ -1124,7 +1124,7 @@
     "mát hơn": 0,
     "tiếng sấm": 0,
     "bị yếu": 5,
-    "nước nào": 1,
+    "nước nào": 2,
     "nghe thấy": 1,
     "cháo": 2,
     "súp": 2,
@@ -1163,6 +1163,6 @@
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T20:13:43.728Z",
+  "updatedAt": "2026-08-16T20:17:02.671Z",
   "appVersion": "1.16.5"
 }
