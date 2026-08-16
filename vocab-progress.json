@@ -1091,7 +1091,7 @@
     "bọn hèn": 0,
     "máy không làm đau tẹo nào": 0,
     "bản đồ": 0,
-    "cốc nước": 0,
+    "cốc nước": 1,
     "áo vét": 0,
     "bùm": 0,
     "còn lâu mới": 0,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786861116018",
-  "updatedAt": "2026-08-16T06:47:27.262Z",
+  "updatedAt": "2026-08-16T06:49:24.850Z",
   "appVersion": "1.13.1"
 }
