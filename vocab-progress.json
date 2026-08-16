@@ -254,7 +254,7 @@
     "bú": 0,
     "thì": 0,
     "hỗ trợ": 0,
-    "mạnh khoẻ": 0,
+    "mạnh khoẻ": 1,
     "Chính xác": 0,
     "Chúc": 2,
     "Chăm/Chăm chỉ": 1,
@@ -1127,8 +1127,8 @@
     "nước nào": 0,
     "nghe thấy": 0,
     "cháo": 1,
-    "súp": 0,
-    "salat": 1,
+    "súp": 1,
+    "salat": 2,
     "khoai tây": 1,
     "cà ri": 0,
     "phô mai": 0,
@@ -1163,6 +1163,6 @@
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T14:42:47.225Z",
+  "updatedAt": "2026-08-16T14:47:11.555Z",
   "appVersion": "1.16.0"
 }
