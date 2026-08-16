@@ -127,6 +127,15 @@
             border: 1px solid #bdc3c7; font-size: 14px; box-sizing: border-box;
         }
         #github-status { font-size: 0.8rem; color: #34495e; min-height: 1.2rem; margin: 8px 0; }
+        #chatgpt-prompts-panel { display: none; flex-direction: column; text-align: center; }
+        #chatgpt-prompts-panel h3 { margin-top: 0; }
+        .chatgpt-prompt-textarea {
+            width: 100%; min-height: 90px; padding: 10px; margin: 5px 0 10px 0;
+            border-radius: 8px; border: 1px solid #bdc3c7; font-size: 14px;
+            box-sizing: border-box; font-family: inherit; resize: vertical;
+        }
+        .chatgpt-prompt-btn-row { display: flex; gap: 8px; margin-bottom: 15px; }
+        .chatgpt-prompt-btn-row .modal-btn { margin: 0; }
         #game-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: white; z-index: 4000; padding: 20px; flex-direction: column; align-items: center; justify-content: center;
@@ -173,7 +182,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.13.1</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.14.0</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -266,6 +275,7 @@
                 <button class="modal-btn btn-one" id="btn-one-label" onclick="execAction('one')">Réinitialiser ce mot</button>
                 <button class="modal-btn btn-all" onclick="execAction('all')">Réinitialiser la section</button>
                 <button class="modal-btn btn-top" onclick="showDataManagement()">🗂️ Gérer les données</button>
+                <button class="modal-btn btn-top" onclick="showChatGPTPromptsPanel()">✏️ Éditer requêtes ChatGPT</button>
                 <button class="modal-btn btn-cancel" onclick="closeModal()">Fermer</button>
             </div>
             <div id="section-list">
@@ -292,17 +302,46 @@
                 <button class="modal-btn btn-one" onclick="githubPush()">⬆️ Envoyer vers GitHub</button>
                 <button class="modal-btn btn-cancel" onclick="hideGithubPanel()" style="margin-top:5px">Retour</button>
             </div>
+            <div id="chatgpt-prompts-panel">
+                <h3>✏️ Éditer requêtes ChatGPT</h3>
+                <p style="font-size:0.8rem; color:#7f8c8d; text-align:left; margin-top:0;">
+                    Requête utilisée par « 🔍 En savoir plus sur ces mots ». Utilise <code>{MOTS}</code> à l'endroit où le(s) mot(s) doivent être insérés.
+                </p>
+                <textarea id="chatgpt-prompt-link-textarea" class="chatgpt-prompt-textarea"></textarea>
+                <div class="chatgpt-prompt-btn-row">
+                    <button class="modal-btn btn-cancel" onclick="resetChatGPTPrompt('link')">🔄 Réinitialiser</button>
+                    <button class="modal-btn btn-apply" onclick="saveChatGPTPrompt('link')">💾 Appliquer</button>
+                </div>
+                <p style="font-size:0.8rem; color:#7f8c8d; text-align:left;">
+                    Requête utilisée lors de 4 appuis rapprochés sur un mot vietnamien (explication détaillée). Utilise <code>{MOT}</code> à l'endroit où le mot doit être inséré.
+                </p>
+                <textarea id="chatgpt-prompt-deep-textarea" class="chatgpt-prompt-textarea"></textarea>
+                <div class="chatgpt-prompt-btn-row">
+                    <button class="modal-btn btn-cancel" onclick="resetChatGPTPrompt('deep')">🔄 Réinitialiser</button>
+                    <button class="modal-btn btn-apply" onclick="saveChatGPTPrompt('deep')">💾 Appliquer</button>
+                </div>
+                <button class="modal-btn btn-cancel" onclick="hideChatGPTPromptsPanel()" style="margin-top:10px">↩️ Retour</button>
+            </div>
         </div>
     </div>
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.13.1';
+        const APP_VERSION = '1.14.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
         const GAME_FONT_MAX = 48;
         let gameAnswerFontSize = parseInt(localStorage.getItem(GAME_FONT_SIZE_KEY), 10) || 24;
+
+        // Requêtes ChatGPT personnalisables (stockage local uniquement, jamais sur GitHub)
+        const CHATGPT_PROMPT_LINK_KEY = 'vocab_chatgpt_prompt_link';
+        const CHATGPT_PROMPT_DEEP_KEY = 'vocab_chatgpt_prompt_deep';
+        const DEFAULT_CHATGPT_PROMPT_LINK = "Peux-tu m'expliquer les mots vietnamiens suivants en français : {MOTS}";
+        const DEFAULT_CHATGPT_PROMPT_DEEP = "Peux-tu m’expliquer le mot suivant et s’il comporte plusieurs syllabes m’expliquer chacune d’elles en détail (et alors mentionne aussi pour chaque syllable leur signification dans d'autres contexte), mais aussi me donner des exemples d’utilisation et m’indiquer comment les Vietnamiens l’emploient dans la vie courante ? : \"{MOT}\"";
+        let chatgptPromptLink = localStorage.getItem(CHATGPT_PROMPT_LINK_KEY) || DEFAULT_CHATGPT_PROMPT_LINK;
+        let chatgptPromptDeep = localStorage.getItem(CHATGPT_PROMPT_DEEP_KEY) || DEFAULT_CHATGPT_PROMPT_DEEP;
+
         let githubPushTimer = null;
         let githubPushInFlight = false;
         let githubPushQueued = false;
@@ -501,6 +540,7 @@
         function showSectionPicker() {
             document.getElementById('modal-main-actions').style.display = 'none';
             document.getElementById('github-panel').style.display = 'none';
+            document.getElementById('chatgpt-prompts-panel').style.display = 'none';
             renderSectionButtons();
             document.getElementById('section-list').style.display = 'flex';
             document.getElementById('custom-modal').style.display = 'flex';
@@ -639,9 +679,13 @@
             scheduleGithubPush();
         }
 
+        function buildChatGPTLinkQuery(text) {
+            return chatgptPromptLink.split('{MOTS}').join(text);
+        }
+
         function updateChatGPTLink() {
             const words = currentPairs.map(p => p.vn).join(', ');
-            const query = encodeURIComponent(`Peux-tu m'expliquer les mots vietnamiens suivants en français : ${words}`);
+            const query = encodeURIComponent(buildChatGPTLinkQuery(words));
             const link = document.getElementById('chatgpt-link');
             link.href = `https://chatgpt.com/?q=${query}`;
             link.innerText = "🔍 En savoir plus sur ces mots";
@@ -651,7 +695,7 @@
             const selectedCount = (selection.left ? 1 : 0) + (selection.right ? 1 : 0);
             if (selectedCount === 1) {
                 const word = (selection.left || selection.right).vn;
-                const query = encodeURIComponent(`Peux-tu m'expliquer le mot vietnamien suivant en français : ${word}`);
+                const query = encodeURIComponent(buildChatGPTLinkQuery(word));
                 const link = document.getElementById('chatgpt-link');
                 link.href = `https://chatgpt.com/?q=${query}`;
                 link.innerText = `🔍 Pour en savoir plus sur ce mot : ${word}`;
@@ -691,6 +735,7 @@
             document.getElementById('modal-main-actions').style.display = 'block';
             document.getElementById('section-list').style.display = 'none';
             document.getElementById('github-panel').style.display = 'none';
+            document.getElementById('chatgpt-prompts-panel').style.display = 'none';
             const labelBtn = document.getElementById('btn-one-label');
             if (lastClickedWord) { labelBtn.style.display = 'block'; labelBtn.innerText = `Réinitialiser "${lastClickedWord}"`; } 
             else { labelBtn.style.display = 'none'; }
@@ -698,6 +743,47 @@
         }
 
         function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
+
+        // ================= ÉDITION DES REQUÊTES CHATGPT =================
+        // Les deux modèles de requête (lien "En savoir plus" et requête détaillée
+        // des 4 appuis) sont éditables et mémorisés uniquement en local
+        // (localStorage), jamais synchronisés via GitHub.
+
+        function showChatGPTPromptsPanel() {
+            document.getElementById('modal-main-actions').style.display = 'none';
+            document.getElementById('section-list').style.display = 'none';
+            document.getElementById('github-panel').style.display = 'none';
+            document.getElementById('chatgpt-prompts-panel').style.display = 'flex';
+            document.getElementById('chatgpt-prompt-link-textarea').value = chatgptPromptLink;
+            document.getElementById('chatgpt-prompt-deep-textarea').value = chatgptPromptDeep;
+            document.getElementById('custom-modal').style.display = 'flex';
+        }
+
+        function hideChatGPTPromptsPanel() {
+            document.getElementById('chatgpt-prompts-panel').style.display = 'none';
+            document.getElementById('modal-main-actions').style.display = 'block';
+        }
+
+        function resetChatGPTPrompt(which) {
+            if (which === 'link') {
+                document.getElementById('chatgpt-prompt-link-textarea').value = DEFAULT_CHATGPT_PROMPT_LINK;
+            } else {
+                document.getElementById('chatgpt-prompt-deep-textarea').value = DEFAULT_CHATGPT_PROMPT_DEEP;
+            }
+        }
+
+        function saveChatGPTPrompt(which) {
+            if (which === 'link') {
+                chatgptPromptLink = document.getElementById('chatgpt-prompt-link-textarea').value;
+                localStorage.setItem(CHATGPT_PROMPT_LINK_KEY, chatgptPromptLink);
+                updateChatGPTLink();
+            } else {
+                chatgptPromptDeep = document.getElementById('chatgpt-prompt-deep-textarea').value;
+                localStorage.setItem(CHATGPT_PROMPT_DEEP_KEY, chatgptPromptDeep);
+            }
+            alert('✅ Requête enregistrée.');
+        }
+        // =============== FIN ÉDITION DES REQUÊTES CHATGPT ================
 
         function execAction(action) {
             if (action === 'all') {
@@ -900,7 +986,7 @@
                 if (clickTracker.word === pair.vn) {
                     clickTracker.count++;
                     if (clickTracker.count === 4) {
-                        const prompt = `Peux-tu m’expliquer le mot suivant et s’il comporte plusieurs syllabes m’expliquer chacune d’elles en détail (et alors mentionne aussi pour chaque syllable leur signification dans d'autres contexte), mais aussi me donner des exemples d’utilisation et m’indiquer comment les Vietnamiens l’emploient dans la vie courante ? : "${pair.vn}"`;
+                        const prompt = chatgptPromptDeep.split('{MOT}').join(pair.vn);
                         window.open(`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`, '_blank');
                         clickTracker.count = 0;
                     }
