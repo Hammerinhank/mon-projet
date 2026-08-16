@@ -1084,7 +1084,7 @@
     "can thiệp": 0,
     "gây mất trật tự": 0,
     "bác sĩ": 2,
-    "giám thị": 0,
+    "giám thị": 1,
     "cục cưng": 1,
     "cục cưng bẩn thỉu": 1,
     "cùng một giuộc": 0,
@@ -1095,7 +1095,7 @@
     "áo vét": 0,
     "bùm": 0,
     "còn lâu mới": 0,
-    "ngăn khỏi": 0,
+    "ngăn khỏi": 1,
     "mượn": 4,
     "cho mượn": 1,
     "sắp xếp": 0,
@@ -1116,10 +1116,10 @@
     "kinh khủng": 0,
     "còn ăn thua gì nữa": 1,
     "chớ có dại mà": 2,
-    "hễ... là...": 0
+    "hễ... là...": 1
   },
-  "currentSection": "TEST",
-  "sectionUpdatedAt": "1786868197794",
-  "updatedAt": "2026-08-16T08:16:43.365Z",
+  "currentSection": "Le petit Nicolas",
+  "sectionUpdatedAt": "1786873506334",
+  "updatedAt": "2026-08-16T09:45:11.340Z",
   "appVersion": "1.13.1"
 }
