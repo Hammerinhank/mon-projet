@@ -1050,7 +1050,7 @@
     "thể khẳng định": 0,
     "thức trần thuật": 0,
     "chia động từ": 0,
-    "đeo kính": 0,
+    "đeo kính": 1,
     "cửa hàng kính": 1,
     "hàng đống": 0,
     "nhìn mọi thứ": 2,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786861116018",
-  "updatedAt": "2026-08-16T06:33:03.509Z",
+  "updatedAt": "2026-08-16T06:34:03.434Z",
   "appVersion": "1.13.1"
 }
