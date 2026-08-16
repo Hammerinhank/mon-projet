@@ -1045,7 +1045,7 @@
     "đứng đầu lớp": 2,
     "kiểm tra": 4,
     "tiết địa lý": 0,
-    "lên bảng": 0,
+    "lên bảng": 1,
     "động từ": 3,
     "thể khẳng định": 0,
     "thức trần thuật": 1,
@@ -1090,7 +1090,7 @@
     "cùng một giuộc": 0,
     "bọn hèn": 1,
     "máy không làm đau tẹo nào": 1,
-    "bản đồ": 0,
+    "bản đồ": 1,
     "cốc nước": 4,
     "áo vét": 0,
     "bùm": 0,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786873506334",
-  "updatedAt": "2026-08-16T12:13:59.289Z",
+  "updatedAt": "2026-08-16T12:15:59.343Z",
   "appVersion": "1.14.0"
 }
