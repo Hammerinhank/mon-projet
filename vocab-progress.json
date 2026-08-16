@@ -1089,7 +1089,7 @@
     "cục cưng bẩn thỉu": 0,
     "cùng một giuộc": 0,
     "bọn hèn": 0,
-    "máy không làm đau tẹo nào": 0,
+    "máy không làm đau tẹo nào": 1,
     "bản đồ": 0,
     "cốc nước": 1,
     "áo vét": 0,
@@ -1105,7 +1105,7 @@
     "vuốt mặt": 0,
     "tuốt má xuống": 0,
     "bấm chuông": 0,
-    "chùi kỹ": 1,
+    "chùi kỹ": 2,
     "suýt nữa": 0,
     "cộc đầu vào": 2,
     "xơi con không": 0,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786861116018",
-  "updatedAt": "2026-08-16T06:53:32.559Z",
+  "updatedAt": "2026-08-16T06:54:32.466Z",
   "appVersion": "1.13.1"
 }
