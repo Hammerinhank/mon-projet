@@ -1115,11 +1115,11 @@
     "ăn thua gì nữa": 0,
     "kinh khủng": 0,
     "còn ăn thua gì nữa": 0,
-    "chớ có dại mà": 0,
+    "chớ có dại mà": 1,
     "hễ... là...": 0
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786861116018",
-  "updatedAt": "2026-08-16T06:38:49.743Z",
+  "updatedAt": "2026-08-16T06:43:48.184Z",
   "appVersion": "1.13.1"
 }
