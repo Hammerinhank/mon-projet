@@ -1111,7 +1111,7 @@
     "xơi con không": 0,
     "hết sảy": 0,
     "lều lếu lêu": 1,
-    "thưa mày": 0,
+    "thưa mày": 2,
     "ăn thua gì nữa": 0,
     "kinh khủng": 0,
     "còn ăn thua gì nữa": 0,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786861116018",
-  "updatedAt": "2026-08-16T06:43:48.184Z",
+  "updatedAt": "2026-08-16T06:45:27.294Z",
   "appVersion": "1.13.1"
 }
