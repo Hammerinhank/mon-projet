@@ -1079,13 +1079,13 @@
     "trò lừa đảo": 0,
     "tự tử": 3,
     "nghiêm trị": 1,
-    "sinh chuyện": 1,
+    "sinh chuyện": 2,
     "đánh nhau": 1,
     "can thiệp": 0,
     "gây mất trật tự": 0,
     "bác sĩ": 2,
     "giám thị": 1,
-    "cục cưng": 1,
+    "cục cưng": 2,
     "cục cưng bẩn thỉu": 1,
     "cùng một giuộc": 0,
     "bọn hèn": 1,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786873506334",
-  "updatedAt": "2026-08-16T11:52:46.479Z",
+  "updatedAt": "2026-08-16T12:13:59.289Z",
   "appVersion": "1.14.0"
 }
