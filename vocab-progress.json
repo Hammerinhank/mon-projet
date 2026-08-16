@@ -1148,7 +1148,7 @@
     "gỏi cá": 2,
     "món cay": 2,
     "chế biến": 0,
-    "ớt": 1,
+    "ớt": 2,
     "cắt": 1,
     "thành": 0,
     "cùng với": 0,
@@ -1156,13 +1156,13 @@
     "đã từng": 0,
     "ăn được": 1,
     "Tây Ban Nha": 0,
-    "chúc": 1,
+    "chúc": 2,
     "cuối tuần": 5,
     "niềm vui": 0,
     "cháy rừng": 0
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T20:11:43.785Z",
+  "updatedAt": "2026-08-16T20:12:43.887Z",
   "appVersion": "1.16.5"
 }
