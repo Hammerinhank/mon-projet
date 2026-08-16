@@ -1119,7 +1119,7 @@
     "hễ... là...": 1,
     "độ": 5,
     "nhiệt độ": 2,
-    "thấp hơn": 0,
+    "thấp hơn": 1,
     "nóng hơn": 1,
     "mát hơn": 0,
     "tiếng sấm": 0,
@@ -1130,7 +1130,7 @@
     "súp": 2,
     "salat": 2,
     "khoai tây": 1,
-    "cà ri": 0,
+    "cà ri": 1,
     "phô mai": 1,
     "kem": 2,
     "nướng": 0,
@@ -1163,6 +1163,6 @@
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T20:06:13.641Z",
+  "updatedAt": "2026-08-16T20:08:04.533Z",
   "appVersion": "1.16.5"
 }
