@@ -1042,7 +1042,7 @@
     "ngạc nhiên kinh": 4,
     "xếp thứ bét": 4,
     "xếp thứ nhất": 4,
-    "đứng đầu lớp": 1,
+    "đứng đầu lớp": 2,
     "kiểm tra": 4,
     "tiết địa lý": 0,
     "lên bảng": 0,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786873506334",
-  "updatedAt": "2026-08-16T09:45:11.340Z",
-  "appVersion": "1.13.1"
+  "updatedAt": "2026-08-16T11:07:22.690Z",
+  "appVersion": "1.14.0"
 }
