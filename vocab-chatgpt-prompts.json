@@ -1,5 +1,5 @@
 {
-  "link": "Peux-tu m'expliquer les mots vietnamiens suivants en français , et en explicitant chacune S des syllabes s’il y en a plusieurs {MOTS}",
+  "link": "Peux-tu m'expliquer les mots vietnamiens suivants en français , et en explicitant chacune S des syllabes s’il y en a plusieurs : «  {MOTS} »",
   "deep": "Peux-tu m’expliquer le mot suivant et s’il comporte plusieurs syllabes m’expliquer chacune d’elles en détail (et alors mentionne aussi pour chaque syllable leur signification dans d'autres contexte), mais aussi me donner des exemples d’utilisation et m’indiquer comment les Vietnamiens l’emploient dans la vie courante ? : \"{MOT}\"",
-  "updatedAt": "2026-08-16T12:49:16.441Z"
+  "updatedAt": "2026-08-16T12:50:21.950Z"
 }
