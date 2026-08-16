@@ -85,6 +85,21 @@
         #data-mgmt-overlay .modal-btn { max-width: 400px; }
         #data-mgmt-overlay p, #data-mgmt-overlay input { width: 100%; max-width: 400px; }
 
+        #raw-data-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 3600; padding: 20px; flex-direction: column; align-items: center;
+        }
+        #raw-data-overlay h3 { margin: 0 0 4px 0; }
+        #raw-data-overlay .modal-btn { max-width: 500px; }
+        #raw-data-content {
+            width: 100%; max-width: 500px; flex-grow: 1; overflow-y: auto;
+            border: 1px solid #ccc; border-radius: 8px; padding: 10px;
+            font-family: monospace; font-size: 13px; line-height: 1.5;
+            white-space: pre-wrap; word-break: break-word; text-align: left;
+            outline: none; color: #2c3e50;
+        }
+        .raw-line { min-height: 1.5em; }
+
         #stats-modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: #1a1a2e; color: white; overflow-y: auto; padding: 20px;
@@ -182,7 +197,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.15.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.0</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -241,6 +256,7 @@
     <div id="data-mgmt-overlay">
         <h3>🗂️ Gérer les données</h3>
         <button class="modal-btn btn-top" onclick="window.open('https://gist.github.com/Hammerinhank/19d9495bea22ee681aa829d908a4f41e/edit', '_blank')">📝 Edit data</button>
+        <button class="modal-btn btn-top" onclick="showRawDataViewer()">🎨 Voir/éditer avec mise en forme</button>
         <hr style="width:100%; max-width:400px;">
         <p style="font-size:0.8rem; color:#7f8c8d; text-align:left;">
             Le nettoyage supprime les « * » situés en tout début de ligne dans le fichier de données (toutes sections confondues), sans autre modification. Utilise le token GitHub renseigné dans « ☁️ Synchronisation GitHub » (aucune saisie séparée n'est nécessaire ici).
@@ -251,6 +267,17 @@
         <button class="modal-btn btn-top" onclick="showCountersFromDataMgmt()">📋 Liste des compteurs</button>
         <button class="modal-btn btn-github" onclick="showGithubPanel()">☁️ Synchronisation GitHub</button>
         <button class="modal-btn btn-cancel" style="margin-top:10px;" onclick="backFromDataManagement()">↩️ Retour</button>
+    </div>
+
+    <div id="raw-data-overlay">
+        <h3>🎨 Fichier de données</h3>
+        <p style="font-size:0.75rem; color:#7f8c8d; text-align:left; margin:0 0 8px 0;">
+            SECTION en gras rouge · lignes sans « : » en gras rose · texte avant « : » en gras.
+        </p>
+        <div id="raw-data-content" contenteditable="true" spellcheck="false"></div>
+        <div id="raw-data-status" style="font-size:0.8rem; color:#34495e; min-height:1.2rem; text-align:center; margin:6px 0;"></div>
+        <button class="modal-btn btn-apply" onclick="saveRawDataViewer()">💾 Enregistrer les modifications</button>
+        <button class="modal-btn btn-cancel" onclick="hideRawDataViewer()">Fermer</button>
     </div>
 
     <div id="stats-modal">
@@ -330,7 +357,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.15.0';
+        const APP_VERSION = '1.16.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -1269,6 +1296,101 @@
             document.getElementById('data-mgmt-overlay').style.display = 'none';
             execAction('top');
         }
+
+        // ============ AFFICHAGE / ÉDITION MISE EN FORME DU FICHIER ============
+        // Copie le contenu du fichier gist dans une fenêtre éditable, en
+        // mettant en forme chaque ligne selon son type (SECTION, ligne libre,
+        // ligne "mot : traduction").
+
+        function setRawDataStatus(text) {
+            const el = document.getElementById('raw-data-status');
+            if (el) el.innerText = text;
+        }
+
+        async function showRawDataViewer() {
+            setRawDataStatus('⏳ Chargement...');
+            document.getElementById('data-mgmt-overlay').style.display = 'none';
+            document.getElementById('raw-data-overlay').style.display = 'flex';
+            try {
+                const res = await fetch(`https://api.github.com/gists/${GIST_ID}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const gist = await res.json();
+                const content = gist.files[Object.keys(gist.files)[0]].content;
+                renderRawDataContent(content);
+                setRawDataStatus('');
+            } catch (e) {
+                setRawDataStatus(`❌ Erreur de chargement : ${e.message}`);
+            }
+        }
+
+        function hideRawDataViewer() {
+            document.getElementById('raw-data-overlay').style.display = 'none';
+            showDataManagement();
+        }
+
+        function renderRawDataContent(content) {
+            const container = document.getElementById('raw-data-content');
+            container.innerHTML = '';
+            content.split('\n').forEach(line => {
+                const div = document.createElement('div');
+                div.className = 'raw-line';
+                const trimmedUpper = line.toUpperCase();
+                if (trimmedUpper.includes('SECTION')) {
+                    // Ligne de section : gras + rouge
+                    div.style.fontWeight = 'bold';
+                    div.style.color = '#e74c3c';
+                    div.textContent = line;
+                } else if (line.includes(':')) {
+                    // Ligne "mot : traduction" : seul le texte à gauche du ':' est en gras
+                    const idx = line.indexOf(':');
+                    const boldSpan = document.createElement('span');
+                    boldSpan.style.fontWeight = 'bold';
+                    boldSpan.textContent = line.slice(0, idx);
+                    div.appendChild(boldSpan);
+                    div.appendChild(document.createTextNode(line.slice(idx)));
+                } else {
+                    // Ligne libre (ni SECTION ni ':') : gras + rose clair
+                    div.style.fontWeight = 'bold';
+                    div.style.color = '#f5b7c6';
+                    div.textContent = line;
+                }
+                if (line === '') div.innerHTML = '&nbsp;';
+                container.appendChild(div);
+            });
+        }
+
+        async function saveRawDataViewer() {
+            const cfg = loadGithubConfig();
+            const token = cfg.token;
+            if (!token) { setRawDataStatus('⚠️ Configure d\'abord un token dans « ☁️ Synchronisation GitHub ».'); return; }
+            if (!confirm('Enregistrer ces modifications dans le fichier de données ?')) return;
+            const newContent = document.getElementById('raw-data-content').innerText.replace(/\u00A0/g, '');
+            setRawDataStatus('⏳ Enregistrement...');
+            try {
+                const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' }
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const gist = await res.json();
+                const filename = Object.keys(gist.files)[0];
+                const patchRes = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ files: { [filename]: { content: newContent } } })
+                });
+                if (!patchRes.ok) { const t = await patchRes.text(); throw new Error(`HTTP ${patchRes.status} ${t}`); }
+                setRawDataStatus('✅ Modifications enregistrées.');
+                renderRawDataContent(newContent);
+                await loadGistData();
+            } catch (e) {
+                setRawDataStatus(`❌ Erreur d'enregistrement : ${e.message}`);
+            }
+        }
+        // ========== FIN AFFICHAGE / ÉDITION MISE EN FORME DU FICHIER ==========
 
         async function runDataCleansing() {
             const cfg = loadGithubConfig();
