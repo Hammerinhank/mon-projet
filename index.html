@@ -182,7 +182,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.14.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.15.0</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -305,6 +305,9 @@
             <div id="chatgpt-prompts-panel">
                 <h3>✏️ Éditer requêtes ChatGPT</h3>
                 <p style="font-size:0.8rem; color:#7f8c8d; text-align:left; margin-top:0;">
+                    « Appliquer » enregistre la requête sur GitHub (fichier <code>vocab-chatgpt-prompts.json</code>, même dépôt/token que la synchro de progression), pour la retrouver sur tous tes appareils.
+                </p>
+                <p style="font-size:0.8rem; color:#7f8c8d; text-align:left; margin-top:0;">
                     Requête utilisée par « 🔍 En savoir plus sur ces mots ». Utilise <code>{MOTS}</code> à l'endroit où le(s) mot(s) doivent être insérés.
                 </p>
                 <textarea id="chatgpt-prompt-link-textarea" class="chatgpt-prompt-textarea"></textarea>
@@ -327,7 +330,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.14.0';
+        const APP_VERSION = '1.15.0';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -337,6 +340,7 @@
         // Requêtes ChatGPT personnalisables (stockage local uniquement, jamais sur GitHub)
         const CHATGPT_PROMPT_LINK_KEY = 'vocab_chatgpt_prompt_link';
         const CHATGPT_PROMPT_DEEP_KEY = 'vocab_chatgpt_prompt_deep';
+        const CHATGPT_PROMPTS_GITHUB_PATH = 'vocab-chatgpt-prompts.json'; // même dépôt/branche/token que la synchro progression
         const DEFAULT_CHATGPT_PROMPT_LINK = "Peux-tu m'expliquer les mots vietnamiens suivants en français : {MOTS}";
         const DEFAULT_CHATGPT_PROMPT_DEEP = "Peux-tu m’expliquer le mot suivant et s’il comporte plusieurs syllabes m’expliquer chacune d’elles en détail (et alors mentionne aussi pour chaque syllable leur signification dans d'autres contexte), mais aussi me donner des exemples d’utilisation et m’indiquer comment les Vietnamiens l’emploient dans la vie courante ? : \"{MOT}\"";
         let chatgptPromptLink = localStorage.getItem(CHATGPT_PROMPT_LINK_KEY) || DEFAULT_CHATGPT_PROMPT_LINK;
@@ -781,7 +785,56 @@
                 chatgptPromptDeep = document.getElementById('chatgpt-prompt-deep-textarea').value;
                 localStorage.setItem(CHATGPT_PROMPT_DEEP_KEY, chatgptPromptDeep);
             }
-            alert('✅ Requête enregistrée.');
+            saveChatGPTPromptToGithubThenAlert();
+        }
+
+        async function saveChatGPTPromptToGithubThenAlert() {
+            if (!githubConfigured()) {
+                alert('✅ Requête enregistrée (localement uniquement — configure la synchronisation GitHub pour la rendre persistante entre appareils).');
+                return;
+            }
+            try {
+                await pushChatGPTPromptsToGithub();
+                alert('✅ Requête enregistrée et envoyée sur GitHub.');
+            } catch (e) {
+                alert(`⚠️ Requête enregistrée localement, mais échec de l'envoi vers GitHub : ${e.message}`);
+            }
+        }
+
+        // Écrit les deux requêtes courantes dans un fichier JSON dédié du même
+        // dépôt/branche que la synchro de progression (même token).
+        async function pushChatGPTPromptsToGithub() {
+            const cfg = loadGithubConfig();
+            const promptsCfg = Object.assign({}, cfg, { path: CHATGPT_PROMPTS_GITHUB_PATH });
+            const file = await githubFetchFile(promptsCfg);
+            const payload = { link: chatgptPromptLink, deep: chatgptPromptDeep, updatedAt: new Date().toISOString() };
+            await githubWriteFile(promptsCfg, payload, file.sha);
+        }
+
+        // Chargée au lancement de l'appli (et après configuration de la
+        // synchro GitHub) pour retrouver les requêtes personnalisées sur
+        // n'importe quel appareil.
+        async function loadChatGPTPromptsFromGithub() {
+            if (!githubConfigured()) return;
+            try {
+                const cfg = loadGithubConfig();
+                const promptsCfg = Object.assign({}, cfg, { path: CHATGPT_PROMPTS_GITHUB_PATH });
+                const file = await githubFetchFile(promptsCfg);
+                if (file.exists && file.data) {
+                    if (typeof file.data.link === 'string') {
+                        chatgptPromptLink = file.data.link;
+                        localStorage.setItem(CHATGPT_PROMPT_LINK_KEY, chatgptPromptLink);
+                    }
+                    if (typeof file.data.deep === 'string') {
+                        chatgptPromptDeep = file.data.deep;
+                        localStorage.setItem(CHATGPT_PROMPT_DEEP_KEY, chatgptPromptDeep);
+                    }
+                    updateChatGPTLink();
+                }
+            } catch (e) {
+                // Silencieux au démarrage (même logique que le pull des compteurs) :
+                // on garde la version locale déjà en mémoire en cas d'échec réseau.
+            }
         }
         // =============== FIN ÉDITION DES REQUÊTES CHATGPT ================
 
@@ -1329,6 +1382,7 @@
             localStorage.setItem(GITHUB_CONFIG_KEY, JSON.stringify(cfg));
             setGithubStatus("✅ Configuration enregistrée. Synchronisation...");
             githubPull(false).then(() => githubPush(false));
+            loadChatGPTPromptsFromGithub();
         }
 
         async function githubFetchFile(cfg) {
@@ -1468,6 +1522,7 @@
 
         document.getElementById('app-version').innerText = 'v' + APP_VERSION;
         applyGameAnswerFontSize();
+        loadChatGPTPromptsFromGithub();
         loadGistData();
     </script>
 </body>
