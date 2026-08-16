@@ -1040,7 +1040,7 @@
     "khi": 5,
     "con trai": 5,
     "ngạc nhiên kinh": 0,
-    "xếp thứ bét": 0,
+    "xếp thứ bét": 1,
     "xếp thứ nhất": 1,
     "đứng đầu lớp": 0,
     "kiểm tra": 0,
@@ -1050,7 +1050,7 @@
     "thể khẳng định": 0,
     "thức trần thuật": 0,
     "chia động từ": 0,
-    "đeo kính": 1,
+    "đeo kính": 2,
     "cửa hàng kính": 1,
     "hàng đống": 0,
     "nhìn mọi thứ": 2,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786861116018",
-  "updatedAt": "2026-08-16T06:49:24.850Z",
+  "updatedAt": "2026-08-16T06:51:34.118Z",
   "appVersion": "1.13.1"
 }
