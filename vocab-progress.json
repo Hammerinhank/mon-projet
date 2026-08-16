@@ -1154,7 +1154,7 @@
     "cùng với": 0,
     "rồi": 0,
     "đã từng": 0,
-    "ăn được": 1,
+    "ăn được": 2,
     "Tây Ban Nha": 0,
     "chúc": 2,
     "cuối tuần": 5,
@@ -1163,6 +1163,6 @@
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T20:12:43.887Z",
+  "updatedAt": "2026-08-16T20:13:43.728Z",
   "appVersion": "1.16.5"
 }
