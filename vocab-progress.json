@@ -1096,7 +1096,7 @@
     "bùm": 0,
     "còn lâu mới": 0,
     "ngăn khỏi": 0,
-    "mượn": 0,
+    "mượn": 1,
     "cho mượn": 0,
     "sắp xếp": 0,
     "vẹo vọ": 0,
@@ -1107,7 +1107,7 @@
     "bấm chuông": 0,
     "chùi kỹ": 0,
     "suýt nữa": 0,
-    "cộc đầu vào": 0,
+    "cộc đầu vào": 1,
     "xơi con không": 0,
     "hết sảy": 0,
     "lều lếu lêu": 1,
@@ -1120,6 +1120,6 @@
   },
   "currentSection": "Le petit Nicolas",
   "sectionUpdatedAt": "1786861116018",
-  "updatedAt": "2026-08-16T06:34:03.434Z",
+  "updatedAt": "2026-08-16T06:37:13.502Z",
   "appVersion": "1.13.1"
 }
