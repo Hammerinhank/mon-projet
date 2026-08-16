@@ -1118,7 +1118,7 @@
     "chớ có dại mà": 2,
     "hễ... là...": 1,
     "độ": 0,
-    "nhiệt độ": 1,
+    "nhiệt độ": 2,
     "thấp hơn": 0,
     "nóng hơn": 1,
     "mát hơn": 0,
@@ -1127,12 +1127,12 @@
     "nước nào": 0,
     "nghe thấy": 0,
     "cháo": 1,
-    "súp": 1,
+    "súp": 2,
     "salat": 2,
     "khoai tây": 1,
     "cà ri": 0,
     "phô mai": 0,
-    "kem": 1,
+    "kem": 2,
     "nướng": 0,
     "lò": 0,
     "lò nướng": 0,
@@ -1163,6 +1163,6 @@
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T14:58:08.217Z",
-  "appVersion": "1.16.0"
+  "updatedAt": "2026-08-16T18:52:37.253Z",
+  "appVersion": "1.16.5"
 }
