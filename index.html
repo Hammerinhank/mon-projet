@@ -101,7 +101,11 @@
         .raw-line { min-height: 1.5em; }
         .raw-line-section { cursor: pointer; border-radius: 4px; padding: 2px 6px; margin: 0 -6px; }
         .raw-line-section-active { background: #fce4e4; }
-        .raw-line-section-active .raw-line-section-text { color: transparent !important; }
+        .raw-line-follower-masked { background: #f5f5f5; }
+        .raw-line-section-active .raw-line-text,
+        .raw-line-follower-masked .raw-line-text,
+        .raw-line-section-active .raw-line-text *,
+        .raw-line-follower-masked .raw-line-text * { color: transparent !important; }
 
         #stats-modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
@@ -200,7 +204,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.1</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.2</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -360,7 +364,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.16.1';
+        const APP_VERSION = '1.16.2';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -1331,45 +1335,66 @@
             showDataManagement();
         }
 
-        function toggleSectionLineBanner(div) {
-            div.classList.toggle('raw-line-section-active');
-        }
-
         function renderRawDataContent(content) {
             const container = document.getElementById('raw-data-content');
             container.innerHTML = '';
-            content.split('\n').forEach(line => {
+            const lines = content.split('\n');
+            const divs = [];
+            lines.forEach(line => {
                 const div = document.createElement('div');
                 div.className = 'raw-line';
                 const trimmedUpper = line.toUpperCase();
-                if (trimmedUpper.includes('SECTION')) {
-                    // Ligne de section : gras + rouge, cliquable pour afficher un
-                    // bandeau coloré tout en masquant temporairement le texte
-                    // (un nouvel appui le fait réapparaître).
+                const isSection = trimmedUpper.includes('SECTION');
+                div.dataset.isSection = isSection ? '1' : '0';
+                const textWrap = document.createElement('span');
+                textWrap.className = 'raw-line-text';
+                if (isSection) {
+                    // Ligne de section : gras + rouge
                     div.classList.add('raw-line-section');
-                    const span = document.createElement('span');
-                    span.className = 'raw-line-section-text';
-                    span.style.fontWeight = 'bold';
-                    span.style.color = '#e74c3c';
-                    span.textContent = line;
-                    div.appendChild(span);
-                    div.addEventListener('mousedown', (e) => { e.preventDefault(); toggleSectionLineBanner(div); });
+                    textWrap.style.fontWeight = 'bold';
+                    textWrap.style.color = '#e74c3c';
+                    textWrap.textContent = line;
                 } else if (line.includes(':')) {
                     // Ligne "mot : traduction" : seul le texte à gauche du ':' est en gras
                     const idx = line.indexOf(':');
                     const boldSpan = document.createElement('span');
                     boldSpan.style.fontWeight = 'bold';
                     boldSpan.textContent = line.slice(0, idx);
-                    div.appendChild(boldSpan);
-                    div.appendChild(document.createTextNode(line.slice(idx)));
+                    textWrap.appendChild(boldSpan);
+                    textWrap.appendChild(document.createTextNode(line.slice(idx)));
                 } else {
                     // Ligne libre (ni SECTION ni ':') : gras + rose clair
-                    div.style.fontWeight = 'bold';
-                    div.style.color = '#f5b7c6';
-                    div.textContent = line;
+                    textWrap.style.fontWeight = 'bold';
+                    textWrap.style.color = '#f5b7c6';
+                    textWrap.textContent = line;
                 }
-                if (line === '') div.innerHTML = '&nbsp;';
+                div.appendChild(textWrap);
+                if (line === '') textWrap.innerHTML = '&nbsp;';
                 container.appendChild(div);
+                divs.push(div);
+            });
+
+            // Un tap sur une ligne SECTION masque (bandeau + texte transparent)
+            // toutes les lignes jusqu'à la section suivante (ou la fin du
+            // fichier) ; un nouveau tap les fait réapparaître.
+            divs.forEach((div, i) => {
+                if (div.dataset.isSection !== '1') return;
+                let end = divs.length;
+                for (let j = i + 1; j < divs.length; j++) {
+                    if (divs[j].dataset.isSection === '1') { end = j; break; }
+                }
+                const group = divs.slice(i, end);
+                div.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    const willMask = !div.classList.contains('raw-line-section-active');
+                    group.forEach((gDiv, idx) => {
+                        if (idx === 0) {
+                            gDiv.classList.toggle('raw-line-section-active', willMask);
+                        } else {
+                            gDiv.classList.toggle('raw-line-follower-masked', willMask);
+                        }
+                    });
+                });
             });
         }
 
