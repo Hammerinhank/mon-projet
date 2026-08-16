@@ -1051,7 +1051,7 @@
     "thức trần thuật": 0,
     "chia động từ": 0,
     "đeo kính": 0,
-    "cửa hàng kính": 0,
+    "cửa hàng kính": 1,
     "hàng đống": 0,
     "nhìn mọi thứ": 0,
     "không được rõ": 0,
@@ -1118,8 +1118,8 @@
     "chớ có dại mà": 0,
     "hễ... là...": 0
   },
-  "currentSection": "- Thu : 16 août 2026",
-  "sectionUpdatedAt": "1786861060929",
-  "updatedAt": "2026-08-16T06:17:46.228Z",
+  "currentSection": "Le petit Nicolas",
+  "sectionUpdatedAt": "1786861116018",
+  "updatedAt": "2026-08-16T06:31:04.513Z",
   "appVersion": "1.13.1"
 }
