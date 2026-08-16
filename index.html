@@ -99,6 +99,9 @@
             outline: none; color: #2c3e50;
         }
         .raw-line { min-height: 1.5em; }
+        .raw-line-section { cursor: pointer; border-radius: 4px; padding: 2px 6px; margin: 0 -6px; }
+        .raw-line-section-active { background: #fce4e4; }
+        .raw-line-section-active .raw-line-section-text { color: transparent !important; }
 
         #stats-modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
@@ -197,7 +200,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.1</span></h1>
     <div id="section-display" onclick="showSectionPicker()"></div>
     <div id="message">Chargement...</div>
 
@@ -357,7 +360,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.16.0';
+        const APP_VERSION = '1.16.1';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -1328,6 +1331,10 @@
             showDataManagement();
         }
 
+        function toggleSectionLineBanner(div) {
+            div.classList.toggle('raw-line-section-active');
+        }
+
         function renderRawDataContent(content) {
             const container = document.getElementById('raw-data-content');
             container.innerHTML = '';
@@ -1336,10 +1343,17 @@
                 div.className = 'raw-line';
                 const trimmedUpper = line.toUpperCase();
                 if (trimmedUpper.includes('SECTION')) {
-                    // Ligne de section : gras + rouge
-                    div.style.fontWeight = 'bold';
-                    div.style.color = '#e74c3c';
-                    div.textContent = line;
+                    // Ligne de section : gras + rouge, cliquable pour afficher un
+                    // bandeau coloré tout en masquant temporairement le texte
+                    // (un nouvel appui le fait réapparaître).
+                    div.classList.add('raw-line-section');
+                    const span = document.createElement('span');
+                    span.className = 'raw-line-section-text';
+                    span.style.fontWeight = 'bold';
+                    span.style.color = '#e74c3c';
+                    span.textContent = line;
+                    div.appendChild(span);
+                    div.addEventListener('mousedown', (e) => { e.preventDefault(); toggleSectionLineBanner(div); });
                 } else if (line.includes(':')) {
                     // Ligne "mot : traduction" : seul le texte à gauche du ':' est en gras
                     const idx = line.indexOf(':');
