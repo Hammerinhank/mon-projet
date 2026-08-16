@@ -1118,7 +1118,7 @@
     "chớ có dại mà": 2,
     "hễ... là...": 1,
     "độ": 0,
-    "nhiệt độ": 0,
+    "nhiệt độ": 1,
     "thấp hơn": 0,
     "nóng hơn": 1,
     "mát hơn": 0,
@@ -1157,12 +1157,12 @@
     "ăn được": 0,
     "Tây Ban Nha": 0,
     "chúc": 0,
-    "cuối tuần": 0,
+    "cuối tuần": 1,
     "niềm vui": 0,
     "cháy rừng": 0
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T14:47:11.555Z",
+  "updatedAt": "2026-08-16T14:58:08.217Z",
   "appVersion": "1.16.0"
 }
