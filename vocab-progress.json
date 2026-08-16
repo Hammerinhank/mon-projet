@@ -1120,7 +1120,7 @@
     "độ": 0,
     "nhiệt độ": 0,
     "thấp hơn": 0,
-    "nóng hơn": 0,
+    "nóng hơn": 1,
     "mát hơn": 0,
     "tiếng sấm": 0,
     "bị yếu": 0,
@@ -1132,7 +1132,7 @@
     "khoai tây": 0,
     "cà ri": 0,
     "phô mai": 0,
-    "kem": 0,
+    "kem": 1,
     "nướng": 0,
     "lò": 0,
     "lò nướng": 0,
@@ -1163,6 +1163,6 @@
   },
   "currentSection": "- Thu : 16 août 2026",
   "sectionUpdatedAt": "1786891137207",
-  "updatedAt": "2026-08-16T14:39:02.222Z",
+  "updatedAt": "2026-08-16T14:41:47.130Z",
   "appVersion": "1.16.0"
 }
