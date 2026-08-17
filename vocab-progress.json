@@ -1172,7 +1172,7 @@
     "mong": 0,
     "tưới cây": 0,
     "trời sẽ mưa": 2,
-    "đẩy": 0,
+    "đẩy": 1,
     "giữ": 0,
     "gặp khó khăn": 0,
     "đọc chậm lại": 0,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T09:55:56.088Z",
+  "updatedAt": "2026-08-17T10:43:47.679Z",
   "appVersion": "1.16.5"
 }
