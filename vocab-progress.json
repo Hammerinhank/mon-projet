@@ -1171,7 +1171,7 @@
     "đến chơi nhà": 0,
     "mong": 0,
     "tưới cây": 0,
-    "trời sẽ mưa": 0,
+    "trời sẽ mưa": 1,
     "đẩy": 0,
     "giữ": 0,
     "gặp khó khăn": 0,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T09:50:48.596Z",
+  "updatedAt": "2026-08-17T09:51:56.192Z",
   "appVersion": "1.16.5"
 }
