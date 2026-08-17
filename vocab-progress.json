@@ -1169,7 +1169,7 @@
     "lần sau": 5,
     "mời": 5,
     "đến chơi nhà": 2,
-    "mong": 1,
+    "mong": 5,
     "tưới cây": 5,
     "trời sẽ mưa": 2,
     "đẩy": 1,
@@ -1178,11 +1178,11 @@
     "đọc chậm lại": 5,
     "chậm lại": 5,
     "hóa đơn": 0,
-    "ngân": 0,
+    "ngân": 1,
     "khoảng cách": 1
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T11:02:24.329Z",
+  "updatedAt": "2026-08-17T11:04:23.629Z",
   "appVersion": "1.16.5"
 }
