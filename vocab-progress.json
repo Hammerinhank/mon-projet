@@ -984,7 +984,7 @@
     "thăm bạn": 0,
     "hàng xóm": 0,
     "thân thiết": 0,
-    "ví dụ": 1,
+    "ví dụ": 5,
     "câu nói": 0,
     "chưa nói được": 0,
     "hơn 4 năm trước đây": 0,
@@ -1176,13 +1176,13 @@
     "giữ": 0,
     "gặp khó khăn": 0,
     "đọc chậm lại": 0,
-    "chậm lại": 1,
+    "chậm lại": 2,
     "hóa đơn": 0,
     "ngân": 0,
     "khoảng cách": 0
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T09:54:56.134Z",
+  "updatedAt": "2026-08-17T09:55:56.088Z",
   "appVersion": "1.16.5"
 }
