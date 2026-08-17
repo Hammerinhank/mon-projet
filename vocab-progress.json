@@ -72,7 +72,7 @@
     "bị từ chối": 0,
     "cũng": 1,
     "Lúc này": 0,
-    "kéo": 2,
+    "kéo": 5,
     "ghế": 5,
     "thưởng thức": 0,
     "khung cảnh": 0,
@@ -1175,7 +1175,7 @@
     "đẩy": 1,
     "giữ": 1,
     "gặp khó khăn": 0,
-    "đọc chậm lại": 0,
+    "đọc chậm lại": 5,
     "chậm lại": 2,
     "hóa đơn": 0,
     "ngân": 0,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T10:51:04.658Z",
+  "updatedAt": "2026-08-17T11:00:24.019Z",
   "appVersion": "1.16.5"
 }
