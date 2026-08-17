@@ -1165,7 +1165,7 @@
     "bất kỳ": 0,
     "quốc gia": 0,
     "cách đây rất lâu": 0,
-    "rất lâu rồi": 0,
+    "rất lâu rồi": 1,
     "lần sau": 0,
     "mời": 0,
     "đến chơi nhà": 0,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T09:51:56.192Z",
+  "updatedAt": "2026-08-17T09:52:56.254Z",
   "appVersion": "1.16.5"
 }
