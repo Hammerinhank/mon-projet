@@ -1164,8 +1164,8 @@
     "chắc chắn": 1,
     "bất kỳ": 1,
     "quốc gia": 1,
-    "cách đây rất lâu": 1,
-    "rất lâu rồi": 3,
+    "cách đây rất lâu": 4,
+    "rất lâu rồi": 4,
     "lần sau": 5,
     "mời": 5,
     "đến chơi nhà": 5,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T11:35:08.292Z",
+  "updatedAt": "2026-08-17T11:36:42.562Z",
   "appVersion": "1.16.5"
 }
