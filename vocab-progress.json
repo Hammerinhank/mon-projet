@@ -1160,7 +1160,7 @@
     "cuối tuần": 5,
     "niềm vui": 0,
     "cháy rừng": 0,
-    "kế hoạch": 0,
+    "kế hoạch": 1,
     "chắc chắn": 0,
     "bất kỳ": 0,
     "quốc gia": 0,
@@ -1169,8 +1169,8 @@
     "lần sau": 5,
     "mời": 5,
     "đến chơi nhà": 2,
-    "mong": 0,
-    "tưới cây": 0,
+    "mong": 1,
+    "tưới cây": 5,
     "trời sẽ mưa": 2,
     "đẩy": 1,
     "giữ": 0,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T10:45:09.181Z",
+  "updatedAt": "2026-08-17T10:46:09.212Z",
   "appVersion": "1.16.5"
 }
