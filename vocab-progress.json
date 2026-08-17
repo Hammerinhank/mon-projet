@@ -1015,7 +1015,7 @@
     "vào bữa tối": 0,
     "nấu ăn": 5,
     "bữa ăn": 5,
-    "kết thúc": 4,
+    "kết thúc": 5,
     "kết thúc bữa ăn": 5,
     "cuối bữa ăn": 5,
     "cuối cùng": 5,
@@ -1162,7 +1162,7 @@
     "cháy rừng": 0,
     "kế hoạch": 1,
     "chắc chắn": 0,
-    "bất kỳ": 0,
+    "bất kỳ": 1,
     "quốc gia": 0,
     "cách đây rất lâu": 0,
     "rất lâu rồi": 2,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T10:47:09.063Z",
+  "updatedAt": "2026-08-17T10:48:09.307Z",
   "appVersion": "1.16.5"
 }
