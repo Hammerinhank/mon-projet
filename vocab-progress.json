@@ -1165,13 +1165,13 @@
     "bất kỳ": 1,
     "quốc gia": 1,
     "cách đây rất lâu": 1,
-    "rất lâu rồi": 2,
+    "rất lâu rồi": 3,
     "lần sau": 5,
     "mời": 5,
     "đến chơi nhà": 5,
     "mong": 5,
     "tưới cây": 5,
-    "trời sẽ mưa": 2,
+    "trời sẽ mưa": 4,
     "đẩy": 5,
     "giữ": 5,
     "gặp khó khăn": 1,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T11:18:06.141Z",
+  "updatedAt": "2026-08-17T11:35:08.292Z",
   "appVersion": "1.16.5"
 }
