@@ -1161,7 +1161,7 @@
     "niềm vui": 0,
     "cháy rừng": 0,
     "kế hoạch": 1,
-    "chắc chắn": 0,
+    "chắc chắn": 1,
     "bất kỳ": 1,
     "quốc gia": 0,
     "cách đây rất lâu": 1,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T11:04:23.629Z",
+  "updatedAt": "2026-08-17T11:05:23.820Z",
   "appVersion": "1.16.5"
 }
