@@ -1166,7 +1166,7 @@
     "quốc gia": 0,
     "cách đây rất lâu": 0,
     "rất lâu rồi": 2,
-    "lần sau": 2,
+    "lần sau": 5,
     "mời": 5,
     "đến chơi nhà": 2,
     "mong": 0,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T10:43:47.679Z",
+  "updatedAt": "2026-08-17T10:45:09.181Z",
   "appVersion": "1.16.5"
 }
