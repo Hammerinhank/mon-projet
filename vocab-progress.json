@@ -1173,16 +1173,16 @@
     "tưới cây": 5,
     "trời sẽ mưa": 2,
     "đẩy": 1,
-    "giữ": 1,
+    "giữ": 5,
     "gặp khó khăn": 1,
     "đọc chậm lại": 5,
     "chậm lại": 5,
-    "hóa đơn": 0,
+    "hóa đơn": 1,
     "ngân": 1,
     "khoảng cách": 1
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T11:05:23.820Z",
+  "updatedAt": "2026-08-17T11:06:23.669Z",
   "appVersion": "1.16.5"
 }
