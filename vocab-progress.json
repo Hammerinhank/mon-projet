@@ -1163,7 +1163,7 @@
     "kế hoạch": 1,
     "chắc chắn": 1,
     "bất kỳ": 1,
-    "quốc gia": 4,
+    "quốc gia": 5,
     "cách đây rất lâu": 5,
     "rất lâu rồi": 5,
     "lần sau": 5,
@@ -1183,6 +1183,6 @@
   },
   "currentSection": "- Trang : 17 août 2026",
   "sectionUpdatedAt": "1786956057740",
-  "updatedAt": "2026-08-17T15:57:09.940Z",
+  "updatedAt": "2026-08-17T15:58:38.153Z",
   "appVersion": "1.16.5"
 }
