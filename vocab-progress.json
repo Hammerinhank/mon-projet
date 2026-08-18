@@ -1205,7 +1205,7 @@
     "định vị": 0,
     "dây đeo chìa khóa": 0,
     "móc chìa khóa": 0,
-    "còn trẻ": 0,
+    "còn trẻ": 1,
     "ít tuổi hơn": 0,
     "giải pháp": 0,
     "buổi học": 0,
@@ -1215,6 +1215,6 @@
   },
   "currentSection": "- Thu : 18 août 2026",
   "sectionUpdatedAt": "1787060877865",
-  "updatedAt": "2026-08-18T13:48:03.500Z",
+  "updatedAt": "2026-08-18T13:49:03.297Z",
   "appVersion": "1.16.5"
 }
