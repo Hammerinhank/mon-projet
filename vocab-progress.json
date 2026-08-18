@@ -1191,7 +1191,7 @@
     "não": 1,
     "quên": 2,
     "thỉnh thoảng": 0,
-    "bài tập": 2,
+    "bài tập": 5,
     "Bệnh Alzheimer": 1,
     "mắng": 0,
     "trẻ con": 0,
@@ -1206,15 +1206,15 @@
     "dây đeo chìa khóa": 0,
     "móc chìa khóa": 1,
     "còn trẻ": 1,
-    "ít tuổi hơn": 1,
+    "ít tuổi hơn": 2,
     "giải pháp": 0,
-    "buổi học": 1,
+    "buổi học": 2,
     "sớm hơn": 1,
     "đổi lịch": 0,
-    "cảm ơn": 1
+    "cảm ơn": 5
   },
   "currentSection": "- Thu : 18 août 2026",
   "sectionUpdatedAt": "1787060877865",
-  "updatedAt": "2026-08-18T13:53:03.463Z",
+  "updatedAt": "2026-08-18T13:57:03.346Z",
   "appVersion": "1.16.5"
 }
