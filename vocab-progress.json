@@ -1234,7 +1234,7 @@
     "con đường": 0,
     "ao": 0,
     "bể bơi": 0,
-    "quyển sách": 0,
+    "quyển sách": 5,
     "quyển vở": 0,
     "ngõ": 0,
     "căn phòng": 0,
@@ -1250,6 +1250,6 @@
   },
   "currentSection": "- Yếu : 19 août 2026",
   "sectionUpdatedAt": "1787127134607",
-  "updatedAt": "2026-08-19T08:12:25.148Z",
+  "updatedAt": "2026-08-19T08:13:37.858Z",
   "appVersion": "1.16.5"
 }
