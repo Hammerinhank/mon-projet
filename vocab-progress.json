@@ -1241,7 +1241,7 @@
     "nhận ra": 0,
     "cảnh báo": 0,
     "phù hợp": 0,
-    "bận": 0,
+    "bận": 1,
     "chủ nhật": 0,
     "nhất trí": 0,
     "giúp": 0,
@@ -1250,6 +1250,6 @@
   },
   "currentSection": "- Yếu : 19 août 2026",
   "sectionUpdatedAt": "1787127134607",
-  "updatedAt": "2026-08-19T08:13:37.858Z",
+  "updatedAt": "2026-08-19T08:19:30.109Z",
   "appVersion": "1.16.5"
 }
