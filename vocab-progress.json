@@ -1256,7 +1256,7 @@
     "tin nhắn": 0,
     "gửi lại": 0,
     "nội dung": 0,
-    "copy": 0,
+    "copy": 5,
     "tạo": 0,
     "trọng âm": 0,
     "âm thanh": 0,
@@ -1269,6 +1269,6 @@
   },
   "currentSection": "- Trang : 19 août 2026",
   "sectionUpdatedAt": "1787132103637",
-  "updatedAt": "2026-08-19T09:35:08.653Z",
+  "updatedAt": "2026-08-19T12:06:32.714Z",
   "appVersion": "1.16.5"
 }
