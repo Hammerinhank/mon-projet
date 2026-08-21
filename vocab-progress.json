@@ -1250,7 +1250,7 @@
     "phía Nam": 5,
     "phía Bắc": 5,
     "quê": 5,
-    "quê vợ": 0,
+    "quê vợ": 5,
     "phút": 5,
     "đoạn văn bản": 0,
     "tin nhắn": 5,
@@ -1269,6 +1269,6 @@
   },
   "currentSection": "- Trang : 19 août 2026",
   "sectionUpdatedAt": "1787132103637",
-  "updatedAt": "2026-08-21T07:21:44.026Z",
+  "updatedAt": "2026-08-21T13:49:36.166Z",
   "appVersion": "1.16.5"
 }
