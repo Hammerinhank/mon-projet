@@ -4,7 +4,7 @@
     "hai": 5,
     "ba": 5,
     "ban công": 1,
-    "trên": 1,
+    "trên": 5,
     "Love on the Bacony": 1,
     "chú": 5,
     "uống cà phê": 5,
@@ -1247,7 +1247,7 @@
     "giúp": 0,
     "nhiều": 5,
     "cancel": 2,
-    "phía Nam": 0,
+    "phía Nam": 1,
     "phía Bắc": 0,
     "quê": 0,
     "quê vợ": 0,
@@ -1269,6 +1269,6 @@
   },
   "currentSection": "- Trang : 19 août 2026",
   "sectionUpdatedAt": "1787132103637",
-  "updatedAt": "2026-08-19T12:07:31.303Z",
+  "updatedAt": "2026-08-21T07:15:26.115Z",
   "appVersion": "1.16.5"
 }
