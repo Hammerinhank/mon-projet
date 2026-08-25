@@ -1268,7 +1268,7 @@
     "dưới": 2,
     "chuyến du lịch": 0,
     "người thân": 0,
-    "chuyến đi": 0,
+    "chuyến đi": 1,
     "ấn tượng": 0,
     "khiến": 0,
     "con gái út": 0,
@@ -1290,7 +1290,7 @@
     "chọn": 0,
     "màu": 0,
     "bôi": 0,
-    "câu đúng": 0,
+    "câu đúng": 1,
     "điền từ": 0,
     "từ trái nghĩa": 0,
     "chỗ trống": 0,
@@ -1364,6 +1364,6 @@
   },
   "currentSection": "- Trang : 25 août 2026",
   "sectionUpdatedAt": "1787672892407",
-  "updatedAt": "2026-08-25T15:48:18.042Z",
+  "updatedAt": "2026-08-25T15:52:19.163Z",
   "appVersion": "1.16.5"
 }
