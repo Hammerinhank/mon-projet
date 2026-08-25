@@ -1292,11 +1292,11 @@
     "bôi": 0,
     "câu đúng": 5,
     "điền từ": 0,
-    "từ trái nghĩa": 1,
+    "từ trái nghĩa": 2,
     "chỗ trống": 0,
     "chọn từ": 1,
     "từ đúng": 5,
-    "nghĩa là": 0,
+    "nghĩa là": 5,
     "cấm": 0,
     "thời gian": 5,
     "hôm": 5,
@@ -1364,6 +1364,6 @@
   },
   "currentSection": "- Trang : 25 août 2026",
   "sectionUpdatedAt": "1787672892407",
-  "updatedAt": "2026-08-25T15:58:18.746Z",
+  "updatedAt": "2026-08-25T16:00:18.793Z",
   "appVersion": "1.16.5"
 }
