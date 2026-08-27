@@ -1266,7 +1266,7 @@
     "đến chơi": 5,
     "ánh sáng": 2,
     "dưới": 2,
-    "chuyến du lịch": 1,
+    "chuyến du lịch": 2,
     "người thân": 1,
     "chuyến đi": 2,
     "ấn tượng": 0,
@@ -1281,7 +1281,7 @@
     "thân thiện": 2,
     "lấy chồng": 2,
     "buồn": 1,
-    "phòng": 1,
+    "phòng": 2,
     "cất đồ": 0,
     "quét": 2,
     "lau": 1,
@@ -1544,6 +1544,6 @@
   },
   "currentSection": "- Yến : 25 août 2026",
   "sectionUpdatedAt": "1787818979215",
-  "updatedAt": "2026-08-27T08:25:04.742Z",
+  "updatedAt": "2026-08-27T08:26:04.623Z",
   "appVersion": "1.16.5"
 }
