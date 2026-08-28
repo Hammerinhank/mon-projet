@@ -1556,7 +1556,7 @@
     "bật điện": 1,
     "cho sáng": 0,
     "đóng cửa": 0,
-    "mở cửa": 1,
+    "mở cửa": 2,
     "làm thay": 0,
     "chuyển động": 1,
     "đậu": 0,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-08-28T09:30:29.111Z",
+  "updatedAt": "2026-08-28T09:37:04.261Z",
   "appVersion": "1.16.5"
 }
