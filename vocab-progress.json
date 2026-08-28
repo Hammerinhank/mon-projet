@@ -1553,7 +1553,7 @@
     "cửa ban công": 0,
     "bật": 0,
     "tắt": 0,
-    "bật điện": 0,
+    "bật điện": 1,
     "cho sáng": 0,
     "đóng cửa": 0,
     "mở cửa": 0,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-08-27T16:16:53.967Z",
+  "updatedAt": "2026-08-28T09:29:28.472Z",
   "appVersion": "1.16.5"
 }
