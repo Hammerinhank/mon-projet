@@ -214,7 +214,7 @@
     "cũ": 5,
     "thêm": 5,
     "khác": 4,
-    "tương lai": 3,
+    "tương lai": 5,
     "lành mạnh": 0,
     "năng lượng": 0,
     "nước ấm": 1,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-09-01T18:12:59.557Z",
+  "updatedAt": "2026-09-01T18:14:03.635Z",
   "appVersion": "1.16.7"
 }
