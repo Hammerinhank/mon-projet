@@ -13,10 +13,21 @@
         }
         h1 { font-size: 1.5rem; color: #2c3e50; margin: 5px 0 2px 0; }
         #section-display {
-            font-size: 1.1rem; color: #ffffff; margin-bottom: 12px; font-weight: 700;
+            font-size: 1.1rem; color: #ffffff; font-weight: 700;
             background: linear-gradient(135deg, #3498db 0%, #2c80b4 100%);
             padding: 8px 18px; border-radius: 20px; display: inline-block;
             box-shadow: 0 2px 5px rgba(0,0,0,0.15); letter-spacing: 0.3px;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+        }
+
+        .section-title-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 4px; margin-bottom: 12px;
+        }
+        .word-font-btn {
+            width: 46px; min-height: 46px; height: 46px; flex-shrink: 0;
+            background: transparent; border: none; padding: 0; margin: 0;
             cursor: pointer; -webkit-tap-highlight-color: transparent;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         }
@@ -200,8 +211,12 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.5</span></h1>
-    <div id="section-display" onclick="showSectionPicker()"></div>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.6</span></h1>
+    <div class="section-title-row">
+        <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
+        <div id="section-display" onclick="showSectionPicker()"></div>
+        <button type="button" class="word-font-btn" aria-label="Agrandir la taille du texte des boutons" onclick="changeWordBtnFontSize(2)"></button>
+    </div>
     <div id="message">Chargement...</div>
 
     <div class="container">
@@ -360,12 +375,20 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.16.5';
+        const APP_VERSION = '1.16.6';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
         const GAME_FONT_MAX = 48;
         let gameAnswerFontSize = parseInt(localStorage.getItem(GAME_FONT_SIZE_KEY), 10) || 24;
+
+        // Taille de police des 5 boutons de chaque colonne (gauche/droite), réglable
+        // via les deux boutons invisibles autour du titre "Section : ...", mémorisée
+        // uniquement en local (localStorage), jamais synchronisée via GitHub.
+        const WORD_BTN_FONT_SIZE_KEY = 'vocab_word_btn_font_size';
+        const WORD_BTN_FONT_MIN = 10;
+        const WORD_BTN_FONT_MAX = 32;
+        let wordBtnFontSize = parseInt(localStorage.getItem(WORD_BTN_FONT_SIZE_KEY), 10) || 20;
 
         // Requêtes ChatGPT personnalisables (stockage local uniquement, jamais sur GitHub)
         const CHATGPT_PROMPT_LINK_KEY = 'vocab_chatgpt_prompt_link';
@@ -936,6 +959,7 @@
 
         function createBtn(pair, containerId, side) {
             const btn = document.createElement('button');
+            btn.style.fontSize = wordBtnFontSize + 'px';
             const shouldHide = (side === 'left' && (hideMode === 'theme' || hideMode === 'theme+')) ||
                                 (side === 'right' && hideMode === 'version');
             if (shouldHide) { 
@@ -1203,6 +1227,17 @@
             if (!btn) return;
             btn.classList.add('font-size-btn-active');
             setTimeout(() => btn.classList.remove('font-size-btn-active'), 333);
+        }
+
+        // Augmente/diminue graduellement la taille du texte des 5 boutons de
+        // chacune des deux colonnes (boutons invisibles à gauche/droite du titre
+        // "Section : ..."). Appliqué immédiatement aux boutons déjà affichés.
+        function changeWordBtnFontSize(delta) {
+            wordBtnFontSize = Math.min(WORD_BTN_FONT_MAX, Math.max(WORD_BTN_FONT_MIN, wordBtnFontSize + delta));
+            localStorage.setItem(WORD_BTN_FONT_SIZE_KEY, String(wordBtnFontSize));
+            document.querySelectorAll('#left-col button, #right-col button').forEach(b => {
+                b.style.fontSize = wordBtnFontSize + 'px';
+            });
         }
 
         let avoidRepeatNext = false; // évite de re-proposer immédiatement le même mot après une soumission vide en Défi Écriture
