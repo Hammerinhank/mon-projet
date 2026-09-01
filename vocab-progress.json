@@ -1543,7 +1543,7 @@
     "rượu": 0,
     "cơn mưa": 5,
     "mây đen": 0,
-    "trời tối sầm lại": 0,
+    "trời tối sầm lại": 1,
     "gió mạnh": 1,
     "cơn bão": 1,
     "trời bắt đầu mưa": 1,
@@ -1568,7 +1568,7 @@
     "đám cưới": 1,
     "tham dự": 1,
     "sắp đến": 0,
-    "quá khứ": 1,
+    "quá khứ": 5,
     "hiện tại": 5,
     "tháng một": 5,
     "năm sau": 5,
@@ -1576,12 +1576,12 @@
     "làm thay việc": 0,
     "theo ý": 0,
     "tuân theo": 1,
-    "mệnh lệnh": 0,
-    "sao chép": 0,
-    "dán": 0
+    "mệnh lệnh": 1,
+    "sao chép": 1,
+    "dán": 1
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-09-01T18:22:29.542Z",
+  "updatedAt": "2026-09-01T18:24:27.420Z",
   "appVersion": "1.16.7"
 }
