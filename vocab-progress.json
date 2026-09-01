@@ -1566,13 +1566,13 @@
     "đậu trên cành cây": 0,
     "đỗ xe": 0,
     "đám cưới": 0,
-    "tham dự": 0,
+    "tham dự": 1,
     "sắp đến": 0,
     "quá khứ": 1,
     "hiện tại": 0,
     "tháng một": 5,
     "năm sau": 5,
-    "khi đó": 0,
+    "khi đó": 1,
     "làm thay việc": 0,
     "theo ý": 0,
     "tuân theo": 0,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-09-01T18:16:03.790Z",
+  "updatedAt": "2026-09-01T18:17:05.769Z",
   "appVersion": "1.16.7"
 }
