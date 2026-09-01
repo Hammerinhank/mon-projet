@@ -19,11 +19,12 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.15); letter-spacing: 0.3px;
             cursor: pointer; -webkit-tap-highlight-color: transparent;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            min-width: 0; text-align: center;
         }
 
         .section-title-row {
             display: flex; align-items: center; justify-content: center;
-            gap: 4px; margin-bottom: 12px;
+            gap: 4px; margin-bottom: 12px; width: 100%; max-width: 500px;
         }
         .word-font-btn {
             width: 46px; min-height: 46px; height: 46px; flex-shrink: 0;
@@ -211,7 +212,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.6</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version">v1.16.7</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -375,7 +376,7 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.16.6';
+        const APP_VERSION = '1.16.7';
         const GITHUB_CONFIG_KEY = 'vocab_github_config';
         const GAME_FONT_SIZE_KEY = 'vocab_game_answer_font_size'; // reste local, jamais envoyé sur GitHub
         const GAME_FONT_MIN = 16;
@@ -463,7 +464,33 @@
         }
 
         function updateSectionDisplay() {
-            document.getElementById('section-display').innerText = "📂 Section : " + currentSection;
+            const el = document.getElementById('section-display');
+            const fullText = "📂 Section : " + currentSection;
+            el.innerText = fullText;
+            // Si le texte complet ("📂 Section : ...") est trop long et passerait
+            // sur deux lignes, on retire le préfixe pour tenir sur une seule ligne.
+            if (sectionDisplayTextWouldWrap(el, fullText)) {
+                el.innerText = currentSection;
+            }
+        }
+
+        // Mesure (via canvas, sans provoquer de reflow supplémentaire) si le texte
+        // donné tiendrait sur une seule ligne dans la largeur disponible de la
+        // rangée du titre, compte tenu des deux boutons invisibles de part et
+        // d'autre et du padding horizontal du badge.
+        function sectionDisplayTextWouldWrap(el, text) {
+            const row = document.querySelector('.section-title-row');
+            if (!row) return false;
+            const style = getComputedStyle(el);
+            const canvas = sectionDisplayTextWouldWrap._canvas || (sectionDisplayTextWouldWrap._canvas = document.createElement('canvas'));
+            const ctx = canvas.getContext('2d');
+            ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+            const textWidth = ctx.measureText(text).width;
+            const paddingLeft = parseFloat(style.paddingLeft) || 0;
+            const paddingRight = parseFloat(style.paddingRight) || 0;
+            const buttonsAndGaps = 46 * 2 + 4 * 2; // largeur des 2 boutons invisibles + gaps de la rangée
+            const available = row.clientWidth - buttonsAndGaps - paddingLeft - paddingRight;
+            return textWidth > available;
         }
 
         let showSectionProgress = false;
