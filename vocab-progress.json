@@ -1561,7 +1561,7 @@
     "chuyển động": 1,
     "đậu": 0,
     "quả đậu": 0,
-    "cành cây": 0,
+    "cành cây": 1,
     "chuồn chuồn": 0,
     "đậu trên cành cây": 0,
     "đỗ xe": 0,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-09-01T18:15:03.607Z",
+  "updatedAt": "2026-09-01T18:16:03.790Z",
   "appVersion": "1.16.7"
 }
