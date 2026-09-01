@@ -1541,7 +1541,7 @@
     "rất": 0,
     "nên": 0,
     "rượu": 0,
-    "cơn mưa": 0,
+    "cơn mưa": 5,
     "mây đen": 0,
     "trời tối sầm lại": 0,
     "gió mạnh": 1,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-09-01T18:14:03.635Z",
+  "updatedAt": "2026-09-01T18:15:03.607Z",
   "appVersion": "1.16.7"
 }
