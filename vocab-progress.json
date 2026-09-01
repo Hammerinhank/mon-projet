@@ -1562,8 +1562,8 @@
     "đậu": 0,
     "quả đậu": 0,
     "cành cây": 1,
-    "chuồn chuồn": 0,
-    "đậu trên cành cây": 0,
+    "chuồn chuồn": 1,
+    "đậu trên cành cây": 1,
     "đỗ xe": 0,
     "đám cưới": 1,
     "tham dự": 1,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-09-01T18:20:03.799Z",
+  "updatedAt": "2026-09-01T18:21:27.318Z",
   "appVersion": "1.16.7"
 }
