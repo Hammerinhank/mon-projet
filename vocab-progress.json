@@ -1557,8 +1557,8 @@
     "cho sáng": 5,
     "đóng cửa": 1,
     "mở cửa": 2,
-    "làm thay": 1,
-    "chuyển động": 1,
+    "làm thay": 2,
+    "chuyển động": 2,
     "đậu": 1,
     "quả đậu": 1,
     "cành cây": 1,
@@ -1573,7 +1573,7 @@
     "tháng một": 5,
     "năm sau": 5,
     "khi đó": 1,
-    "làm thay việc": 1,
+    "làm thay việc": 2,
     "theo ý": 0,
     "tuân theo": 1,
     "mệnh lệnh": 1,
@@ -1582,6 +1582,6 @@
   },
   "currentSection": "- Yến: 27 août 2026",
   "sectionUpdatedAt": "1787847408950",
-  "updatedAt": "2026-09-04T05:57:09.661Z",
+  "updatedAt": "2026-09-04T05:58:09.687Z",
   "appVersion": "1.16.7"
 }
