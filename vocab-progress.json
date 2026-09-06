@@ -1600,7 +1600,7 @@
     "vẽ": 0,
     "ít": 0,
     "rất ít": 0,
-    "bức": 0,
+    "bức": 1,
     "hoa tai": 0,
     "ngọc trai": 0,
     "chủ đề": 0,
@@ -1628,6 +1628,6 @@
   },
   "currentSection": "- Chi : 6 septembre 2026",
   "sectionUpdatedAt": "1788716663892",
-  "updatedAt": "2026-09-06T17:45:29.361Z",
+  "updatedAt": "2026-09-06T17:46:41.227Z",
   "appVersion": "1.16.7"
 }
