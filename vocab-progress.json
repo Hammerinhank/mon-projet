@@ -1628,9 +1628,9 @@
     "bệnh viện": 5,
     "bác sỹ": 5,
     "y tá": 1,
-    "cắt chỉ": 0,
+    "cắt chỉ": 1,
     "vết thương": 0,
-    "kết luận": 0,
+    "kết luận": 1,
     "ổn": 0,
     "cách đây": 0,
     "tuần": 5,
@@ -1652,6 +1652,6 @@
   },
   "currentSection": "- Trang : 7 septembre 2026",
   "sectionUpdatedAt": "1788775745601",
-  "updatedAt": "2026-09-07T10:18:50.749Z",
+  "updatedAt": "2026-09-07T10:19:51.238Z",
   "appVersion": "1.16.7"
 }
