@@ -1632,7 +1632,7 @@
     "vết thương": 1,
     "kết luận": 1,
     "ổn": 1,
-    "cách đây": 0,
+    "cách đây": 1,
     "tuần": 5,
     "câu hỏi": 5,
     "tình huống": 1,
@@ -1652,6 +1652,6 @@
   },
   "currentSection": "- Trang : 7 septembre 2026",
   "sectionUpdatedAt": "1788775745601",
-  "updatedAt": "2026-09-07T10:40:46.734Z",
+  "updatedAt": "2026-09-07T10:41:46.845Z",
   "appVersion": "1.16.7"
 }
