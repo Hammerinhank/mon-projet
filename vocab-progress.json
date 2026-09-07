@@ -1637,7 +1637,7 @@
     "câu hỏi": 0,
     "tình huống": 0,
     "chờ": 5,
-    "hỏi": 0,
+    "hỏi": 5,
     "tay": 0,
     "bàn tay": 0,
     "cách dùng": 0,
@@ -1647,11 +1647,11 @@
     "bạn của bác": 5,
     "thăm": 1,
     "cách sử dụng": 0,
-    "được": 0,
+    "được": 1,
     "cứ": 0
   },
   "currentSection": "- Trang : 7 septembre 2026",
   "sectionUpdatedAt": "1788775745601",
-  "updatedAt": "2026-09-07T10:12:11.028Z",
+  "updatedAt": "2026-09-07T10:18:50.749Z",
   "appVersion": "1.16.7"
 }
