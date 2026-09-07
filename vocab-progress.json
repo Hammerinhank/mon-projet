@@ -92,7 +92,7 @@
     "từng + noun": 0,
     "từng bước": 0,
     "đặt": 0,
-    "trước": 0,
+    "trước": 5,
     "gõ cửa": 0,
     "bỏ đi": 1,
     "sàn (nhà)": 0,
@@ -1643,8 +1643,8 @@
     "cách dùng": 0,
     "câu": 0,
     "tiếng Việt": 0,
-    "bạn": 0,
-    "bạn của bác": 0,
+    "bạn": 5,
+    "bạn của bác": 5,
     "thăm": 0,
     "cách sử dụng": 0,
     "được": 0,
@@ -1652,6 +1652,6 @@
   },
   "currentSection": "- Trang : 7 septembre 2026",
   "sectionUpdatedAt": "1788775745601",
-  "updatedAt": "2026-09-07T10:10:11.018Z",
+  "updatedAt": "2026-09-07T10:11:11.025Z",
   "appVersion": "1.16.7"
 }
