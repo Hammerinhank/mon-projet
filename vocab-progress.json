@@ -1629,7 +1629,7 @@
     "bác sỹ": 5,
     "y tá": 2,
     "cắt chỉ": 1,
-    "vết thương": 0,
+    "vết thương": 1,
     "kết luận": 1,
     "ổn": 1,
     "cách đây": 0,
@@ -1640,7 +1640,7 @@
     "hỏi": 5,
     "tay": 5,
     "bàn tay": 2,
-    "cách dùng": 0,
+    "cách dùng": 2,
     "câu": 0,
     "tiếng Việt": 0,
     "bạn": 5,
@@ -1652,6 +1652,6 @@
   },
   "currentSection": "- Trang : 7 septembre 2026",
   "sectionUpdatedAt": "1788775745601",
-  "updatedAt": "2026-09-07T10:33:01.434Z",
+  "updatedAt": "2026-09-07T10:36:15.059Z",
   "appVersion": "1.16.7"
 }
