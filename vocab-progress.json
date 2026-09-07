@@ -1627,7 +1627,7 @@
     "hê": 0,
     "bệnh viện": 5,
     "bác sỹ": 5,
-    "y tá": 2,
+    "y tá": 5,
     "cắt chỉ": 1,
     "vết thương": 1,
     "kết luận": 1,
@@ -1648,10 +1648,10 @@
     "thăm": 2,
     "cách sử dụng": 5,
     "được": 5,
-    "cứ": 0
+    "cứ": 1
   },
   "currentSection": "- Trang : 7 septembre 2026",
   "sectionUpdatedAt": "1788775745601",
-  "updatedAt": "2026-09-07T10:37:48.811Z",
+  "updatedAt": "2026-09-07T10:40:46.734Z",
   "appVersion": "1.16.7"
 }
