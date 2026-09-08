@@ -1661,7 +1661,7 @@
     "rất đông": 0,
     "quốc khánh": 0,
     "Chúc mừng ngày quốc khánh": 0,
-    "tắc đường": 1,
+    "tắc đường": 2,
     "mấy hôm nay": 1,
     "bão": 0,
     "trời mưa to": 1,
@@ -1674,7 +1674,7 @@
     "thường xuyên hơn": 0,
     "được bác hỏi": 0,
     "cứ hỏi nhiều": 0,
-    "hỏi là học": 0,
+    "hỏi là học": 1,
     "nốt": 0,
     "vần": 0,
     "học nốt": 0,
@@ -1707,6 +1707,6 @@
   },
   "currentSection": "- Yến : 30 août 2026",
   "sectionUpdatedAt": "1788852001944",
-  "updatedAt": "2026-09-08T07:24:58.454Z",
+  "updatedAt": "2026-09-08T07:25:58.385Z",
   "appVersion": "1.16.7"
 }
