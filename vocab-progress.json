@@ -1664,7 +1664,7 @@
     "tắc đường": 0,
     "mấy hôm nay": 0,
     "bão": 0,
-    "trời mưa to": 0,
+    "trời mưa to": 1,
     "đường bị ngập": 0,
     "bị ngập": 0,
     "ngập": 0,
@@ -1705,8 +1705,8 @@
     "tháng 7, 8, 9": 0,
     "thường vào": 0
   },
-  "currentSection": "- Trang : 8 septembre 2026",
-  "sectionUpdatedAt": "1788851919445",
-  "updatedAt": "2026-09-08T07:18:44.451Z",
+  "currentSection": "- Yến : 30 août 2026",
+  "sectionUpdatedAt": "1788852001944",
+  "updatedAt": "2026-09-08T07:20:58.070Z",
   "appVersion": "1.16.7"
 }
