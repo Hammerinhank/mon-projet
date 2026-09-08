@@ -1674,7 +1674,7 @@
     "thường xuyên hơn": 0,
     "được bác hỏi": 0,
     "cứ hỏi nhiều": 0,
-    "hỏi là học": 1,
+    "hỏi là học": 5,
     "nốt": 0,
     "vần": 0,
     "học nốt": 0,
@@ -1707,6 +1707,6 @@
   },
   "currentSection": "- Yến : 30 août 2026",
   "sectionUpdatedAt": "1788852001944",
-  "updatedAt": "2026-09-08T07:43:22.461Z",
+  "updatedAt": "2026-09-08T07:44:22.444Z",
   "appVersion": "1.16.7"
 }
