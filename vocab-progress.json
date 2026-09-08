@@ -1377,7 +1377,7 @@
     "làm thế nào": 1,
     "đúng không": 0,
     "có lẽ": 0,
-    "thường xuyên": 1,
+    "thường xuyên": 2,
     "cả câu": 0,
     "cả câu đang nói gì": 0,
     "từ": 0,
@@ -1656,13 +1656,13 @@
     "bất kì": 0,
     "công ty": 1,
     "dịch vụ": 0,
-    "được học": 1,
+    "được học": 2,
     "đặt lịch": 0,
     "rất đông": 0,
     "quốc khánh": 0,
     "Chúc mừng ngày quốc khánh": 0,
     "tắc đường": 2,
-    "mấy hôm nay": 1,
+    "mấy hôm nay": 2,
     "bão": 0,
     "trời mưa to": 1,
     "đường bị ngập": 0,
@@ -1703,10 +1703,10 @@
     "hoa mai": 0,
     "ngày nào": 0,
     "tháng 7, 8, 9": 1,
-    "thường vào": 0
+    "thường vào": 1
   },
   "currentSection": "- Yến : 30 août 2026",
   "sectionUpdatedAt": "1788852001944",
-  "updatedAt": "2026-09-08T07:25:58.385Z",
+  "updatedAt": "2026-09-08T07:43:22.461Z",
   "appVersion": "1.16.7"
 }
