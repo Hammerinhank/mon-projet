@@ -1741,7 +1741,7 @@
     "em": 0,
     "anh": 0,
     "nhiều hơn": 0,
-    "ít hơn": 0,
+    "ít hơn": 1,
     "trẻ hơn": 0,
     "nhiều tuổi": 0,
     "2 tuổi": 0,
@@ -1759,6 +1759,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1788875577906",
-  "updatedAt": "2026-09-08T13:53:02.926Z",
+  "updatedAt": "2026-09-08T17:53:06.890Z",
   "appVersion": "1.16.7"
 }
