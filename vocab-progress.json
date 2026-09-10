@@ -1475,7 +1475,7 @@
     "người ăn chay": 0,
     "đồ ăn": 0,
     "chai": 1,
-    "hộp": 0,
+    "hộp": 1,
     "rượu vang trắng": 1,
     "chai rượu vang trắng": 0,
     "món quà": 1,
@@ -1492,7 +1492,7 @@
     "đường cho ô tô": 0,
     "di chuyển": 0,
     "lái xe ô tô": 0,
-    "nguy hiểm": 0,
+    "nguy hiểm": 1,
     "xe ô tô": 0,
     "sau khi": 0,
     "hôm qua": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:34:57.855Z",
+  "updatedAt": "2026-09-10T08:35:58.050Z",
   "appVersion": "1.16.7"
 }
