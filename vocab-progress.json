@@ -57,7 +57,7 @@
     "buộc": 5,
     "cái hộp": 0,
     "sợ dây": 0,
-    "đi vào": 3,
+    "đi vào": 4,
     "nhà": 5,
     "lại (+ verb)": 0,
     "liền + verb": 0,
@@ -1303,7 +1303,7 @@
     "anh họ": 0,
     "chị họ": 1,
     "em họ": 1,
-    "bạn học cũ": 1,
+    "bạn học cũ": 2,
     "đồng nghiệp cũ": 1,
     "giống gia đình": 0,
     "hơn 2 tuổi": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T12:16:43.820Z",
+  "updatedAt": "2026-09-10T12:23:32.074Z",
   "appVersion": "1.16.7"
 }
