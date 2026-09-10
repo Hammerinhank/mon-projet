@@ -172,7 +172,7 @@
     "thoải mái": 0,
     "khỏe mạnh": 2,
     "dễ chịu": 0,
-    "dễ dàng": 4,
+    "dễ dàng": 5,
     "tỉnh táo": 1,
     "vận động": 1,
     "động tác": 3,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:44:09.996Z",
+  "updatedAt": "2026-09-10T08:48:02.292Z",
   "appVersion": "1.16.7"
 }
