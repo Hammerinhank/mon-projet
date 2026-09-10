@@ -1762,7 +1762,7 @@
     "đường cho xe máy": 1,
     "đường cho người đi bộ": 1,
     "giờ cao điểm": 0,
-    "đi lại": 1,
+    "đi lại": 2,
     "an toàn": 1,
     "điều hòa": 0,
     "phòng ngủ": 5,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T12:37:02.412Z",
+  "updatedAt": "2026-09-10T12:39:02.985Z",
   "appVersion": "1.16.7"
 }
