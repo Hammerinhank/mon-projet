@@ -1302,7 +1302,7 @@
     "hôm": 5,
     "anh họ": 0,
     "chị họ": 1,
-    "em họ": 1,
+    "em họ": 2,
     "bạn học cũ": 2,
     "đồng nghiệp cũ": 1,
     "giống gia đình": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T12:25:48.020Z",
+  "updatedAt": "2026-09-10T12:26:48.111Z",
   "appVersion": "1.16.7"
 }
