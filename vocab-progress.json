@@ -1770,7 +1770,7 @@
     "gửi": 0,
     "đáp án": 0,
     "chọn đáp án đúng": 0,
-    "cho phép": 0,
+    "cho phép": 1,
     "quan chức nhà nước": 0,
     "trưng bày": 0,
     "triển lãm": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:28:51.090Z",
+  "updatedAt": "2026-09-10T08:31:57.892Z",
   "appVersion": "1.16.7"
 }
