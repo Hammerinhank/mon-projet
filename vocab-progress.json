@@ -1779,7 +1779,7 @@
     "họa sĩ nước Hà Lan": 0,
     "thường thường": 0,
     "hiếm khi": 0,
-    "không bao giờ": 0,
+    "không bao giờ": 1,
     "hàng tuần": 1,
     "thứ sáu": 0,
     "thứ bảy": 5,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:21:26.174Z",
+  "updatedAt": "2026-09-10T08:24:51.135Z",
   "appVersion": "1.16.7"
 }
