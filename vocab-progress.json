@@ -1828,14 +1828,14 @@
     "Bà ngoại là chiều Louis nhất": 1,
     "nghiêm khắc": 1,
     "chiều": 0,
-    "Bé Ngoan": 0,
+    "Bé Ngoan": 1,
     "đi đâu": 5,
-    "mùa đông": 0,
+    "mùa đông": 5,
     "Bác thấy mùa hè hay mùa đông dễ chịu hơn?": 1,
     "trung tâm thành phố": 0
   },
   "currentSection": "- Thu : 10 septembre 2026",
   "sectionUpdatedAt": "1789058930397",
-  "updatedAt": "2026-09-10T21:49:56.433Z",
+  "updatedAt": "2026-09-10T21:50:59.091Z",
   "appVersion": "1.16.7"
 }
