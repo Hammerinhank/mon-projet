@@ -1488,7 +1488,7 @@
     "đường hầm": 1,
     "phương tiện giao thông": 1,
     "đường dành cho xe tải": 0,
-    "đường cho xe tải": 2,
+    "đường cho xe tải": 3,
     "đường cho ô tô": 0,
     "di chuyển": 0,
     "lái xe ô tô": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T12:40:03.016Z",
+  "updatedAt": "2026-09-10T13:13:10.362Z",
   "appVersion": "1.16.7"
 }
