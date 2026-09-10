@@ -1772,10 +1772,10 @@
     "chọn đáp án đúng": 0,
     "cho phép": 2,
     "quan chức nhà nước": 1,
-    "trưng bày": 0,
+    "trưng bày": 1,
     "triển lãm": 1,
     "triển lãm tạm thời": 0,
-    "họa sĩ nước Tây Ban Nha": 0,
+    "họa sĩ nước Tây Ban Nha": 1,
     "họa sĩ nước Hà Lan": 1,
     "thường thường": 0,
     "hiếm khi": 0,
@@ -1788,10 +1788,10 @@
     "đã gửi": 0,
     "chưa trả lời": 0,
     "tệ": 0,
-    "tạm thời": 0
+    "tạm thời": 1
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:50:02.280Z",
+  "updatedAt": "2026-09-10T08:52:57.614Z",
   "appVersion": "1.16.7"
 }
