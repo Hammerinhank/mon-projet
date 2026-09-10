@@ -1190,7 +1190,7 @@
     "luyện tập": 0,
     "não": 1,
     "quên": 2,
-    "thỉnh thoảng": 0,
+    "thỉnh thoảng": 1,
     "bài tập": 5,
     "Bệnh Alzheimer": 1,
     "mắng": 0,
@@ -1529,7 +1529,7 @@
     "2 hộp": 0,
     "12 chai": 0,
     "một tin nhắn nữa": 3,
-    "tin nhắn cuối": 3,
+    "tin nhắn cuối": 4,
     "từ tiếp theo": 0,
     "cao hơn": 0,
     "chất lượng": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:32:57.888Z",
+  "updatedAt": "2026-09-10T08:33:57.913Z",
   "appVersion": "1.16.7"
 }
