@@ -1776,7 +1776,7 @@
     "triển lãm": 1,
     "triển lãm tạm thời": 0,
     "họa sĩ nước Tây Ban Nha": 1,
-    "họa sĩ nước Hà Lan": 2,
+    "họa sĩ nước Hà Lan": 3,
     "thường thường": 0,
     "hiếm khi": 0,
     "không bao giờ": 5,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T12:29:24.731Z",
+  "updatedAt": "2026-09-10T12:37:02.412Z",
   "appVersion": "1.16.7"
 }
