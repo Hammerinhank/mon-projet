@@ -1304,7 +1304,7 @@
     "chị họ": 1,
     "em họ": 1,
     "bạn học cũ": 0,
-    "đồng nghiệp cũ": 0,
+    "đồng nghiệp cũ": 1,
     "giống gia đình": 0,
     "hơn 2 tuổi": 0,
     "hơn bác 2 tuổi": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:38:57.895Z",
+  "updatedAt": "2026-09-10T08:39:57.884Z",
   "appVersion": "1.16.7"
 }
