@@ -1472,7 +1472,7 @@
     "bánh bao chay": 0,
     "nhân thịt": 0,
     "đồ ăn chay": 0,
-    "người ăn chay": 1,
+    "người ăn chay": 5,
     "đồ ăn": 0,
     "chai": 1,
     "hộp": 1,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:39:57.884Z",
+  "updatedAt": "2026-09-10T08:41:10.024Z",
   "appVersion": "1.16.7"
 }
