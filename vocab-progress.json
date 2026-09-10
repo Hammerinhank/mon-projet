@@ -76,7 +76,7 @@
     "ghế": 5,
     "thưởng thức": 0,
     "khung cảnh": 0,
-    "buổi tối": 0,
+    "buổi tối": 5,
     "thật + adj/adv": 0,
     "cảm thấy, thây": 5,
     "hai bên": 0,
@@ -1836,6 +1836,6 @@
   },
   "currentSection": "- Thu : 10 septembre 2026",
   "sectionUpdatedAt": "1789058930397",
-  "updatedAt": "2026-09-10T16:54:51.752Z",
+  "updatedAt": "2026-09-10T21:48:35.146Z",
   "appVersion": "1.16.7"
 }
