@@ -1539,7 +1539,7 @@
     "không tốt": 0,
     "trong": 0,
     "rất": 0,
-    "nên": 0,
+    "nên": 1,
     "rượu": 0,
     "cơn mưa": 5,
     "mây đen": 1,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-09T17:42:55.466Z",
+  "updatedAt": "2026-09-10T08:20:25.830Z",
   "appVersion": "1.16.7"
 }
