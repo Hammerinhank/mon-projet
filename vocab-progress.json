@@ -1794,7 +1794,7 @@
     "già": 1,
     "trẻ": 5,
     "thức": 0,
-    "ướt": 0,
+    "ướt": 1,
     "khô": 0,
     "tròn": 0,
     "vuông": 0,
@@ -1825,7 +1825,7 @@
     "Ai gọn gàng hơn?": 0,
     "vợ": 0,
     "bà ngoại": 1,
-    "Bà ngoại là chiều Louis nhất": 0,
+    "Bà ngoại là chiều Louis nhất": 1,
     "nghiêm khắc": 0,
     "chiều": 0,
     "Bé Ngoan": 0,
@@ -1836,6 +1836,6 @@
   },
   "currentSection": "- Thu : 10 septembre 2026",
   "sectionUpdatedAt": "1789058930397",
-  "updatedAt": "2026-09-10T16:51:51.670Z",
+  "updatedAt": "2026-09-10T16:52:51.726Z",
   "appVersion": "1.16.7"
 }
