@@ -1301,9 +1301,9 @@
     "thời gian": 5,
     "hôm": 5,
     "anh họ": 0,
-    "chị họ": 1,
+    "chị họ": 2,
     "em họ": 2,
-    "bạn học cũ": 2,
+    "bạn học cũ": 3,
     "đồng nghiệp cũ": 1,
     "giống gia đình": 0,
     "hơn 2 tuổi": 0,
@@ -1787,11 +1787,11 @@
     "quá": 5,
     "đã gửi": 5,
     "chưa trả lời": 0,
-    "tệ": 0,
+    "tệ": 1,
     "tạm thời": 1
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T12:39:02.985Z",
+  "updatedAt": "2026-09-10T12:40:03.016Z",
   "appVersion": "1.16.7"
 }
