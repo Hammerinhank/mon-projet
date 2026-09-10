@@ -1483,7 +1483,7 @@
     "chồng": 0,
     "một bạn": 0,
     "dạy học": 0,
-    "đi qua": 0,
+    "đi qua": 5,
     "xe tải": 0,
     "đường hầm": 0,
     "phương tiện giao thông": 0,
@@ -1783,7 +1783,7 @@
     "hàng tuần": 3,
     "thứ sáu": 0,
     "thứ bảy": 5,
-    "không thể": 1,
+    "không thể": 5,
     "quá": 5,
     "đã gửi": 0,
     "chưa trả lời": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:33:57.913Z",
+  "updatedAt": "2026-09-10T08:34:57.855Z",
   "appVersion": "1.16.7"
 }
