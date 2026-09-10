@@ -1474,7 +1474,7 @@
     "đồ ăn chay": 1,
     "người ăn chay": 5,
     "đồ ăn": 0,
-    "chai": 1,
+    "chai": 5,
     "hộp": 1,
     "rượu vang trắng": 1,
     "chai rượu vang trắng": 0,
@@ -1792,6 +1792,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T08:52:57.614Z",
+  "updatedAt": "2026-09-10T12:15:43.686Z",
   "appVersion": "1.16.7"
 }
