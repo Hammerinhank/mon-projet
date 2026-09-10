@@ -1785,13 +1785,13 @@
     "thứ bảy": 5,
     "không thể": 5,
     "quá": 5,
-    "đã gửi": 0,
+    "đã gửi": 5,
     "chưa trả lời": 0,
     "tệ": 0,
     "tạm thời": 1
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1788975583812",
-  "updatedAt": "2026-09-10T12:15:43.686Z",
+  "updatedAt": "2026-09-10T12:16:43.820Z",
   "appVersion": "1.16.7"
 }
