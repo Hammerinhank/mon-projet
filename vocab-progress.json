@@ -227,7 +227,7 @@
     "hạt": 0,
     "chuối": 0,
     "quả mọng": 0,
-    "ngọt": 1,
+    "ngọt": 2,
     "luộc": 0,
     "tinh thần": 0,
     "dọn": 1,
@@ -1815,8 +1815,8 @@
     "gần giống nhau": 1,
     "Ai trẻ hơn?": 1,
     "Ai nói nhiều hơn?": 0,
-    "nói nhiều": 0,
-    "nói ít": 0,
+    "nói nhiều": 1,
+    "nói ít": 2,
     "Ai ngủ muộn hơn?": 0,
     "Ai vui tính hơn?": 0,
     "vui tính": 0,
@@ -1866,8 +1866,8 @@
     "ai đến Việt Nam": 0,
     "bác gái": 5
   },
-  "currentSection": "- Thu : 10 septembre 2026",
-  "sectionUpdatedAt": "1789118719651",
-  "updatedAt": "2026-09-11T09:31:34.871Z",
+  "currentSection": "- Yến : 8 septembre 2026",
+  "sectionUpdatedAt": "1789153611831",
+  "updatedAt": "2026-09-11T19:06:56.876Z",
   "appVersion": "1.16.7"
 }
