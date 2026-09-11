@@ -1230,7 +1230,7 @@
     "mỏng": 2,
     "bừa bộn": 1,
     "béo": 5,
-    "gầy": 1,
+    "gầy": 2,
     "con đường": 1,
     "ao": 0,
     "bể bơi": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Thu : 10 septembre 2026",
   "sectionUpdatedAt": "1789118719651",
-  "updatedAt": "2026-09-11T09:27:13.861Z",
+  "updatedAt": "2026-09-11T09:29:35.340Z",
   "appVersion": "1.16.7"
 }
