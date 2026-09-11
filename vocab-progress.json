@@ -1802,7 +1802,7 @@
     "thẳng": 5,
     "cong": 0,
     "vơi": 0,
-    "đóng": 0,
+    "đóng": 1,
     "mở": 5,
     "lên": 5,
     "xuống": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Thu : 10 septembre 2026",
   "sectionUpdatedAt": "1789118719651",
-  "updatedAt": "2026-09-11T09:26:13.965Z",
+  "updatedAt": "2026-09-11T09:27:13.861Z",
   "appVersion": "1.16.7"
 }
