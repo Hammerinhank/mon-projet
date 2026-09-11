@@ -1834,8 +1834,8 @@
     "Bác thấy mùa hè hay mùa đông dễ chịu hơn?": 1,
     "trung tâm thành phố": 0,
     "pha cà phê": 5,
-    "thứ nhất": 1,
-    "thứ hai": 1,
+    "thứ nhất": 2,
+    "thứ hai": 2,
     "tự pha cà phê": 0,
     "thức dậy sớm": 1,
     "10 phút sau": 5,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Trang : 11 septembre 2026",
   "sectionUpdatedAt": "1789117855247",
-  "updatedAt": "2026-09-11T09:15:01.047Z",
+  "updatedAt": "2026-09-11T09:19:42.833Z",
   "appVersion": "1.16.7"
 }
