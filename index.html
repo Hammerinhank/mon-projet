@@ -225,6 +225,13 @@
         #ai-answer-panel.visible { display: block; }
         #ai-answer-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
         #ai-answer-title { font-size: 0.78rem; font-weight: 700; color: #7f8c8d; text-align: left; }
+        #ai-answer-refresh {
+            display: none; flex: 0 0 26px; width: 26px; height: 26px; min-height: 26px; padding: 0;
+            background: #eaf2fb; color: #2980b9; border: 1px solid #cfe0f3;
+            border-radius: 6px; font-size: 13px; line-height: 1; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #ai-answer-refresh.visible { display: inline-block; }
         #ai-answer-close {
             flex: 0 0 26px; width: 26px; height: 26px; min-height: 26px; padding: 0;
             background: #ecf0f1; color: #7f8c8d; border: 1px solid #dfe6e9;
@@ -239,6 +246,9 @@
         #ai-answer-body code { background: #f4f7f6; padding: 1px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
         #ai-answer-body.ai-error { color: #c0392b; font-weight: bold; }
         #ai-answer-body.ai-waiting { color: #7f8c8d; font-style: italic; }
+        /* Mot dont l'explication est déjà mémorisée sur GitHub */
+        #chatgpt-link .mot-connu { color: #00c853; font-weight: 800; }
+        #ai-answer-source { font-size: 0.72rem; color: #95a5a6; margin-top: 8px; text-align: right; }
 
         #ai-panel { display: none; flex-direction: column; text-align: center; }
         #ai-panel h3 { margin-top: 0; }
@@ -272,7 +282,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.17.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.18.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -297,9 +307,13 @@
         <div id="ai-answer-panel">
             <div id="ai-answer-head">
                 <span id="ai-answer-title">🤖 Gemini</span>
-                <button type="button" id="ai-answer-close" onclick="hideAiAnswerPanel()" aria-label="Masquer la réponse">✕</button>
+                <span style="display:flex; gap:6px;">
+                    <button type="button" id="ai-answer-refresh" onclick="refreshCurrentExplication()" aria-label="Redemander à Gemini" title="Redemander à Gemini">🔄</button>
+                    <button type="button" id="ai-answer-close" onclick="hideAiAnswerPanel()" aria-label="Masquer la réponse">✕</button>
+                </span>
             </div>
             <div id="ai-answer-body"></div>
+            <div id="ai-answer-source"></div>
         </div>
     </div>
 
@@ -480,10 +494,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.17.0';
+        const APP_VERSION = '1.18.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.18.0', d: "Mémorisation durable des explications d'un mot unique dans le fichier vocab-explications.json du dépôt (même dépôt/token que la progression), en mode Gemini uniquement : « En savoir plus » et les 4 appuis réutilisent l'explication stockée au lieu de rappeler l'API. Le mot apparaît en vert vif dans le libellé du bouton quand son explication est déjà connue, et un bouton 🔄 dans le panneau permet de la redemander à Gemini." },
             { v: '1.17.0', d: "Ajout de Gemini comme assistant IA (menu « 🤖 Assistant IA ») : la réponse s'affiche dans un panneau sous le bouton « En savoir plus », se masque au clic ailleurs et se réaffiche sans nouvel appel tant que les mots n'ont pas changé ; idem pour la requête détaillée des 4 appuis. ChatGPT inchangé. Badge de version cliquable ouvrant cet historique." },
             { v: '1.16.7', d: "État de départ (avant l'ajout de Gemini) : jeu d'association, modes Flashcards / Défi Écriture, mode Masqué à 4 états, gestion des données du gist, synchronisation GitHub, requêtes ChatGPT éditables." }
         ];
@@ -525,7 +540,20 @@
         let geminiEnCours = false;
         let aiAnswerQuestion = null;   // question correspondant au contenu actuel du panneau
         let aiLinkWords = '';          // mot(s) que vise actuellement le bouton « En savoir plus »
-        let aiLinkLabel = '';          // libellé normal du bouton (restauré après une attente)
+        let aiLinkMot = null;          // le mot unique visé, ou null si le bouton vise les 5 mots
+        let aiLinkLabel = '';          // libellé normal du bouton, en HTML (restauré après une attente)
+        let aiCurrentMot = null;       // mot dont le panneau affiche l'explication (null si 5 mots)
+        let aiCurrentType = null;      // 'link' (En savoir plus) ou 'deep' (4 appuis)
+
+        // Explications mémorisées durablement, mot par mot, dans un fichier JSON du
+        // dépôt (même dépôt/branche/token que la synchro de progression) : une fois
+        // obtenue, l'explication d'un mot n'est plus redemandée à Gemini.
+        // Miroir local dans localStorage pour survivre à une recharge hors connexion.
+        const EXPLICATIONS_GITHUB_PATH = 'vocab-explications.json';
+        const EXPLICATIONS_LOCAL_KEY = 'vocab_explications';
+        let explications = {};          // { "<mot>": { link: {...}, deep: {...} } }
+        let explicationsPushEnCours = false;
+        let explicationsPushEnAttente = false;
 
         let githubPushTimer = null;
         let githubPushInFlight = false;
@@ -898,6 +926,7 @@
         function updateChatGPTLink() {
             const words = currentPairs.map(p => p.vn).join(', ');
             aiLinkWords = words;
+            aiLinkMot = null;
             const query = encodeURIComponent(buildChatGPTLinkQuery(words));
             const link = document.getElementById('chatgpt-link');
             link.href = `https://chatgpt.com/?q=${query}`;
@@ -909,10 +938,16 @@
             if (selectedCount === 1) {
                 const word = (selection.left || selection.right).vn;
                 aiLinkWords = word;
+                aiLinkMot = word;
                 const query = encodeURIComponent(buildChatGPTLinkQuery(word));
                 const link = document.getElementById('chatgpt-link');
                 link.href = `https://chatgpt.com/?q=${query}`;
-                setAiLinkLabel(`🔍 Pour en savoir plus sur ce mot : ${word}`);
+                // En mode Gemini, un mot dont l'explication est déjà mémorisée
+                // s'affiche en vert vif : le clic ne rappellera pas l'API.
+                const motHtml = (aiProvider === 'gemini' && motAExplication(word))
+                    ? `<span class="mot-connu">${escapeHtmlIA(word)}</span>`
+                    : escapeHtmlIA(word);
+                setAiLinkLabel(`🔍 Pour en savoir plus sur ce mot : ${motHtml}`);
             } else {
                 updateChatGPTLink();
             }
@@ -921,9 +956,9 @@
         // Le libellé normal est mémorisé mais pas appliqué tant qu'une réponse
         // Gemini est en cours : le « ⏳ » ne doit pas être effacé par une
         // sélection de mot survenue pendant l'attente.
-        function setAiLinkLabel(txt) {
-            aiLinkLabel = txt;
-            if (!geminiEnCours) document.getElementById('chatgpt-link').innerText = txt;
+        function setAiLinkLabel(html) {
+            aiLinkLabel = html;
+            if (!geminiEnCours) document.getElementById('chatgpt-link').innerHTML = html;
         }
 
         function resetGameFull() {
@@ -1069,26 +1104,50 @@
             return document.getElementById('ai-answer-panel').classList.contains('visible');
         }
 
-        async function askGemini(question, titre) {
+        // opts = { mot, type, force }
+        //  - mot/type absents  : question sur les 5 mots, jamais mémorisée durablement
+        //  - mot/type présents : explication d'un mot unique, lue puis écrite dans le
+        //    fichier vocab-explications.json du dépôt (mode Gemini uniquement)
+        //  - force : ignore ce qui est mémorisé et redemande à Gemini (bouton 🔄)
+        async function askGemini(question, titre, opts) {
+            opts = opts || {};
+            const mot = opts.mot || null;
+            const type = opts.type || null;
             // Appel déjà en cours pour cette même question : on laisse l'attente se terminer.
             if (geminiEnCours && aiAnswerQuestion === question) return;
             // Même question et panneau déjà ouvert : on referme (bascule).
-            if (aiAnswerPanelVisible() && aiAnswerQuestion === question) {
+            if (!opts.force && aiAnswerPanelVisible() && aiAnswerQuestion === question) {
                 hideAiAnswerPanel();
                 return;
             }
+            aiCurrentMot = mot;
+            aiCurrentType = type;
             document.getElementById('ai-answer-title').innerText = titre;
-            // Réponse déjà obtenue pour cette question exacte : réaffichage direct.
-            if (geminiCache.has(question)) {
-                aiAnswerQuestion = question;
-                setAiAnswerBody(renderLightMarkdown(geminiCache.get(question)), '');
-                showAiAnswerPanel();
-                return;
+            majBoutonRelance();
+            if (!opts.force) {
+                // 1) Explication mémorisée dans le fichier du dépôt (mot unique).
+                const memorisee = getExplication(mot, type);
+                if (memorisee) {
+                    aiAnswerQuestion = question;
+                    setAiAnswerBody(renderLightMarkdown(memorisee.texte), '');
+                    setAiAnswerSource(`💾 Explication mémorisée le ${formatDateCourte(memorisee.updatedAt)} (${memorisee.modele || 'modèle inconnu'}) — 🔄 pour la redemander`);
+                    showAiAnswerPanel();
+                    return;
+                }
+                // 2) Réponse déjà obtenue dans cette session (cas des 5 mots).
+                if (geminiCache.has(question)) {
+                    aiAnswerQuestion = question;
+                    setAiAnswerBody(renderLightMarkdown(geminiCache.get(question)), '');
+                    setAiAnswerSource('');
+                    showAiAnswerPanel();
+                    return;
+                }
             }
             if (geminiEnCours) return;
             if (!cleGemini) {
                 aiAnswerQuestion = null;
                 setAiAnswerBody('<p>Aucune clé API Gemini sur cet appareil. Renseigne-la dans ⚙️ Options → 🤖 Assistant IA.</p>', 'ai-error');
+                setAiAnswerSource('');
                 showAiAnswerPanel();
                 return;
             }
@@ -1098,28 +1157,60 @@
             link.innerText = '⏳ Gemini réfléchit…';
             link.style.opacity = '0.6';
             setAiAnswerBody('<p>⏳ Interrogation de ' + escapeHtmlIA(modeleGemini) + '…</p>', 'ai-waiting');
+            setAiAnswerSource('');
             showAiAnswerPanel();
             const debut = Date.now();
             try {
                 const texte = await appelerGemini(question, null);
                 geminiCache.set(question, texte);
                 console.log(`[Gemini] ${modeleGemini} · question ${question.length} car. · ${Math.round((Date.now() - debut) / 100) / 10}s · réponse ${texte.length} car. · « ${texte.slice(0, 80)} »`);
+                // Mot unique : l'explication est mémorisée durablement (local + dépôt).
+                if (mot && type) {
+                    setExplication(mot, type, texte);
+                    refreshChatGPTLink();
+                }
                 // La question a pu changer entre-temps (autre mot sélectionné) :
                 // on n'écrase l'affichage que si le panneau vise toujours cette question.
                 if (aiAnswerQuestion === question) {
                     setAiAnswerBody(renderLightMarkdown(texte), '');
+                    setAiAnswerSource(mot && type ? '💾 Nouvelle explication mémorisée pour « ' + escapeHtmlIA(mot) + ' »' : '');
                 }
             } catch (e) {
                 console.log(`[Gemini] échec (${modeleGemini}) : ${e.message}`);
                 if (aiAnswerQuestion === question) {
                     setAiAnswerBody(renderLightMarkdown('❌ ' + messageErreurGemini(e.message)), 'ai-error');
-                    aiAnswerQuestion = null; // une erreur n'est pas mise en cache
+                    setAiAnswerSource('');
+                    aiAnswerQuestion = null; // une erreur n'est ni mise en cache ni mémorisée
                 }
             } finally {
                 geminiEnCours = false;
                 link.style.opacity = '';
-                link.innerText = aiLinkLabel;
+                link.innerHTML = aiLinkLabel;
             }
+        }
+
+        function setAiAnswerSource(html) {
+            document.getElementById('ai-answer-source').innerHTML = html || '';
+        }
+
+        function formatDateCourte(iso) {
+            try { return new Date(iso).toLocaleDateString('fr-FR'); } catch (e) { return '?'; }
+        }
+
+        // Le bouton 🔄 n'a de sens que pour l'explication d'un mot unique.
+        function majBoutonRelance() {
+            const btn = document.getElementById('ai-answer-refresh');
+            btn.classList.toggle('visible', !!(aiCurrentMot && aiCurrentType && aiProvider === 'gemini'));
+        }
+
+        // Redemande à Gemini l'explication du mot affiché, et remplace celle
+        // qui était mémorisée.
+        function refreshCurrentExplication() {
+            if (!aiCurrentMot || !aiCurrentType || !aiAnswerQuestion) return;
+            const question = aiAnswerQuestion;
+            geminiCache.delete(question);
+            askGemini(question, document.getElementById('ai-answer-title').innerText,
+                      { mot: aiCurrentMot, type: aiCurrentType, force: true });
         }
 
         // Clic sur « En savoir plus » : inchangé pour ChatGPT (le lien s'ouvre),
@@ -1129,7 +1220,9 @@
             e.preventDefault();
             const mots = aiLinkWords || currentPairs.map(p => p.vn).join(', ');
             if (!mots) return;
-            askGemini(buildChatGPTLinkQuery(mots), `🤖 Gemini · ${mots}`);
+            // Un seul mot visé : l'explication est mémorisée durablement.
+            const opts = aiLinkMot ? { mot: aiLinkMot, type: 'link' } : {};
+            askGemini(buildChatGPTLinkQuery(mots), `🤖 Gemini · ${mots}`, opts);
         }
 
         // Clic ailleurs = masquage. En phase de capture, pour que le panneau
@@ -1142,6 +1235,124 @@
                 if (cible && cible.closest && (cible.closest('#ai-answer-panel') || cible.closest('#chatgpt-link'))) return;
                 hideAiAnswerPanel();
             }, true);
+        }
+
+        // ---- Explications mémorisées (fichier vocab-explications.json du dépôt) ----
+
+        function chargerExplicationsLocales() {
+            try {
+                const brut = localStorage.getItem(EXPLICATIONS_LOCAL_KEY);
+                explications = brut ? (JSON.parse(brut) || {}) : {};
+            } catch (e) { explications = {}; }
+        }
+
+        function sauverExplicationsLocales() {
+            try { localStorage.setItem(EXPLICATIONS_LOCAL_KEY, JSON.stringify(explications)); }
+            catch (e) { console.log('[Explications] écriture locale impossible : ' + e.message); }
+        }
+
+        function getExplication(mot, type) {
+            const e = mot && explications[mot] ? explications[mot][type] : null;
+            return (e && typeof e.texte === 'string' && e.texte) ? e : null;
+        }
+
+        function motAExplication(mot) {
+            return !!getExplication(mot, 'link');
+        }
+
+        function setExplication(mot, type, texte) {
+            if (!explications[mot]) explications[mot] = {};
+            explications[mot][type] = { texte, modele: modeleGemini, updatedAt: new Date().toISOString() };
+            sauverExplicationsLocales();
+            pushExplicationsToGithub();
+        }
+
+        function compterExplications() {
+            let mots = 0, entrees = 0;
+            Object.keys(explications).forEach(mot => {
+                let n = 0;
+                if (getExplication(mot, 'link')) n++;
+                if (getExplication(mot, 'deep')) n++;
+                if (n) { mots++; entrees += n; }
+            });
+            return { mots, entrees };
+        }
+
+        // Fusion entrée par entrée : la version la plus récente gagne, pour que
+        // deux appareils qui enrichissent le fichier chacun de leur côté ne
+        // s'effacent pas mutuellement.
+        function fusionnerExplications(base, ajout) {
+            const resultat = Object.assign({}, base || {});
+            const mots = Object.keys(ajout || {});
+            let ajoutees = 0, restantes = mots.length;
+            mots.forEach(mot => {
+                restantes--;
+                const cible = Object.assign({}, resultat[mot] || {});
+                ['link', 'deep'].forEach(type => {
+                    const neuve = ajout[mot] && ajout[mot][type];
+                    if (!neuve || !neuve.texte) return;
+                    const ancienne = cible[type];
+                    if (!ancienne || !ancienne.texte || (neuve.updatedAt || '') > (ancienne.updatedAt || '')) {
+                        cible[type] = neuve;
+                        ajoutees++;
+                    }
+                });
+                resultat[mot] = cible;
+            });
+            if (mots.length) console.log(`[Explications] fusion : ${mots.length} mots traités, ${restantes} restants, ${ajoutees} entrées retenues`);
+            return resultat;
+        }
+
+        function explicationsConfig() {
+            return Object.assign({}, loadGithubConfig(), { path: EXPLICATIONS_GITHUB_PATH });
+        }
+
+        async function loadExplicationsFromGithub() {
+            if (!githubConfigured()) return;
+            try {
+                const file = await githubFetchFile(explicationsConfig());
+                if (file.exists && file.data && file.data.mots) {
+                    explications = fusionnerExplications(explications, file.data.mots);
+                    sauverExplicationsLocales();
+                    const c = compterExplications();
+                    console.log(`[Explications] ${c.mots} mots / ${c.entrees} explications disponibles`);
+                    refreshChatGPTLink();
+                }
+            } catch (e) {
+                // Silencieux au démarrage : on garde le miroir local.
+                console.log('[Explications] lecture GitHub impossible : ' + e.message);
+            }
+        }
+
+        // Écriture sur GitHub après relecture du fichier (donc du sha) : les
+        // explications ajoutées entre-temps depuis un autre appareil sont
+        // conservées. Un seul envoi à la fois, les suivants sont regroupés.
+        async function pushExplicationsToGithub() {
+            if (!githubConfigured()) return;
+            if (explicationsPushEnCours) { explicationsPushEnAttente = true; return; }
+            explicationsPushEnCours = true;
+            try {
+                const cfg = explicationsConfig();
+                const file = await githubFetchFile(cfg);
+                const distant = (file.exists && file.data && file.data.mots) ? file.data.mots : {};
+                explications = fusionnerExplications(distant, explications);
+                sauverExplicationsLocales();
+                const c = compterExplications();
+                await githubWriteFile(cfg, {
+                    mots: explications,
+                    updatedAt: new Date().toISOString(),
+                    appVersion: APP_VERSION
+                }, file.sha);
+                console.log(`[Explications] envoyées sur GitHub (${c.mots} mots / ${c.entrees} explications)`);
+            } catch (e) {
+                console.log('[Explications] envoi GitHub impossible : ' + e.message);
+            } finally {
+                explicationsPushEnCours = false;
+                if (explicationsPushEnAttente) {
+                    explicationsPushEnAttente = false;
+                    setTimeout(pushExplicationsToGithub, 1500);
+                }
+            }
         }
 
         // ---- Réglages de l'assistant (menu ⚙️) ----
@@ -1158,9 +1369,11 @@
             document.getElementById('ai-gemini-key').value = cleGemini;
             document.getElementById('ai-gemini-key').type = 'password';
             document.getElementById('ai-gemini-model').value = modeleGemini;
-            document.getElementById('ai-status').innerText = aiProvider === 'gemini'
+            const c = compterExplications();
+            document.getElementById('ai-status').innerText = (aiProvider === 'gemini'
                 ? (cleGemini ? `Gemini actif (${modeleGemini}).` : "Gemini sélectionné, mais aucune clé sur cet appareil.")
-                : "ChatGPT actif (ouverture d'un onglet).";
+                : "ChatGPT actif (ouverture d'un onglet).")
+                + ` · ${c.mots} mot(s) expliqué(s) en mémoire (${c.entrees} explications).`;
             syncAiPanelVisibility();
             document.getElementById('custom-modal').style.display = 'flex';
         }
@@ -1197,7 +1410,10 @@
             geminiCache.clear(); // un changement de modèle doit repartir de réponses fraîches
             hideAiAnswerPanel();
             aiAnswerQuestion = null;
+            aiCurrentMot = null;
+            aiCurrentType = null;
             applyAiProviderClass();
+            if (aiProvider === 'gemini') loadExplicationsFromGithub();
             refreshChatGPTLink();
             if (aiProvider === 'gemini' && !cleGemini) {
                 alert("⚠️ Gemini sélectionné, mais aucune clé API n'est enregistrée sur cet appareil : les réponses échoueront tant qu'elle n'est pas saisie.");
@@ -1520,7 +1736,7 @@
                     if (clickTracker.count === 4) {
                         const prompt = chatgptPromptDeep.split('{MOT}').join(pair.vn);
                         if (aiProvider === 'gemini') {
-                            askGemini(prompt, `🤖 Gemini · explication détaillée : ${pair.vn}`);
+                            askGemini(prompt, `🤖 Gemini · explication détaillée : ${pair.vn}`, { mot: pair.vn, type: 'deep' });
                         } else {
                             window.open(`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`, '_blank');
                         }
@@ -2148,6 +2364,8 @@
 
         document.getElementById('app-version').innerText = 'v' + APP_VERSION;
         applyAiProviderClass();
+        chargerExplicationsLocales();
+        if (aiProvider === 'gemini') loadExplicationsFromGithub();
         document.getElementById('chatgpt-link').addEventListener('click', onAiLinkClick);
         installAiOutsideClickHandler();
         applyGameAnswerFontSize();
