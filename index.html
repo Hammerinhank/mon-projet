@@ -258,6 +258,9 @@
         #ai-answer-body code { background: #f4f7f6; padding: 1px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
         #ai-answer-body.ai-error { color: #c0392b; font-weight: bold; }
         #ai-answer-body.ai-waiting { color: #7f8c8d; font-style: italic; }
+        #ai-answer-body.ai-quota { color: #b9770e; font-style: normal; }
+        #ai-answer-body details { margin-top: 8px; font-size: 0.8rem; color: #7f8c8d; }
+        #ai-answer-body details summary { cursor: pointer; }
         /* Mot dont l'explication est déjà mémorisée sur GitHub */
         #chatgpt-link .mot-connu { color: #00c853; font-weight: 800; }
         #ai-answer-source { font-size: 0.72rem; color: #95a5a6; margin-top: 8px; text-align: right; }
@@ -310,7 +313,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.29.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.30.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -537,10 +540,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.29.0';
+        const APP_VERSION = '1.30.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.30.0', d: "Un quota Gemini dépassé n'affiche plus le message d'erreur brut de Google dans le panneau : message court en français rappelant la limite et le modèle concerné, décompte des secondes restantes, relance automatique de la question à la fin du délai si le panneau est toujours ouvert, et détail technique replié pour qui veut le lire." },
             { v: '1.29.0', d: "Le message d'attente imposée par Gemini devient vivant : il décompte les secondes, explique la cause (limite d'appels par minute de la clé API) et se remplace, à la fin du délai, par une invitation à relancer — puis disparaît. Il ne reste donc plus affiché figé après coup." },
             { v: '1.28.0', d: "Le bouton 🤖 d'une section affiche le résultat chiffré de l'appel (« 5/5 », « 3/5 ») pendant quelques secondes, avec un liseré vert si tous les mots demandés ont bien été mémorisés et orange si seuls certains l'ont été — les mots manquants sont alors nommés dans la ligne d'état et dans le journal. Rouge reste réservé à l'échec complet et au délai imposé par Gemini." },
             { v: '1.27.0', d: "Journal des appels IA consultable dans l'app (⚙️ Options → 🧾 Journal des appels IA) : chaque appel Gemini, chaque mot mémorisé, chaque erreur et chaque envoi vers GitHub y est horodaté, conservé d'une session à l'autre (200 dernières lignes). Une ligne d'état sous la liste des sections résume aussi la dernière opération de remplissage du cache." },
@@ -1503,6 +1507,15 @@
                 showAiAnswerPanel();
                 return;
             }
+            // Délai Gemini encore en cours : on réaffiche le décompte plutôt
+            // que de lancer un appel voué au même refus.
+            const attenteQuota = geminiBloqueJusqua > Date.now() ? Math.ceil((geminiBloqueJusqua - Date.now()) / 1000) : 0;
+            if (attenteQuota) {
+                aiAnswerQuestion = question;
+                showAiAnswerPanel();
+                afficherAttenteQuota(question, titre, opts, attenteQuota, `Limite d'appels atteinte sur ${modeleGemini}.`);
+                return;
+            }
             aiAnswerQuestion = question;
             geminiEnCours = true;
             const link = document.getElementById('chatgpt-link');
@@ -1550,15 +1563,68 @@
             } catch (e) {
                 journaliser(`Gemini ${modeleGemini} : échec — ${e.message}`, 'erreur');
                 if (aiAnswerQuestion === question) {
-                    setAiAnswerBody(renderLightMarkdown('❌ ' + messageErreurGemini(e.message)), 'ai-error');
-                    setAiAnswerSource('');
-                    aiAnswerQuestion = null; // une erreur n'est ni mise en cache ni mémorisée
+                    if (e.status === 429) {
+                        // Quota : on garde la question pour pouvoir la relancer seule.
+                        const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + 1);
+                        afficherAttenteQuota(question, titre, opts, secondes, e.message);
+                    } else {
+                        setAiAnswerBody(renderLightMarkdown('❌ ' + messageErreurGemini(e.message)), 'ai-error');
+                        setAiAnswerSource('');
+                        aiAnswerQuestion = null; // une erreur n'est ni mise en cache ni mémorisée
+                    }
                 }
             } finally {
                 geminiEnCours = false;
                 link.style.opacity = '';
                 link.innerHTML = aiLinkLabel;
             }
+        }
+
+        let minuteurQuotaPanneau = null;
+
+        // Le message de Google indique la limite et le modèle concernés.
+        function extraireInfosQuota(message) {
+            const lim = /limit:\s*(\d+)/i.exec(message || '');
+            const mod = /model:\s*([\w.\-]+)/i.exec(message || '');
+            return { limite: lim ? lim[1] : null, modele: mod ? mod[1] : modeleGemini };
+        }
+
+        // Quota dépassé : message court et décompte dans le panneau, puis
+        // relance automatique de la question quand le délai est écoulé.
+        function afficherAttenteQuota(question, titre, opts, secondes, messageBrut) {
+            const infos = extraireInfosQuota(messageBrut);
+            geminiBloqueJusqua = Math.max(geminiBloqueJusqua, Date.now() + secondes * 1000);
+            let restant = secondes;
+            const dessiner = () => {
+                setAiAnswerBody(
+                    `<p><b>⏳ Limite d'appels Gemini atteinte.</b></p>`
+                    + `<p>Le palier gratuit autorise ${infos.limite ? infos.limite + ' requêtes par minute' : 'un nombre limité de requêtes par minute'} sur ${escapeHtmlIA(infos.modele)}. La question repart automatiquement dans <b>${restant} s</b>.</p>`
+                    + `<p>Tu peux aussi changer de modèle dans ⚙️ Options → 🤖 Assistant IA : chacun a son propre compteur.</p>`
+                    + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(messageBrut)}</p></details>`,
+                    'ai-quota');
+                document.getElementById('chatgpt-link').innerText = `⏳ Quota atteint — ${restant} s`;
+            };
+            dessiner();
+            setAiAnswerSource('');
+            if (minuteurQuotaPanneau) clearInterval(minuteurQuotaPanneau);
+            // Démarré après le bloc finally de l'appel, qui restaure le libellé.
+            setTimeout(() => {
+                minuteurQuotaPanneau = setInterval(() => {
+                    restant--;
+                    const toujoursLa = aiAnswerQuestion === question && aiAnswerPanelVisible();
+                    if (restant > 0) { if (toujoursLa) dessiner(); return; }
+                    clearInterval(minuteurQuotaPanneau);
+                    minuteurQuotaPanneau = null;
+                    geminiBloqueJusqua = 0;
+                    if (toujoursLa) {
+                        journaliser('Délai Gemini écoulé — relance automatique de la question', 'ok');
+                        askGemini(question, titre, Object.assign({}, opts, { force: true }));
+                    } else {
+                        journaliser('Délai Gemini écoulé — les appels sont de nouveau possibles', 'ok');
+                        document.getElementById('chatgpt-link').innerHTML = aiLinkLabel;
+                    }
+                }, 1000);
+            }, 0);
         }
 
         function setAiAnswerSource(html) {
