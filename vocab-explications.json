@@ -48,8 +48,36 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T16:06:39.258Z"
       }
+    },
+    "thông gia": {
+      "link": {
+        "texte": "### thông gia\n\n**Explication :**\nLe mot \"thông gia\" désigne la relation entre deux familles unies par un mariage, spécifiquement entre les parents des époux. Il s'agit d'un terme réciproque : les parents du mari sont les \"thông gia\" des parents de la femme, et inversement.\n\n*   **thông :** Cette syllabe évoque l'idée de \"communication\", de \"connexion\" ou de \"relation établie\".\n*   **gia :** Cette syllabe signifie \"famille\" ou \"foyer\".\n\n**Exemples de phrases usuelles :**\n\n1.  Hôm nay, thông gia của chúng tôi đến ăn cơm.\n    *   Aujourd'hui, les parents de notre gendre/belle-fille (nos beaux-parents par alliance) viennent dîner.\n\n2.  Mối quan hệ thông gia rất quan trọng trong văn hóa Việt Nam.\n    *   La relation entre les familles alliées est très importante dans la culture vietnamienne.\n\n3.  Chúng tôi sẽ tổ chức một bữa tiệc mời cả hai bên thông gia.\n    *   Nous organiserons une fête à laquelle nous inviterons les deux familles alliées.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:11:54.639Z"
+      }
+    },
+    "xin phép": {
+      "link": {
+        "texte": "### xin phép\n\n**Explication :**\nLe mot \"xin phép\" signifie \"demander la permission\", \"demander l'autorisation\" ou \"requérir l'autorisation\".\n\n*   **xin :** Cette syllabe signifie \"demander\", \"requérir\", \"supplier\" ou \"s'il vous plaît\".\n*   **phép :** Cette syllabe signifie \"permission\", \"autorisation\", \"licence\".\n\n**Exemples de phrases usuelles :**\n\n1.  Em xin phép cô giáo đi vệ sinh.\n    *   Je demande la permission à la maîtresse d'aller aux toilettes.\n\n2.  Con xin phép bố mẹ đi chơi với bạn.\n    *   Je demande la permission à mes parents de sortir avec des amis.\n\n3.  Trước khi về, anh ấy đã xin phép sếp.\n    *   Avant de partir, il a demandé la permission à son patron.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:11:54.639Z"
+      }
+    },
+    "danh từ": {
+      "link": {
+        "texte": "### danh từ\n\n**Explication :**\nLe mot \"danh từ\" est un terme grammatical qui désigne un nom.\n\n*   **danh :** Cette syllabe signifie \"nom\", \"appellation\", \"titre\" ou \"réputation\".\n*   **từ :** Cette syllabe signifie \"mot\" ou \"caractère\".\n\n**Exemples de phrases usuelles :**\n\n1.  Trong câu này, \"sách\" là một danh từ.\n    *   Dans cette phrase, \"sách\" (livre) est un nom.\n\n2.  Hãy tìm tất cả các danh từ trong đoạn văn sau.\n    *   Trouvez tous les noms dans le paragraphe suivant.\n\n3.  Anh ấy đang học cách phân biệt danh từ và động từ.\n    *   Il est en train d'apprendre à distinguer les noms et les verbes.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:11:54.639Z"
+      }
+    },
+    "xưng": {
+      "link": {
+        "texte": "### xưng\n\n**Explication :**\nLe mot \"xưng\" (une seule syllabe) a plusieurs significations liées à la manière de se présenter ou de désigner soi-même ou autrui. Il peut signifier \"s'appeler\", \"se nommer\", \"se déclarer\", \"se proclamer\", \"revendiquer un titre\", ou \"employer un terme d'adresse spécifique\" (notamment pour les pronoms personnels et les titres de parenté en vietnamien).\n\n**Exemples de phrases usuelles :**\n\n1.  Trong tiếng Việt, cách xưng hô rất quan trọng.\n    *   En vietnamien, la manière de se désigner (soi-même) et de désigner les autres est très importante.\n\n2.  Bạn phải xưng \"con\" khi nói chuyện với ông bà.\n    *   Vous devez vous appeler \"con\" (enfant) lorsque vous parlez à vos grands-parents.\n\n3.  Cô ấy xưng mình là chuyên gia trong lĩnh vực này.\n    *   Elle se déclare experte dans ce domaine.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:11:54.639Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T16:06:39.554Z",
+  "updatedAt": "2026-09-12T16:11:54.958Z",
   "appVersion": "1.21.0"
 }
