@@ -282,7 +282,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.22.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.23.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -498,10 +498,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.22.0';
+        const APP_VERSION = '1.23.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.23.0', d: "La question sur les 5 mots ne porte plus que sur les mots dont l'explication n'est pas encore mémorisée : les autres sont repris du fichier et le panneau affiche l'ensemble dans l'ordre de la colonne. Le bouton 🔄 est désormais actif aussi sur cet affichage et redemande alors réellement toutes les explications à Gemini, en remplaçant celles qui étaient mémorisées." },
             { v: '1.22.0', d: "Gestion du dépassement de quota Gemini (erreur 429) : le délai renvoyé par Google est lu, un décompte s'affiche dans le panneau et sur le bouton, et la question est renvoyée automatiquement une fois. Au-delà d'une attente de deux minutes (quota journalier), l'erreur est affichée avec les solutions : autre modèle, ou facturation activée." },
             { v: '1.21.0', d: "La question posée sur les 5 mots de la colonne demande désormais à l'IA de traiter chaque mot sous un titre « ### mot » : la réponse est découpée et mémorisée mot par mot dans vocab-explications.json (sans écraser une explication déjà connue), ce qui rend les 5 mots verts d'un coup. Inversement, si les 5 mots sont déjà expliqués, la question globale est assemblée depuis le fichier sans appeler Gemini." },
             { v: '1.20.0', d: "La consigne ajoutée automatiquement à chaque question demande en plus, pour chaque mot, des exemples de phrases usuelles qui l'emploient (avec leur traduction en français)." },
@@ -552,6 +553,7 @@
         let aiLinkLabel = '';          // libellé normal du bouton, en HTML (restauré après une attente)
         let aiCurrentMot = null;       // mot dont le panneau affiche l'explication (null si 5 mots)
         let aiCurrentType = null;      // 'link' (En savoir plus) ou 'deep' (4 appuis)
+        let aiCurrentListe = null;     // liste des mots affichés quand le panneau porte sur la colonne
 
         // Explications mémorisées durablement, mot par mot, dans un fichier JSON du
         // dépôt (même dépôt/branche/token que la synchro de progression) : une fois
@@ -1200,8 +1202,10 @@
                 hideAiAnswerPanel();
                 return;
             }
-            aiCurrentMot = mot;
-            aiCurrentType = type;
+            const listeComplete = opts.listeComplete || null;
+            aiCurrentMot = listeComplete ? null : mot;
+            aiCurrentType = listeComplete ? null : type;
+            aiCurrentListe = listeComplete;
             document.getElementById('ai-answer-title').innerText = titre;
             majBoutonRelance();
             if (!opts.force) {
@@ -1252,17 +1256,23 @@
                 if (mot && type) {
                     setExplication(mot, type, texte);
                     refreshChatGPTLink();
-                } else if (opts.motsListe && opts.motsListe.length > 1) {
-                    // Question sur les 5 mots : on découpe la réponse pour créer
+                } else if (opts.motsListe && opts.motsListe.length) {
+                    // Question sur plusieurs mots : on découpe la réponse pour créer
                     // une entrée par mot, et éviter autant d'appels plus tard.
-                    nouveauxMots = memoriserExplicationsGroupees(texte, opts.motsListe);
+                    // Un 🔄 explicite (force) remplace les explications existantes.
+                    nouveauxMots = memoriserExplicationsGroupees(texte, opts.motsListe, !!opts.force);
                 }
                 // La question a pu changer entre-temps (autre mot sélectionné) :
                 // on n'écrase l'affichage que si le panneau vise toujours cette question.
                 if (aiAnswerQuestion === question) {
-                    setAiAnswerBody(renderLightMarkdown(texte), '');
+                    // Sur une question portant sur la colonne, le panneau montre
+                    // l'ensemble des mots dans l'ordre : mémorisés et nouveaux.
+                    setAiAnswerBody(renderLightMarkdown(listeComplete ? composerAffichageMultiMots(listeComplete, texte) : texte), '');
+                    const reutilises = (opts.dejaConnus || []).length;
                     if (mot && type) {
                         setAiAnswerSource('💾 Nouvelle explication mémorisée pour « ' + escapeHtmlIA(mot) + ' »');
+                    } else if (listeComplete) {
+                        setAiAnswerSource(`💾 ${reutilises} explication(s) reprise(s) du fichier · ${nouveauxMots.length} demandée(s) à Gemini et mémorisée(s)${nouveauxMots.length ? ' : ' + escapeHtmlIA(nouveauxMots.join(', ')) : ''}`);
                     } else if (nouveauxMots.length) {
                         setAiAnswerSource(`💾 ${nouveauxMots.length} explication(s) mémorisée(s) : ${escapeHtmlIA(nouveauxMots.join(', '))}`);
                     } else {
@@ -1294,12 +1304,24 @@
         // Le bouton 🔄 n'a de sens que pour l'explication d'un mot unique.
         function majBoutonRelance() {
             const btn = document.getElementById('ai-answer-refresh');
-            btn.classList.toggle('visible', !!(aiCurrentMot && aiCurrentType && aiProvider === 'gemini'));
+            const utile = (aiCurrentMot && aiCurrentType) || (aiCurrentListe && aiCurrentListe.length);
+            btn.classList.toggle('visible', !!(utile && aiProvider === 'gemini'));
         }
 
         // Redemande à Gemini l'explication du mot affiché, et remplace celle
         // qui était mémorisée.
         function refreshCurrentExplication() {
+            // Affichage portant sur la colonne : toutes les explications sont
+            // redemandées à Gemini et remplacent celles qui étaient mémorisées.
+            if (aiCurrentListe && aiCurrentListe.length) {
+                const liste = aiCurrentListe.slice();
+                const mots = liste.join(', ');
+                const question = buildChatGPTLinkQuery(mots, liste.length > 1);
+                geminiCache.delete(question);
+                askGemini(question, `🤖 Gemini · ${mots}`,
+                          { motsListe: liste, listeComplete: liste, dejaConnus: [], force: true });
+                return;
+            }
             if (!aiCurrentMot || !aiCurrentType || !aiAnswerQuestion) return;
             const question = aiAnswerQuestion;
             geminiCache.delete(question);
@@ -1319,24 +1341,50 @@
                 askGemini(buildChatGPTLinkQuery(mots, false), `🤖 Gemini · ${mots}`, { mot: aiLinkMot, type: 'link' });
                 return;
             }
-            // Question sur les 5 mots : si tous sont déjà expliqués, on assemble
-            // le texte mémorisé au lieu d'appeler Gemini.
+            // Question sur les mots de la colonne : on ne demande à Gemini que
+            // ceux dont l'explication n'est pas déjà mémorisée.
             const liste = currentPairs.map(p => p.vn);
             const question = buildChatGPTLinkQuery(mots, liste.length > 1);
-            if (liste.length && liste.every(motAExplication)) {
+            const manquants = liste.filter(m => !motAExplication(m));
+            if (liste.length && !manquants.length) {
                 afficherExplicationsAssemblees(liste, question, `🤖 Gemini · ${mots}`);
                 return;
             }
-            askGemini(question, `🤖 Gemini · ${mots}`, { motsListe: liste });
+            const dejaConnus = liste.filter(motAExplication);
+            askGemini(buildChatGPTLinkQuery(manquants.join(', '), manquants.length > 1),
+                      `🤖 Gemini · ${mots}`,
+                      { motsListe: manquants, listeComplete: liste, dejaConnus });
+        }
+
+        // Une explication issue d'un découpage commence déjà par son titre.
+        function blocAvecTitre(mot, texte) {
+            const premiere = (texte || '').split('\n').find(l => l.trim()) || '';
+            return /^\s*#{1,6}\s+\S/.test(premiere) ? texte : `### ${mot}\n\n${texte}`;
+        }
+
+        // Assemble l'affichage des mots de la colonne : explications mémorisées
+        // dans l'ordre, puis le texte brut si certains mots n'ont pas pu être
+        // isolés dans la réponse.
+        function composerAffichageMultiMots(liste, texteReponse) {
+            const blocs = [];
+            let manquants = false;
+            liste.forEach(mot => {
+                const e = getExplication(mot, 'link');
+                if (e) blocs.push(blocAvecTitre(mot, e.texte)); else manquants = true;
+            });
+            let sortie = blocs.join('\n\n');
+            if (manquants && texteReponse) sortie += (sortie ? '\n\n---\n\n' : '') + texteReponse;
+            return sortie || texteReponse || '';
         }
 
         // Reconstitue une réponse globale à partir des explications déjà mémorisées.
         function afficherExplicationsAssemblees(liste, question, titre) {
             if (aiAnswerPanelVisible() && aiAnswerQuestion === question) { hideAiAnswerPanel(); return; }
-            const texte = liste.map(mot => `### ${mot}\n\n${getExplication(mot, 'link').texte}`).join('\n\n');
+            const texte = composerAffichageMultiMots(liste, '');
             aiAnswerQuestion = question;
             aiCurrentMot = null;
             aiCurrentType = null;
+            aiCurrentListe = liste;
             document.getElementById('ai-answer-title').innerText = titre;
             majBoutonRelance();
             setAiAnswerBody(renderLightMarkdown(texte), '');
@@ -1421,8 +1469,11 @@
         // Mémorise mot par mot une réponse portant sur les 5 mots de la colonne.
         // Une explication déjà connue n'est pas écrasée (le bouton 🔄 reste le
         // seul moyen de la remplacer). Un seul envoi GitHub pour l'ensemble.
-        function memoriserExplicationsGroupees(texte, mots) {
+        function memoriserExplicationsGroupees(texte, mots, ecraser) {
             const blocs = decouperReponseParMots(texte, mots);
+            // Question ne portant que sur un mot : pas de titre à découper,
+            // la réponse entière est son explication.
+            if (mots.length === 1 && !blocs[mots[0]]) blocs[mots[0]] = texte.trim();
             const nouveaux = [];
             let restants = mots.length;
             mots.forEach(mot => {
@@ -1430,7 +1481,7 @@
                 const bloc = blocs[mot];
                 console.log(`[Explications] découpage : ${mots.length - restants}/${mots.length} · « ${mot} » ${bloc ? 'trouvé (' + bloc.length + ' car.)' : 'non trouvé'} · ${restants} restant(s)`);
                 if (!bloc) return;
-                if (getExplication(mot, 'link')) return; // déjà mémorisé : on n'écrase pas
+                if (!ecraser && getExplication(mot, 'link')) return; // déjà mémorisé : on n'écrase pas
                 setExplication(mot, 'link', bloc, true);
                 nouveaux.push(mot);
             });
@@ -1586,6 +1637,7 @@
             aiAnswerQuestion = null;
             aiCurrentMot = null;
             aiCurrentType = null;
+            aiCurrentListe = null;
             applyAiProviderClass();
             if (aiProvider === 'gemini') loadExplicationsFromGithub();
             refreshChatGPTLink();
