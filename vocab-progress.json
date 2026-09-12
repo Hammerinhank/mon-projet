@@ -1744,7 +1744,7 @@
     "ít hơn": 5,
     "trẻ hơn": 2,
     "nhiều tuổi": 5,
-    "2 tuổi": 0,
+    "2 tuổi": 1,
     "55 tuổi": 5,
     "riêng tư": 0,
     "bất lịch sự": 1,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T17:06:39.039Z",
+  "updatedAt": "2026-09-12T17:08:52.770Z",
   "appVersion": "1.21.0"
 }
