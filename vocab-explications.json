@@ -13,8 +13,15 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T15:35:24.129Z"
       }
+    },
+    "đất đai": {
+      "link": {
+        "texte": "Le terme « đất đai » est un mot composé en vietnamien qui signifie globalement **terre, terrain, propriété foncière, ou immobilier**.\n\nIl est constitué de deux syllabes :\n\n1.  **« đất » :** Cette syllabe signifie généralement **terre, sol, terrain**.\n2.  **« đai » :** Prise isolément, cette syllabe peut signifier **ceinture, sangle**. Cependant, dans le contexte du mot composé « đất đai », elle ne conserve pas ce sens littéral mais contribue à former une expression plus large et plus englobante pour désigner la **propriété foncière** ou l'ensemble des **terres**.\n\nAinsi, « đất đai » fait référence à la terre en tant que bien, ressource ou propriété.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T15:41:44.758Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T15:35:24.469Z",
-  "appVersion": "1.18.0"
+  "updatedAt": "2026-09-12T15:41:45.268Z",
+  "appVersion": "1.19.0"
 }
