@@ -1718,8 +1718,8 @@
     "xưng": 0,
     "chỉ nói tiếng Việt": 0,
     "nhà văn hóa": 1,
-    "thôn": 0,
-    "làng": 0,
+    "thôn": 1,
+    "làng": 1,
     "chữ kí / chữ ký": 0,
     "kí tên / ký tên": 0,
     "danh từ": 0,
@@ -1729,7 +1729,7 @@
     "nông dân": 0,
     "trồng lúa": 0,
     "đất trồng lúa": 0,
-    "bị thu hồi": 0,
+    "bị thu hồi": 1,
     "thu hồi": 0,
     "dự án": 1,
     "nhà nước": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T15:30:37.723Z",
+  "updatedAt": "2026-09-12T15:31:41.865Z",
   "appVersion": "1.18.0"
 }
