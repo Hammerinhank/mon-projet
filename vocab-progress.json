@@ -1216,7 +1216,7 @@
     "bé trai": 1,
     "bé gái": 5,
     "người em": 0,
-    "trái nghĩa": 1,
+    "trái nghĩa": 2,
     "chăm chỉ": 2,
     "suy nghĩ": 2,
     "sâu sắc": 1,
@@ -1717,7 +1717,7 @@
     "nhấn mạnh": 0,
     "xưng": 0,
     "chỉ nói tiếng Việt": 0,
-    "nhà văn hóa": 0,
+    "nhà văn hóa": 1,
     "thôn": 0,
     "làng": 0,
     "chữ kí / chữ ký": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T15:30:12.532Z",
+  "updatedAt": "2026-09-12T15:30:37.723Z",
   "appVersion": "1.18.0"
 }
