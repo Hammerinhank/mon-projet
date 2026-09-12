@@ -1704,13 +1704,13 @@
     "ngày nào": 0,
     "tháng 7, 8, 9": 1,
     "thường vào": 1,
-    "xin phép": 1,
+    "xin phép": 2,
     "vào lớp": 0,
     "vài phút": 0,
     "không có gì": 1,
     "không sao": 0,
     "đang vào": 0,
-    "vừa": 0,
+    "vừa": 1,
     "đưa": 1,
     "ra": 0,
     "bằng": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T15:32:42.493Z",
-  "appVersion": "1.18.0"
+  "updatedAt": "2026-09-12T15:40:57.213Z",
+  "appVersion": "1.19.0"
 }
