@@ -1705,7 +1705,7 @@
     "tháng 7, 8, 9": 1,
     "thường vào": 1,
     "xin phép": 2,
-    "vào lớp": 0,
+    "vào lớp": 1,
     "vài phút": 1,
     "không có gì": 1,
     "không sao": 0,
@@ -1745,7 +1745,7 @@
     "trẻ hơn": 0,
     "nhiều tuổi": 0,
     "2 tuổi": 0,
-    "55 tuổi": 1,
+    "55 tuổi": 2,
     "riêng tư": 0,
     "bất lịch sự": 1,
     "ý tưởng": 1,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T15:45:30.946Z",
+  "updatedAt": "2026-09-12T15:46:31.605Z",
   "appVersion": "1.20.0"
 }
