@@ -1707,7 +1707,7 @@
     "xin phép": 0,
     "vào lớp": 0,
     "vài phút": 0,
-    "không có gì": 0,
+    "không có gì": 1,
     "không sao": 0,
     "đang vào": 0,
     "vừa": 0,
@@ -1747,7 +1747,7 @@
     "2 tuổi": 0,
     "55 tuổi": 0,
     "riêng tư": 0,
-    "bất lịch sự": 0,
+    "bất lịch sự": 1,
     "ý tưởng": 0,
     "toàn bộ": 0,
     "phần giải thích": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-11T19:06:56.876Z",
-  "appVersion": "1.16.7"
+  "updatedAt": "2026-09-12T15:30:12.532Z",
+  "appVersion": "1.18.0"
 }
