@@ -1732,7 +1732,7 @@
     "bị thu hồi": 1,
     "thu hồi": 0,
     "dự án": 2,
-    "nhà nước": 1,
+    "nhà nước": 2,
     "mẹ của con dâu": 1,
     "bà thông gia": 0,
     "thông gia": 0,
@@ -1740,7 +1740,7 @@
     "ông": 5,
     "em": 5,
     "anh": 5,
-    "nhiều hơn": 2,
+    "nhiều hơn": 5,
     "ít hơn": 5,
     "trẻ hơn": 2,
     "nhiều tuổi": 5,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T17:11:52.782Z",
+  "updatedAt": "2026-09-12T17:12:52.637Z",
   "appVersion": "1.21.0"
 }
