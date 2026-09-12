@@ -282,7 +282,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.20.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.21.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -489,6 +489,7 @@
                 </div>
                 <p style="font-size:0.8rem; color:#7f8c8d; text-align:left;">
                     Quelle que soit la requête ci-dessus, ces deux consignes y sont ajoutées automatiquement avant l'envoi (ChatGPT comme Gemini) : <em>« Ne donne aucune indication de prononciation dans ta réponse : ni transcription phonétique ou API, ni explication des tons, ni conseil sur la façon de prononcer ou d'articuler. »</em> et <em>« Donne aussi, pour chaque mot, plusieurs exemples de phrases usuelles qui l'emploient dans la vie courante, chacune suivie de sa traduction en français. »</em>
+                    Quand la question porte sur les 5 mots à la fois, une troisième consigne demande un titre <code>### mot</code> devant chaque partie, ce qui permet de mémoriser la réponse mot par mot.
                 </p>
                 <button class="modal-btn btn-cancel" onclick="hideChatGPTPromptsPanel()" style="margin-top:10px">↩️ Retour</button>
             </div>
@@ -497,10 +498,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.20.0';
+        const APP_VERSION = '1.21.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.21.0', d: "La question posée sur les 5 mots de la colonne demande désormais à l'IA de traiter chaque mot sous un titre « ### mot » : la réponse est découpée et mémorisée mot par mot dans vocab-explications.json (sans écraser une explication déjà connue), ce qui rend les 5 mots verts d'un coup. Inversement, si les 5 mots sont déjà expliqués, la question globale est assemblée depuis le fichier sans appeler Gemini." },
             { v: '1.20.0', d: "La consigne ajoutée automatiquement à chaque question demande en plus, pour chaque mot, des exemples de phrases usuelles qui l'emploient (avec leur traduction en français)." },
             { v: '1.19.0', d: "Toute question envoyée à l'IA (ChatGPT comme Gemini, requête « En savoir plus » comme requête détaillée des 4 appuis) se termine automatiquement par une consigne demandant de ne donner aucune indication de prononciation (phonétique, tons, conseils d'articulation). La consigne est rappelée dans « Éditer requêtes » ; les explications déjà mémorisées restent telles quelles, le bouton 🔄 permet de les refaire." },
             { v: '1.18.0', d: "Mémorisation durable des explications d'un mot unique dans le fichier vocab-explications.json du dépôt (même dépôt/token que la progression), en mode Gemini uniquement : « En savoir plus » et les 4 appuis réutilisent l'explication stockée au lieu de rappeler l'API. Le mot apparaît en vert vif dans le libellé du bouton quand son explication est déjà connue, et un bouton 🔄 dans le panneau permet de la redemander à Gemini." },
@@ -929,8 +931,14 @@
         const CONSIGNES_AUTO = "\n\nNe donne aucune indication de prononciation dans ta réponse : ni transcription phonétique ou API, ni explication des tons, ni conseil sur la façon de prononcer ou d'articuler."
             + "\n\nDonne aussi, pour chaque mot, plusieurs exemples de phrases usuelles qui l'emploient dans la vie courante, chacune suivie de sa traduction en français.";
 
-        function buildChatGPTLinkQuery(text) {
-            return chatgptPromptLink.split('{MOTS}').join(text) + CONSIGNES_AUTO;
+        // Consigne supplémentaire quand la question porte sur plusieurs mots :
+        // elle rend la réponse découpable, donc mémorisable mot par mot.
+        const CONSIGNE_DECOUPAGE = "\n\nTraite les mots un par un, dans l'ordre, et commence la partie consacrée à chaque mot par une ligne contenant uniquement : ### suivi du mot, écrit exactement comme ci-dessus.";
+
+        function buildChatGPTLinkQuery(text, plusieursMots) {
+            return chatgptPromptLink.split('{MOTS}').join(text)
+                + CONSIGNES_AUTO
+                + (plusieursMots ? CONSIGNE_DECOUPAGE : '');
         }
 
         function buildChatGPTDeepQuery(mot) {
@@ -941,7 +949,7 @@
             const words = currentPairs.map(p => p.vn).join(', ');
             aiLinkWords = words;
             aiLinkMot = null;
-            const query = encodeURIComponent(buildChatGPTLinkQuery(words));
+            const query = encodeURIComponent(buildChatGPTLinkQuery(words, currentPairs.length > 1));
             const link = document.getElementById('chatgpt-link');
             link.href = `https://chatgpt.com/?q=${query}`;
             setAiLinkLabel("🔍 En savoir plus sur ces mots");
@@ -953,7 +961,7 @@
                 const word = (selection.left || selection.right).vn;
                 aiLinkWords = word;
                 aiLinkMot = word;
-                const query = encodeURIComponent(buildChatGPTLinkQuery(word));
+                const query = encodeURIComponent(buildChatGPTLinkQuery(word, false));
                 const link = document.getElementById('chatgpt-link');
                 link.href = `https://chatgpt.com/?q=${query}`;
                 // En mode Gemini, un mot dont l'explication est déjà mémorisée
@@ -1179,15 +1187,26 @@
                 geminiCache.set(question, texte);
                 console.log(`[Gemini] ${modeleGemini} · question ${question.length} car. · ${Math.round((Date.now() - debut) / 100) / 10}s · réponse ${texte.length} car. · « ${texte.slice(0, 80)} »`);
                 // Mot unique : l'explication est mémorisée durablement (local + dépôt).
+                let nouveauxMots = [];
                 if (mot && type) {
                     setExplication(mot, type, texte);
                     refreshChatGPTLink();
+                } else if (opts.motsListe && opts.motsListe.length > 1) {
+                    // Question sur les 5 mots : on découpe la réponse pour créer
+                    // une entrée par mot, et éviter autant d'appels plus tard.
+                    nouveauxMots = memoriserExplicationsGroupees(texte, opts.motsListe);
                 }
                 // La question a pu changer entre-temps (autre mot sélectionné) :
                 // on n'écrase l'affichage que si le panneau vise toujours cette question.
                 if (aiAnswerQuestion === question) {
                     setAiAnswerBody(renderLightMarkdown(texte), '');
-                    setAiAnswerSource(mot && type ? '💾 Nouvelle explication mémorisée pour « ' + escapeHtmlIA(mot) + ' »' : '');
+                    if (mot && type) {
+                        setAiAnswerSource('💾 Nouvelle explication mémorisée pour « ' + escapeHtmlIA(mot) + ' »');
+                    } else if (nouveauxMots.length) {
+                        setAiAnswerSource(`💾 ${nouveauxMots.length} explication(s) mémorisée(s) : ${escapeHtmlIA(nouveauxMots.join(', '))}`);
+                    } else {
+                        setAiAnswerSource('');
+                    }
                 }
             } catch (e) {
                 console.log(`[Gemini] échec (${modeleGemini}) : ${e.message}`);
@@ -1235,8 +1254,33 @@
             const mots = aiLinkWords || currentPairs.map(p => p.vn).join(', ');
             if (!mots) return;
             // Un seul mot visé : l'explication est mémorisée durablement.
-            const opts = aiLinkMot ? { mot: aiLinkMot, type: 'link' } : {};
-            askGemini(buildChatGPTLinkQuery(mots), `🤖 Gemini · ${mots}`, opts);
+            if (aiLinkMot) {
+                askGemini(buildChatGPTLinkQuery(mots, false), `🤖 Gemini · ${mots}`, { mot: aiLinkMot, type: 'link' });
+                return;
+            }
+            // Question sur les 5 mots : si tous sont déjà expliqués, on assemble
+            // le texte mémorisé au lieu d'appeler Gemini.
+            const liste = currentPairs.map(p => p.vn);
+            const question = buildChatGPTLinkQuery(mots, liste.length > 1);
+            if (liste.length && liste.every(motAExplication)) {
+                afficherExplicationsAssemblees(liste, question, `🤖 Gemini · ${mots}`);
+                return;
+            }
+            askGemini(question, `🤖 Gemini · ${mots}`, { motsListe: liste });
+        }
+
+        // Reconstitue une réponse globale à partir des explications déjà mémorisées.
+        function afficherExplicationsAssemblees(liste, question, titre) {
+            if (aiAnswerPanelVisible() && aiAnswerQuestion === question) { hideAiAnswerPanel(); return; }
+            const texte = liste.map(mot => `### ${mot}\n\n${getExplication(mot, 'link').texte}`).join('\n\n');
+            aiAnswerQuestion = question;
+            aiCurrentMot = null;
+            aiCurrentType = null;
+            document.getElementById('ai-answer-title').innerText = titre;
+            majBoutonRelance();
+            setAiAnswerBody(renderLightMarkdown(texte), '');
+            setAiAnswerSource(`💾 Assemblé à partir des ${liste.length} explications mémorisées — aucun appel à Gemini`);
+            showAiAnswerPanel();
         }
 
         // Clic ailleurs = masquage. En phase de capture, pour que le panneau
@@ -1274,11 +1318,66 @@
             return !!getExplication(mot, 'link');
         }
 
-        function setExplication(mot, type, texte) {
+        function setExplication(mot, type, texte, differerPush) {
             if (!explications[mot]) explications[mot] = {};
             explications[mot][type] = { texte, modele: modeleGemini, updatedAt: new Date().toISOString() };
             sauverExplicationsLocales();
-            pushExplicationsToGithub();
+            if (!differerPush) pushExplicationsToGithub();
+        }
+
+        // Découpe une réponse portant sur plusieurs mots : chaque mot est repéré
+        // par sa ligne de titre (### mot, ou **mot**), et sa partie va jusqu'au
+        // titre suivant. Renvoie une table mot -> texte (mots non trouvés omis).
+        function decouperReponseParMots(texte, mots) {
+            const lignes = texte.split('\n');
+            const reperes = [];
+            lignes.forEach((ligne, i) => {
+                const estTitre = /^\s*#{1,6}\s+\S/.test(ligne) || /^\s*\*\*[^*]+\*\*\s*:?\s*$/.test(ligne);
+                if (!estTitre) return;
+                const nu = ligne.replace(/^\s*#{1,6}\s*/, '').replace(/\*\*/g, '').replace(/[:：]\s*$/, '').trim().toLowerCase();
+                if (!nu) return;
+                // Parmi les mots pas encore repérés, on retient la correspondance
+                // exacte si elle existe, sinon le mot le plus long reconnu dans
+                // le titre (« ăn cơm » l'emporte sur « ăn »).
+                const restants = mots.filter(m => !reperes.some(r => r.mot === m));
+                const exact = restants.find(m => nu === m.toLowerCase());
+                const trouve = exact || restants
+                    .filter(m => nu.startsWith(m.toLowerCase()) || nu.includes(m.toLowerCase()))
+                    .sort((a, b) => b.length - a.length)[0];
+                if (trouve) reperes.push({ index: i, mot: trouve });
+            });
+            reperes.sort((a, b) => a.index - b.index);
+            const resultat = {};
+            reperes.forEach((r, k) => {
+                const fin = (k + 1 < reperes.length) ? reperes[k + 1].index : lignes.length;
+                const bloc = lignes.slice(r.index, fin).join('\n').trim();
+                // Un titre seul (sans contenu en dessous) n'est pas une explication.
+                if (bloc.split('\n').filter(l => l.trim()).length > 1) resultat[r.mot] = bloc;
+            });
+            return resultat;
+        }
+
+        // Mémorise mot par mot une réponse portant sur les 5 mots de la colonne.
+        // Une explication déjà connue n'est pas écrasée (le bouton 🔄 reste le
+        // seul moyen de la remplacer). Un seul envoi GitHub pour l'ensemble.
+        function memoriserExplicationsGroupees(texte, mots) {
+            const blocs = decouperReponseParMots(texte, mots);
+            const nouveaux = [];
+            let restants = mots.length;
+            mots.forEach(mot => {
+                restants--;
+                const bloc = blocs[mot];
+                console.log(`[Explications] découpage : ${mots.length - restants}/${mots.length} · « ${mot} » ${bloc ? 'trouvé (' + bloc.length + ' car.)' : 'non trouvé'} · ${restants} restant(s)`);
+                if (!bloc) return;
+                if (getExplication(mot, 'link')) return; // déjà mémorisé : on n'écrase pas
+                setExplication(mot, 'link', bloc, true);
+                nouveaux.push(mot);
+            });
+            if (nouveaux.length) {
+                pushExplicationsToGithub();
+                refreshChatGPTLink();
+            }
+            return nouveaux;
         }
 
         function compterExplications() {
