@@ -282,7 +282,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.19.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.20.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -488,7 +488,7 @@
                     <button class="modal-btn btn-apply" onclick="saveChatGPTPrompt('deep')">💾 Appliquer</button>
                 </div>
                 <p style="font-size:0.8rem; color:#7f8c8d; text-align:left;">
-                    Quelle que soit la requête ci-dessus, la consigne suivante y est ajoutée automatiquement avant l'envoi (ChatGPT comme Gemini) : <em>« Ne donne aucune indication de prononciation dans ta réponse : ni transcription phonétique ou API, ni explication des tons, ni conseil sur la façon de prononcer ou d'articuler. »</em>
+                    Quelle que soit la requête ci-dessus, ces deux consignes y sont ajoutées automatiquement avant l'envoi (ChatGPT comme Gemini) : <em>« Ne donne aucune indication de prononciation dans ta réponse : ni transcription phonétique ou API, ni explication des tons, ni conseil sur la façon de prononcer ou d'articuler. »</em> et <em>« Donne aussi, pour chaque mot, plusieurs exemples de phrases usuelles qui l'emploient dans la vie courante, chacune suivie de sa traduction en français. »</em>
                 </p>
                 <button class="modal-btn btn-cancel" onclick="hideChatGPTPromptsPanel()" style="margin-top:10px">↩️ Retour</button>
             </div>
@@ -497,10 +497,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.19.0';
+        const APP_VERSION = '1.20.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.20.0', d: "La consigne ajoutée automatiquement à chaque question demande en plus, pour chaque mot, des exemples de phrases usuelles qui l'emploient (avec leur traduction en français)." },
             { v: '1.19.0', d: "Toute question envoyée à l'IA (ChatGPT comme Gemini, requête « En savoir plus » comme requête détaillée des 4 appuis) se termine automatiquement par une consigne demandant de ne donner aucune indication de prononciation (phonétique, tons, conseils d'articulation). La consigne est rappelée dans « Éditer requêtes » ; les explications déjà mémorisées restent telles quelles, le bouton 🔄 permet de les refaire." },
             { v: '1.18.0', d: "Mémorisation durable des explications d'un mot unique dans le fichier vocab-explications.json du dépôt (même dépôt/token que la progression), en mode Gemini uniquement : « En savoir plus » et les 4 appuis réutilisent l'explication stockée au lieu de rappeler l'API. Le mot apparaît en vert vif dans le libellé du bouton quand son explication est déjà connue, et un bouton 🔄 dans le panneau permet de la redemander à Gemini." },
             { v: '1.17.0', d: "Ajout de Gemini comme assistant IA (menu « 🤖 Assistant IA ») : la réponse s'affiche dans un panneau sous le bouton « En savoir plus », se masque au clic ailleurs et se réaffiche sans nouvel appel tant que les mots n'ont pas changé ; idem pour la requête détaillée des 4 appuis. ChatGPT inchangé. Badge de version cliquable ouvrant cet historique." },
@@ -923,16 +924,17 @@
             scheduleGithubPush();
         }
 
-        // Consigne ajoutée automatiquement à toutes les questions envoyées à l'IA
+        // Consignes ajoutées automatiquement à toutes les questions envoyées à l'IA
         // (ChatGPT comme Gemini), sans toucher aux modèles de requête éditables.
-        const SUFFIXE_SANS_PRONONCIATION = "\n\nNe donne aucune indication de prononciation dans ta réponse : ni transcription phonétique ou API, ni explication des tons, ni conseil sur la façon de prononcer ou d'articuler.";
+        const CONSIGNES_AUTO = "\n\nNe donne aucune indication de prononciation dans ta réponse : ni transcription phonétique ou API, ni explication des tons, ni conseil sur la façon de prononcer ou d'articuler."
+            + "\n\nDonne aussi, pour chaque mot, plusieurs exemples de phrases usuelles qui l'emploient dans la vie courante, chacune suivie de sa traduction en français.";
 
         function buildChatGPTLinkQuery(text) {
-            return chatgptPromptLink.split('{MOTS}').join(text) + SUFFIXE_SANS_PRONONCIATION;
+            return chatgptPromptLink.split('{MOTS}').join(text) + CONSIGNES_AUTO;
         }
 
         function buildChatGPTDeepQuery(mot) {
-            return chatgptPromptDeep.split('{MOT}').join(mot) + SUFFIXE_SANS_PRONONCIATION;
+            return chatgptPromptDeep.split('{MOT}').join(mot) + CONSIGNES_AUTO;
         }
 
         function updateChatGPTLink() {
