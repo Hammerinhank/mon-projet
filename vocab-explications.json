@@ -118,8 +118,15 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T17:23:48.238Z"
       }
+    },
+    "Thùng rác": {
+      "link": {
+        "texte": "Le terme vietnamien « Thùng rác » est un nom composé signifiant « poubelle » ou « corbeille à papier ». Il est formé de deux syllabes, chacune ayant sa propre signification :\n\n1.  **Thùng**\n    *   **Signification** : Cette syllabe désigne un récipient, un conteneur, un bac, un baril, un fût, un seau, une caisse ou une boîte. Elle fait référence à un objet creux utilisé pour contenir quelque chose.\n    *   **Exemples de phrases usuelles** :\n        *   \"Người ta thường đựng nước trong thùng.\"\n            *   Traduction : Les gens stockent souvent l'eau dans des fûts/bacs.\n        *   \"Anh ấy khiêng một thùng gỗ lớn.\"\n            *   Traduction : Il porte une grande caisse en bois.\n        *   \"Có mấy thùng carton ở đây cần được dọn dẹp.\"\n            *   Traduction : Il y a quelques cartons ici qui doivent être rangés.\n        *   \"Hàng hóa được đóng gói cẩn thận trong thùng.\"\n            *   Traduction : Les marchandises sont soigneusement emballées dans des caisses.\n\n2.  **Rác**\n    *   **Signification** : Cette syllabe signifie « déchets », « ordures », « immondices », « détritus ». Elle fait référence à des matériaux inutiles ou non désirés qui sont jetés.\n    *   **Exemples de phrases usuelles** :\n        *   \"Rác phải được thu gom hàng ngày.\"\n            *   Traduction : Les ordures doivent être collectées quotidiennement.\n        *   \"Đống rác này gây ô nhiễm môi trường.\"\n            *   Traduction : Ce tas de déchets pollue l'environnement.\n        *   \"Xin đừng vứt rác bừa bãi ra đường.\"\n            *   Traduction : Veuillez ne pas jeter les déchets n'importe où dans la rue.\n        *   \"Chính phủ khuyến khích phân loại rác tại nguồn.\"\n            *   Traduction : Le gouvernement encourage le tri des déchets à la source.\n\nAinsi, « Thùng rác » se traduit littéralement par « récipient à déchets » ou « bac à ordures », ce qui correspond au sens de « poubelle » en français.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T21:21:00.783Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T17:23:48.603Z",
-  "appVersion": "1.22.0"
+  "updatedAt": "2026-09-12T21:21:01.075Z",
+  "appVersion": "1.29.0"
 }
