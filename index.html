@@ -199,6 +199,16 @@
             border-radius: 6px; font-size: 15px; line-height: 1; cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
+        .section-cache-btn {
+            flex: 0 0 40px; width: 40px; min-height: 34px; height: 34px; padding: 0;
+            background: #eaf2fb; color: #2980b9; border: 3px solid transparent;
+            border-radius: 6px; font-size: 15px; line-height: 1; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .section-cache-btn.attente { border-color: #3498db; }
+        .section-cache-btn.ok { border-color: #27ae60; }
+        .section-cache-btn.erreur { border-color: #e74c3c; }
+        .section-cache-btn.bloque { border-color: #e74c3c; font-size: 11px; font-weight: bold; color: #c0392b; }
         .section-edit-btn {
             flex: 0 0 34px; width: 34px; min-height: 34px; height: 34px; padding: 0;
             background: #eaf2fb; color: #2980b9; border: 1px solid #cfe0f3;
@@ -282,7 +292,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.24.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.25.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -498,10 +508,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.24.0';
+        const APP_VERSION = '1.25.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.25.0', d: "Page « Sélectionner Section » : le bouton d'affichage enchaîne maintenant trois états — progression, puis « % explications en cache » (bandeau d'une couleur propre à chaque section), puis rien. Dans ce dernier mode, un bouton 🤖 par section demande à Gemini l'explication de 5 mots tirés au hasard parmi ceux qui n'en ont pas encore : liseré bleu pendant l'appel, vert 3 s si tout s'est bien passé, rouge 5 s en cas d'erreur, et rouge avec décompte tant que Gemini impose un délai d'attente." },
             { v: '1.24.0', d: "Correction : après un renommage ou une suppression de section (ou une édition du fichier de données), le nouveau nom apparaissait avec plusieurs relancements de retard. Les lectures du gist ne passent plus par le cache du navigateur (no-store + paramètre anti-cache + jeton quand il est disponible), et surtout la liste des sections est reconstruite directement à partir du contenu qui vient d'être envoyé, sans relecture réseau." },
             { v: '1.23.0', d: "La question sur les 5 mots ne porte plus que sur les mots dont l'explication n'est pas encore mémorisée : les autres sont repris du fichier et le panneau affiche l'ensemble dans l'ordre de la colonne. Le bouton 🔄 est désormais actif aussi sur cet affichage et redemande alors réellement toutes les explications à Gemini, en remplaçant celles qui étaient mémorisées." },
             { v: '1.22.0', d: "Gestion du dépassement de quota Gemini (erreur 429) : le délai renvoyé par Google est lu, un décompte s'affiche dans le panneau et sur le bouton, et la question est renvoyée automatiquement une fois. Au-delà d'une attente de deux minutes (quota journalier), l'erreur est affichée avec les solutions : autre modèle, ou facturation activée." },
@@ -679,13 +690,154 @@
             return textWidth > available;
         }
 
-        let showSectionProgress = false;
+        // 0 = rien, 1 = progression (mots au niveau 5), 2 = % d'explications en cache.
+        let sectionDisplayMode = 0;
+        const LIBELLES_MODE_SECTION = ['📊 Afficher la progression', '💾 % explications en cache', '🎨 Masquer les bandeaux'];
 
         function toggleSectionProgress() {
-            showSectionProgress = !showSectionProgress;
-            const btn = document.getElementById('progress-toggle-btn');
-            if (btn) btn.innerText = showSectionProgress ? '🎨 Masquer la progression' : '📊 Afficher la progression';
+            sectionDisplayMode = (sectionDisplayMode + 1) % 3;
+            majLibelleModeSection();
             renderSectionButtons();
+        }
+
+        // Le bouton annonce l'état suivant : progression → % en cache → rien.
+        function majLibelleModeSection() {
+            const btn = document.getElementById('progress-toggle-btn');
+            if (btn) btn.innerText = LIBELLES_MODE_SECTION[sectionDisplayMode];
+        }
+
+        // Teinte stable propre à chaque section, dérivée de son nom.
+        function couleurSection(nom) {
+            let h = 0;
+            for (let i = 0; i < nom.length; i++) h = (h * 31 + nom.charCodeAt(i)) % 360;
+            return `hsl(${h}, 65%, 72%)`;
+        }
+
+        // Mots (sans doublon) d'une section, et ceux dont l'explication manque.
+        function motsDeSection(section) {
+            const mots = (section === "Toutes") ? allData.map(p => p.vn) : allData.filter(p => p.section === section).map(p => p.vn);
+            return Array.from(new Set(mots));
+        }
+
+        function motsSansExplication(section) {
+            return motsDeSection(section).filter(m => !motAExplication(m));
+        }
+
+        function statsCacheSection(section) {
+            const mots = motsDeSection(section);
+            const enCache = mots.filter(motAExplication).length;
+            return { total: mots.length, enCache, percent: mots.length ? Math.round((enCache / mots.length) * 100) : 0 };
+        }
+
+        // ---- Remplissage du cache d'explications, section par section ----
+        // État visuel de chaque bouton : liseré bleu pendant l'appel, vert 3 s en
+        // cas de succès, rouge 5 s en cas d'erreur. Un quota Gemini dépassé bloque
+        // tous les boutons en rouge, avec décompte, jusqu'à la fin du délai imposé.
+        const MOTS_PAR_APPEL_CACHE = 5;
+        const etatCacheSection = {};   // section -> { etat, jusqua }
+        let geminiBloqueJusqua = 0;
+        let minuteurBlocageGemini = null;
+
+        function setEtatCacheSection(section, etat, dureeMs) {
+            if (!etat) delete etatCacheSection[section];
+            else etatCacheSection[section] = { etat, jusqua: dureeMs ? Date.now() + dureeMs : 0 };
+            renderSectionButtons();
+            if (dureeMs) {
+                setTimeout(() => {
+                    const e = etatCacheSection[section];
+                    if (e && e.jusqua && Date.now() >= e.jusqua - 50) {
+                        delete etatCacheSection[section];
+                        renderSectionButtons();
+                    }
+                }, dureeMs + 80);
+            }
+        }
+
+        function bloquerGemini(secondes) {
+            geminiBloqueJusqua = Date.now() + secondes * 1000;
+            if (minuteurBlocageGemini) clearInterval(minuteurBlocageGemini);
+            minuteurBlocageGemini = setInterval(() => {
+                if (Date.now() >= geminiBloqueJusqua) {
+                    clearInterval(minuteurBlocageGemini);
+                    minuteurBlocageGemini = null;
+                    geminiBloqueJusqua = 0;
+                }
+                renderSectionButtons();
+            }, 1000);
+            renderSectionButtons();
+        }
+
+        function secondesBlocageGemini() {
+            return geminiBloqueJusqua > Date.now() ? Math.ceil((geminiBloqueJusqua - Date.now()) / 1000) : 0;
+        }
+
+        function creerBoutonCacheSection(section) {
+            const btn = document.createElement('button');
+            btn.className = 'section-cache-btn';
+            const manquants = motsSansExplication(section).length;
+            const bloque = secondesBlocageGemini();
+            const etat = etatCacheSection[section];
+            if (bloque) {
+                btn.classList.add('bloque');
+                btn.innerText = bloque + 's';
+                btn.title = `Gemini impose un délai d'attente : encore ${bloque} s`;
+            } else {
+                btn.innerText = '🤖';
+                btn.title = manquants
+                    ? `Demander à Gemini l'explication de ${Math.min(MOTS_PAR_APPEL_CACHE, manquants)} mot(s) au hasard parmi les ${manquants} sans explication`
+                    : 'Tous les mots de cette section ont déjà leur explication';
+                if (etat) btn.classList.add(etat.etat);
+            }
+            btn.onclick = (e) => { e.stopPropagation(); remplirCacheSection(section); };
+            return btn;
+        }
+
+        function tirerAuHasard(liste, combien) {
+            const copie = liste.slice();
+            for (let i = copie.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copie[i], copie[j]] = [copie[j], copie[i]];
+            }
+            return copie.slice(0, combien);
+        }
+
+        async function remplirCacheSection(section) {
+            if (aiProvider !== 'gemini') {
+                alert('⚠️ Sélectionne Gemini comme assistant (⚙️ Options → 🤖 Assistant IA) pour remplir le cache des explications.');
+                return;
+            }
+            if (!cleGemini) {
+                alert("⚠️ Aucune clé API Gemini sur cet appareil (⚙️ Options → 🤖 Assistant IA).");
+                return;
+            }
+            if (secondesBlocageGemini()) return;         // encore en attente du délai imposé
+            if (etatCacheSection[section] && etatCacheSection[section].etat === 'attente') return;
+
+            const manquants = motsSansExplication(section);
+            if (!manquants.length) { setEtatCacheSection(section, 'ok', 3000); return; }
+            const choisis = tirerAuHasard(manquants, MOTS_PAR_APPEL_CACHE);
+
+            setEtatCacheSection(section, 'attente', 0);
+            console.log(`[Cache] section « ${section} » : ${choisis.length} mot(s) demandé(s) sur ${manquants.length} sans explication — ${choisis.join(', ')}`);
+            try {
+                const question = buildChatGPTLinkQuery(choisis.join(', '), choisis.length > 1);
+                const texte = await appelerGemini(question, null);
+                const nouveaux = memoriserExplicationsGroupees(texte, choisis);
+                if (!nouveaux.length) throw new Error("Réponse reçue, mais aucun mot n'a pu y être isolé.");
+                console.log(`[Cache] section « ${section} » : ${nouveaux.length} explication(s) mémorisée(s), ${motsSansExplication(section).length} mot(s) restant(s)`);
+                setEtatCacheSection(section, 'ok', 3000);
+            } catch (e) {
+                console.log(`[Cache] section « ${section} » : échec — ${e.message}`);
+                if (e.status === 429) {
+                    // Délai imposé par Google : liseré rouge jusqu'à sa fin.
+                    const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + 1);
+                    delete etatCacheSection[section];
+                    bloquerGemini(secondes);
+                } else {
+                    setEtatCacheSection(section, 'erreur', 5000);
+                    alert('❌ ' + messageErreurGemini(e.message));
+                }
+            }
         }
 
         function renderSectionButtons() {
@@ -703,7 +855,7 @@
                 div.style.color = '#2c3e50'; // toujours foncé, y compris pour la section sélectionnée
                 div.onclick = () => selectSection(s);
 
-                if (showSectionProgress) {
+                if (sectionDisplayMode === 1) {
                     const masteredCount = wordsInSection.filter(p => (counters[p.vn] || 0) >= 5).length;
                     const percent = count > 0 ? Math.round((masteredCount / count) * 100) : 0;
                     // Remplissage horizontal proportionnel au % de mots au niveau 5 (Expert) ;
@@ -711,6 +863,13 @@
                     div.style.background = `linear-gradient(to right, #a8e6b0 ${percent}%, #ecf0f1 ${percent}%)`;
                     div.style.border = (currentSection === s) ? '3px solid #2980b9' : '1px solid #bdc3c7';
                     div.title = `${masteredCount}/${count} mots au niveau 5 (${percent}%)`;
+                } else if (sectionDisplayMode === 2) {
+                    // Même présentation, mais pour la part des mots dont
+                    // l'explication est déjà mémorisée, dans la teinte de la section.
+                    const st = statsCacheSection(s);
+                    div.style.background = `linear-gradient(to right, ${couleurSection(s)} ${st.percent}%, #ecf0f1 ${st.percent}%)`;
+                    div.style.border = (currentSection === s) ? '3px solid #2980b9' : '1px solid #bdc3c7';
+                    div.title = `${st.enCache}/${st.total} mots expliqués en cache (${st.percent}%)`;
                 } else {
                     div.style.background = '';
                     div.style.border = '';
@@ -719,7 +878,11 @@
 
                 row.appendChild(div);
 
-                if (s !== "Toutes" && !showSectionProgress) {
+                if (sectionDisplayMode === 2) {
+                    row.appendChild(creerBoutonCacheSection(s));
+                }
+
+                if (s !== "Toutes" && sectionDisplayMode === 0) {
                     const editBtn = document.createElement('button');
                     editBtn.className = 'section-edit-btn';
                     editBtn.innerText = '✏️';
@@ -808,6 +971,7 @@
             document.getElementById('github-panel').style.display = 'none';
             document.getElementById('chatgpt-prompts-panel').style.display = 'none';
             document.getElementById('ai-panel').style.display = 'none';
+            majLibelleModeSection();
             renderSectionButtons();
             document.getElementById('section-list').style.display = 'flex';
             document.getElementById('custom-modal').style.display = 'flex';
