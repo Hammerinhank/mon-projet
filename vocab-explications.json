@@ -90,8 +90,15 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T17:01:48.380Z"
       }
+    },
+    "riêng tư": {
+      "link": {
+        "texte": "### riêng tư\nLe mot \"riêng tư\" est composé de deux syllabes :\n*   **riêng :** Cette syllabe signifie \"séparé\", \"individuel\", \"privé\", \"personnel\", \"propre\".\n*   **tư :** Cette syllabe signifie également \"privé\", \"personnel\", \"individuel\". Elle est souvent utilisée pour créer des mots composés liés à la sphère privée, par opposition au public.\n\nEnsemble, \"riêng tư\" signifie \"privé\", \"personnel\", faisant référence à l'intimité ou à des affaires qui ne concernent qu'une personne.\n\nExemples de phrases usuelles :\n*   Đây là vấn đề riêng tư của tôi.\n    (C'est mon affaire privée / C'est une question personnelle.)\n*   Mọi người nên tôn trọng không gian riêng tư của người khác.\n    (Tout le monde devrait respecter l'espace privé des autres.)\n*   Thông tin cá nhân của bạn sẽ được giữ riêng tư.\n    (Vos informations personnelles seront gardées privées.)\n*   Xin đừng can thiệp vào chuyện riêng tư của tôi.\n    (Veuillez ne pas vous immiscer dans mes affaires privées.)",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T17:20:39.581Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T17:01:48.716Z",
-  "appVersion": "1.21.0"
+  "updatedAt": "2026-09-12T17:20:39.927Z",
+  "appVersion": "1.22.0"
 }
