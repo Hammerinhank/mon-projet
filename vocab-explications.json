@@ -6,8 +6,15 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T15:32:12.796Z"
       }
+    },
+    "dự án": {
+      "link": {
+        "texte": "Absolument ! Le terme vietnamien **« dự án »** signifie en français : **Projet**.\n\nIl est composé de deux syllabes, chacune ayant sa propre signification et sa propre tonalité (très importante en vietnamien) :\n\n---\n\n### 1. Syllabe : **Dự**\n\n*   **Sens :** Cette syllabe véhicule l'idée de **préparer, anticiper, estimer, projeter (dans le sens de concevoir ou planifier).** C'est l'action mentale ou la phase de conception qui précède la réalisation de quelque chose. On pourrait le rapprocher de l'idée de \"préparer un dossier\", \"prévoir quelque chose\".\n\n*   **Prononciation :**\n    *   La consonne **'d'** au début peut varier selon les régions :\n        *   Souvent prononcée comme un **'z' doux** (comme dans \"zoo\") dans le sud du Vietnam.\n        *   Ou comme un **'y'** (comme dans \"yoga\") dans le nord du Vietnam.\n    *   La voyelle **'ư'** est un son fermé similaire au \"eu\" dans \"deux\" ou \"feu\", mais prononcé un peu plus en arrière dans la bouche.\n    *   La **tonalité** est le **ton 'nặng' (grave-glottal ou glottal-tombant)** : le son descend rapidement avec une légère coupure glottale à la fin, comme si vous étiez surpris ou que vous vous arrêtiez brusquement de parler.\n\n*   **En simplifié, on pourrait l'approcher par un \"dzeu\" (sud) ou \"yeu\" (nord) avec cette tonalité particulière.**\n\n---\n\n### 2. Syllabe : **Án**\n\n*   **Sens :** Cette syllabe signifie **plan, projet (le nom), proposition, dossier, affaire, cas (légal).** C'est l'entité concrète ou la proposition structurée qui est le résultat de la phase de \"dự\". C'est l'objet de la planification.\n\n*   **Prononciation :**\n    *   La voyelle **'a'** est un 'a' ouvert, comme dans \"papa\".\n    *   La consonne finale **'n'** est comme le 'n' français.\n    *   La **tonalité** est le **ton 'sắc' (aigu-montant)** : le son monte de manière assez nette et rapide, comme si vous posiez une question en français avec une intonation montante (\"ça va ?\").\n\n*   **En simplifié, on pourrait l'approcher par un \"an\" avec cette tonalité montante.**\n\n---\n\n### Ensemble : **Dự án**\n\nEn combinant les deux, **« dự án »** signifie donc littéralement quelque chose comme **\"plan préparé\"** ou **\"plan anticipé\"**, ce qui aboutit naturellement au sens de **\"projet\"** en français.\n\nC'est un terme très courant et polyvalent, utilisé pour désigner un projet de construction, un projet de loi, un projet d'entreprise, un projet personnel, etc.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T15:35:24.129Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T15:32:13.033Z",
+  "updatedAt": "2026-09-12T15:35:24.469Z",
   "appVersion": "1.18.0"
 }
