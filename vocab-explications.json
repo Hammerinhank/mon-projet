@@ -20,8 +20,36 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T15:41:44.758Z"
       }
+    },
+    "vừa": {
+      "link": {
+        "texte": "### vừa\nLe mot \"vừa\" est un terme polyvalent dont le sens varie selon le contexte. Il peut signifier :\n1.  **Juste, tout juste, à peine** (indiquant un temps ou une quantité) : Par exemple, \"vừa mới\" signifie \"tout juste\", \"il y a un instant\".\n2.  **Convient, juste ce qu'il faut, parfait** (pour une taille, une quantité, un goût) : Implique une adéquation ou un équilibre.\n3.  **En même temps que, à la fois** (pour des actions simultanées) : Utilisé pour lier deux actions qui se produisent simultanément.\n4.  **Égal, de même taille/quantité**.\n\nIl s'agit d'un mot d'une seule syllabe.\n\nExemples de phrases :\n*   Anh ấy vừa mới đi làm về.\n    *   Il vient tout juste de rentrer du travail.\n*   Món canh này nêm rất vừa ăn.\n    *   Cette soupe est assaisonnée juste comme il faut / est à mon goût.\n*   Cái áo này mặc vừa vặn với tôi.\n    *   Cette chemise me va parfaitement.\n*   Cô ấy vừa đọc sách vừa nghe nhạc.\n    *   Elle lit un livre tout en écoutant de la musique.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:06:39.257Z"
+      }
+    },
+    "bị thu hồi": {
+      "link": {
+        "texte": "### bị thu hồi\nL'expression \"bị thu hồi\" signifie **être révoqué, être confisqué, être rappelé, être exproprié**. Le mot \"bị\" indique que l'action est subie, souvent avec une connotation négative ou involontaire.\n\nCette expression est composée de trois éléments, chacun une syllabe :\n*   **bị** : Cet élément marque la voix passive, indiquant que le sujet subit l'action. Il est souvent utilisé pour des événements négatifs ou indésirables.\n*   **thu** : Cette syllabe signifie collecter, rassembler, recevoir, percevoir.\n*   **hồi** : Cette syllabe exprime l'idée de retourner, revenir, récupérer, rappeler.\nEnsemble, \"thu hồi\" signifie rappeler, révoquer, confisquer. Avec \"bị\", cela devient \"être rappelé, être révoqué, être confisqué\".\n\nExemples de phrases :\n*   Giấy phép kinh doanh của công ty đã bị thu hồi.\n    *   La licence commerciale de l'entreprise a été révoquée.\n*   Những sản phẩm bị lỗi đã bị thu hồi khỏi thị trường.\n    *   Les produits défectueux ont été rappelés du marché.\n*   Đất đai của người dân đã bị thu hồi để làm đường.\n    *   Les terres des habitants ont été expropriées pour construire une route.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:06:39.258Z"
+      }
+    },
+    "nông dân": {
+      "link": {
+        "texte": "### nông dân\nLe mot \"nông dân\" signifie **paysan, agriculteur, fermier**. Il désigne une personne qui travaille la terre et vit de l'agriculture.\n\nCe mot est composé de deux syllabes :\n*   **nông** : Cette syllabe est liée à l'agriculture, au secteur rural, à la ferme.\n*   **dân** : Cette syllabe désigne le peuple, les citoyens, les habitants.\nEnsemble, \"nông dân\" décrit une personne du peuple dont l'activité est liée à l'agriculture.\n\nExemples de phrases :\n*   Cuộc sống của nông dân ở vùng sâu vùng xa còn nhiều khó khăn.\n    *   La vie des paysans dans les régions reculées est encore très difficile.\n*   Chính phủ có nhiều chính sách hỗ trợ nông dân.\n    *   Le gouvernement a de nombreuses politiques de soutien aux agriculteurs.\n*   Nông dân đang chuẩn bị cho vụ mùa mới.\n    *   Les agriculteurs se préparent pour la nouvelle saison de récolte.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:06:39.258Z"
+      }
+    },
+    "nhấn mạnh": {
+      "link": {
+        "texte": "### nhấn mạnh\nL'expression \"nhấn mạnh\" signifie **souligner, insister sur, mettre l'accent sur, accentuer**. Elle est utilisée pour attirer l'attention sur quelque chose d'important.\n\nCette expression est composée de deux syllabes :\n*   **nhấn** : Cette syllabe signifie presser, appuyer, enfoncer. Dans un sens figuré, cela peut signifier insister.\n*   **mạnh** : Cette syllabe signifie fort, puissant, intense.\nEnsemble, \"nhấn mạnh\" exprime l'action d'appuyer fortement sur une idée ou un propos pour lui donner plus de poids ou d'importance.\n\nExemples de phrases :\n*   Anh ấy nhấn mạnh tầm quan trọng của việc học ngoại ngữ.\n    *   Il a souligné l'importance d'apprendre des langues étrangères.\n*   Báo cáo này nhấn mạnh sự cần thiết của cải cách kinh tế.\n    *   Ce rapport met l'accent sur la nécessité des réformes économiques.\n*   Tôi muốn nhấn mạnh rằng an toàn là ưu tiên hàng đầu.\n    *   Je tiens à insister sur le fait que la sécurité est la priorité absolue.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T16:06:39.258Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T15:41:45.268Z",
-  "appVersion": "1.19.0"
+  "updatedAt": "2026-09-12T16:06:39.554Z",
+  "appVersion": "1.21.0"
 }
