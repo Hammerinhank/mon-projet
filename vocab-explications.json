@@ -97,8 +97,29 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T17:20:39.581Z"
       }
+    },
+    "trồng lúa": {
+      "link": {
+        "texte": "### trồng lúa\nCe mot signifie \"cultiver le riz\" ou \"planter le riz\".\n*   **trồng** : signifie \"planter\" ou \"cultiver\".\n*   **lúa** : désigne le riz en tant que plante ou céréale non décortiquée (paddy).\n\n**Exemples :**\n*   Gia đình tôi sống bằng nghề trồng lúa.\n    *   Ma famille vit de la culture du riz.\n*   Nông dân đang trồng lúa trên cánh đồng.\n    *   Les agriculteurs sont en train de planter le riz dans les champs.\n*   Để trồng lúa cần rất nhiều nước.\n    *   Il faut beaucoup d'eau pour cultiver le riz.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T17:23:48.238Z"
+      }
+    },
+    "đất trồng lúa": {
+      "link": {
+        "texte": "### đất trồng lúa\nCe mot signifie \"terre rizicole\" ou \"rizière\" ou \"terrain destiné à la culture du riz\".\n*   **đất** : signifie \"terre\", \"sol\", \"terrain\".\n*   **trồng lúa** : (voir ci-dessus) signifie \"cultiver le riz\".\n\n**Exemples :**\n*   Vùng này có nhiều đất trồng lúa phì nhiêu.\n    *   Cette région a de nombreuses terres rizicoles fertiles.\n*   Chính phủ có chính sách bảo vệ đất trồng lúa.\n    *   Le gouvernement a une politique de protection des terres destinées à la culture du riz.\n*   Việc chuyển đổi đất trồng lúa sang mục đích khác đang là vấn đề lớn.\n    *   La conversion des terres rizicoles à d'autres fins est un problème majeur.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T17:23:48.238Z"
+      }
+    },
+    "kí tên / ký tên": {
+      "link": {
+        "texte": "### kí tên / ký tên\nCes deux formes sont interchangeables et signifient \"signer\" (apposer sa signature).\n*   **kí / ký** : signifie \"signer\" (verbe).\n*   **tên** : signifie \"nom\".\n\n**Exemples :**\n*   Bạn cần kí tên vào biên bản này.\n    *   Vous devez signer ce procès-verbal.\n*   Đừng quên ký tên của bạn ở cuối đơn.\n    *   N'oubliez pas de signer votre nom à la fin du formulaire.\n*   Giám đốc đã kí tên vào hợp đồng.\n    *   Le directeur a signé le contrat.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T17:23:48.238Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T17:20:39.927Z",
+  "updatedAt": "2026-09-12T17:23:48.603Z",
   "appVersion": "1.22.0"
 }
