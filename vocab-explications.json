@@ -76,8 +76,22 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T16:11:54.639Z"
       }
+    },
+    "thu hồi": {
+      "link": {
+        "texte": "### thu hồi\n\nLe mot « thu hồi » est un verbe composé de deux syllabes :\n*   La syllabe « thu » signifie \"rassembler\", \"collecter\", \"acquérir\", \"recevoir\".\n*   La syllabe « hồi » signifie \"retourner\", \"revenir\", \"récupérer\".\n\nEnsemble, « thu hồi » signifie \"rappeler\", \"récupérer\", \"retirer\", \"réquisitionner\", \"recouvrer\". Il est utilisé pour désigner l'action de reprendre quelque chose, qu'il s'agisse de produits défectueux, de dettes, d'informations ou d'objets.\n\n**Exemples :**\n*   Công ty đã phải thu hồi tất cả các sản phẩm bị lỗi trên thị trường.\n    *   L'entreprise a dû rappeler tous les produits défectueux sur le marché.\n*   Ngân hàng đang thu hồi nợ từ những khách hàng không trả đúng hạn.\n    *   La banque est en train de recouvrer les dettes des clients qui n'ont pas payé à temps.\n*   Chính phủ quyết định thu hồi đất để xây dựng dự án công cộng.\n    *   Le gouvernement a décidé de réquisitionner des terres pour construire un projet public.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T17:01:48.380Z"
+      }
+    },
+    "hợp đồng": {
+      "link": {
+        "texte": "### hợp đồng\n\nLe mot « hợp đồng » est un nom commun composé de deux syllabes :\n*   La syllabe « hợp » signifie \"s'accorder\", \"être d'accord\", \"combiner\", \"joindre\".\n*   La syllabe « đồng » signifie \"ensemble\", \"commun\", \"similaire\", et dans ce contexte, elle renforce l'idée d'accord mutuel.\n\nEnsemble, « hợp đồng » signifie \"contrat\", \"accord\". Il fait référence à un document légal ou un arrangement formel entre deux ou plusieurs parties.\n\n**Exemples :**\n*   Chúng tôi vừa ký hợp đồng thuê nhà mới.\n    *   Nous venons de signer un nouveau contrat de location de maison.\n*   Bạn cần đọc kỹ các điều khoản trong hợp đồng trước khi ký.\n    *   Vous devez lire attentivement les clauses du contrat avant de signer.\n*   Việc vi phạm hợp đồng có thể dẫn đến những hậu quả pháp lý nghiêm trọng.\n    *   La violation du contrat peut entraîner de graves conséquences juridiques.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-12T17:01:48.380Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T16:11:54.958Z",
+  "updatedAt": "2026-09-12T17:01:48.716Z",
   "appVersion": "1.21.0"
 }
