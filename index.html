@@ -208,6 +208,8 @@
         .section-cache-btn.attente { border-color: #3498db; }
         .section-cache-btn.ok { border-color: #27ae60; }
         .section-cache-btn.erreur { border-color: #e74c3c; }
+        .section-cache-btn.partiel { border-color: #e67e22; }
+        .section-cache-btn.resultat { font-size: 12px; font-weight: bold; }
         .section-cache-btn.bloque { border-color: #e74c3c; font-size: 11px; font-weight: bold; color: #c0392b; }
         .section-edit-btn {
             flex: 0 0 34px; width: 34px; min-height: 34px; height: 34px; padding: 0;
@@ -280,6 +282,22 @@
         }
         #ai-status { font-size: 0.8rem; color: #34495e; min-height: 1.2rem; margin: 8px 0; }
 
+        #journal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 5000; align-items: center; justify-content: center; padding: 16px;
+        }
+        #journal-overlay .modal-content { text-align: left; }
+        #journal-overlay h3 { margin-top: 0; text-align: center; }
+        #journal-list {
+            max-height: 55vh; overflow-y: auto; background: #fff; border: 1px solid #dfe6e9;
+            border-radius: 8px; padding: 8px; font-size: 0.78rem; line-height: 1.45; color: #2c3e50;
+            -webkit-user-select: text; user-select: text;
+        }
+        .journal-ligne { margin-bottom: 5px; }
+        .journal-ligne b { color: #7f8c8d; font-weight: 600; }
+        .journal-ligne.erreur { color: #c0392b; }
+        .journal-ligne.ok { color: #1e8449; }
+        #section-cache-status { font-size: 0.8rem; color: #34495e; text-align: center; min-height: 1.1rem; margin: 6px 0 0 0; }
         #version-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 5000; align-items: center; justify-content: center; padding: 16px;
@@ -292,7 +310,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.25.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.28.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -390,6 +408,15 @@
         <button class="modal-btn btn-cancel" onclick="hideRawDataViewer()">Fermer</button>
     </div>
 
+    <div id="journal-overlay" onclick="if(event.target===this) hideJournalIA()">
+        <div class="modal-content">
+            <h3>🧾 Journal des appels IA</h3>
+            <div id="journal-list"></div>
+            <button class="modal-btn btn-cancel" onclick="viderJournalIA()" style="margin-top:10px">🗑️ Vider le journal</button>
+            <button class="modal-btn btn-cancel" onclick="hideJournalIA()" style="margin-top:5px">Fermer</button>
+        </div>
+    </div>
+
     <div id="version-overlay" onclick="if(event.target===this) hideVersionHistory()">
         <div class="modal-content">
             <h3>🗒️ Historique des versions</h3>
@@ -421,6 +448,7 @@
                 <button class="modal-btn btn-all" onclick="execAction('all')">Réinitialiser la section</button>
                 <button class="modal-btn btn-top" onclick="showDataManagement()">🗂️ Gérer les données</button>
                 <button class="modal-btn btn-top" onclick="showAiPanel()">🤖 Assistant IA (ChatGPT / Gemini)</button>
+                <button class="modal-btn btn-top" onclick="showJournalIA()">🧾 Journal des appels IA</button>
                 <button class="modal-btn btn-top" onclick="showChatGPTPromptsPanel()">✏️ Éditer requêtes ChatGPT</button>
                 <button class="modal-btn btn-cancel" onclick="closeModal()">Fermer</button>
             </div>
@@ -428,6 +456,7 @@
                 <h3>Sélectionner Section</h3>
                 <button class="modal-btn btn-top" id="progress-toggle-btn" onclick="toggleSectionProgress()">📊 Afficher la progression</button>
                 <div id="section-buttons"></div>
+                <p id="section-cache-status"></p>
                 <button class="modal-btn btn-cancel" onclick="hideSectionPicker()" style="margin-top:15px">Retour</button>
             </div>
             <div id="github-panel">
@@ -508,10 +537,13 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.25.0';
+        const APP_VERSION = '1.28.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.28.0', d: "Le bouton 🤖 d'une section affiche le résultat chiffré de l'appel (« 5/5 », « 3/5 ») pendant quelques secondes, avec un liseré vert si tous les mots demandés ont bien été mémorisés et orange si seuls certains l'ont été — les mots manquants sont alors nommés dans la ligne d'état et dans le journal. Rouge reste réservé à l'échec complet et au délai imposé par Gemini." },
+            { v: '1.27.0', d: "Journal des appels IA consultable dans l'app (⚙️ Options → 🧾 Journal des appels IA) : chaque appel Gemini, chaque mot mémorisé, chaque erreur et chaque envoi vers GitHub y est horodaté, conservé d'une session à l'autre (200 dernières lignes). Une ligne d'état sous la liste des sections résume aussi la dernière opération de remplissage du cache." },
+            { v: '1.26.0', d: "Le liseré rouge avec décompte, quand Gemini impose un délai, ne s'affiche plus que sur le bouton de la section réellement cliquée. Les autres gardent leur aspect normal ; si l'un d'eux est actionné pendant le délai, il affiche à son tour son décompte sans faire d'appel inutile." },
             { v: '1.25.0', d: "Page « Sélectionner Section » : le bouton d'affichage enchaîne maintenant trois états — progression, puis « % explications en cache » (bandeau d'une couleur propre à chaque section), puis rien. Dans ce dernier mode, un bouton 🤖 par section demande à Gemini l'explication de 5 mots tirés au hasard parmi ceux qui n'en ont pas encore : liseré bleu pendant l'appel, vert 3 s si tout s'est bien passé, rouge 5 s en cas d'erreur, et rouge avec décompte tant que Gemini impose un délai d'attente." },
             { v: '1.24.0', d: "Correction : après un renommage ou une suppression de section (ou une édition du fichier de données), le nouveau nom apparaissait avec plusieurs relancements de retard. Les lectures du gist ne passent plus par le cache du navigateur (no-store + paramètre anti-cache + jeton quand il est disponible), et surtout la liste des sections est reconstruite directement à partir du contenu qui vient d'être envoyé, sans relecture réseau." },
             { v: '1.23.0', d: "La question sur les 5 mots ne porte plus que sur les mots dont l'explication n'est pas encore mémorisée : les autres sont repris du fichier et le panneau affiche l'ensemble dans l'ordre de la colonne. Le bouton 🔄 est désormais actif aussi sur cet affichage et redemande alors réellement toutes les explications à Gemini, en remplaçant celles qui étaient mémorisées." },
@@ -738,9 +770,9 @@
         let geminiBloqueJusqua = 0;
         let minuteurBlocageGemini = null;
 
-        function setEtatCacheSection(section, etat, dureeMs) {
+        function setEtatCacheSection(section, etat, dureeMs, libelle) {
             if (!etat) delete etatCacheSection[section];
-            else etatCacheSection[section] = { etat, jusqua: dureeMs ? Date.now() + dureeMs : 0 };
+            else etatCacheSection[section] = { etat, jusqua: dureeMs ? Date.now() + dureeMs : 0, libelle: libelle || '' };
             renderSectionButtons();
             if (dureeMs) {
                 setTimeout(() => {
@@ -753,17 +785,28 @@
             }
         }
 
-        function bloquerGemini(secondes) {
-            geminiBloqueJusqua = Date.now() + secondes * 1000;
-            if (minuteurBlocageGemini) clearInterval(minuteurBlocageGemini);
-            minuteurBlocageGemini = setInterval(() => {
-                if (Date.now() >= geminiBloqueJusqua) {
-                    clearInterval(minuteurBlocageGemini);
-                    minuteurBlocageGemini = null;
-                    geminiBloqueJusqua = 0;
-                }
-                renderSectionButtons();
-            }, 1000);
+        // Le quota est global (il porte sur la clé API), mais le décompte ne
+        // s'affiche que sur les boutons effectivement actionnés : les autres
+        // sections gardent leur aspect normal.
+        function bloquerSectionGemini(section, secondes) {
+            journaliser(`Section « ${section} » : délai imposé par Gemini, ${secondes} s à attendre`, 'erreur');
+            setStatutCacheSection(`⛔ ${section} : Gemini impose ${secondes} s d'attente`);
+            const jusqua = Date.now() + secondes * 1000;
+            geminiBloqueJusqua = Math.max(geminiBloqueJusqua, jusqua);
+            etatCacheSection[section] = { etat: 'bloque', jusqua };
+            if (!minuteurBlocageGemini) {
+                minuteurBlocageGemini = setInterval(() => {
+                    let encore = false;
+                    Object.keys(etatCacheSection).forEach(sec => {
+                        const e = etatCacheSection[sec];
+                        if (e.etat !== 'bloque') return;
+                        if (Date.now() >= e.jusqua) delete etatCacheSection[sec]; else encore = true;
+                    });
+                    if (Date.now() >= geminiBloqueJusqua) geminiBloqueJusqua = 0;
+                    if (!encore) { clearInterval(minuteurBlocageGemini); minuteurBlocageGemini = null; }
+                    renderSectionButtons();
+                }, 1000);
+            }
             renderSectionButtons();
         }
 
@@ -771,22 +814,32 @@
             return geminiBloqueJusqua > Date.now() ? Math.ceil((geminiBloqueJusqua - Date.now()) / 1000) : 0;
         }
 
+        function secondesBlocageSection(section) {
+            const e = etatCacheSection[section];
+            return (e && e.etat === 'bloque' && e.jusqua > Date.now()) ? Math.ceil((e.jusqua - Date.now()) / 1000) : 0;
+        }
+
         function creerBoutonCacheSection(section) {
             const btn = document.createElement('button');
             btn.className = 'section-cache-btn';
             const manquants = motsSansExplication(section).length;
-            const bloque = secondesBlocageGemini();
+            const bloque = secondesBlocageSection(section);
             const etat = etatCacheSection[section];
             if (bloque) {
                 btn.classList.add('bloque');
                 btn.innerText = bloque + 's';
                 btn.title = `Gemini impose un délai d'attente : encore ${bloque} s`;
             } else {
-                btn.innerText = '🤖';
+                // Après un appel, le bouton affiche le résultat chiffré
+                // (mots mémorisés / mots demandés) pendant quelques secondes.
+                btn.innerText = (etat && etat.libelle) ? etat.libelle : '🤖';
                 btn.title = manquants
                     ? `Demander à Gemini l'explication de ${Math.min(MOTS_PAR_APPEL_CACHE, manquants)} mot(s) au hasard parmi les ${manquants} sans explication`
                     : 'Tous les mots de cette section ont déjà leur explication';
-                if (etat) btn.classList.add(etat.etat);
+                if (etat) {
+                    btn.classList.add(etat.etat);
+                    if (etat.libelle) btn.classList.add('resultat');
+                }
             }
             btn.onclick = (e) => { e.stopPropagation(); remplirCacheSection(section); };
             return btn;
@@ -810,31 +863,48 @@
                 alert("⚠️ Aucune clé API Gemini sur cet appareil (⚙️ Options → 🤖 Assistant IA).");
                 return;
             }
-            if (secondesBlocageGemini()) return;         // encore en attente du délai imposé
+            // Délai Gemini en cours : ce bouton affiche à son tour son décompte,
+            // sans lancer d'appel voué à échouer.
+            const attente = secondesBlocageGemini();
+            if (attente) { bloquerSectionGemini(section, attente); return; }
             if (etatCacheSection[section] && etatCacheSection[section].etat === 'attente') return;
 
             const manquants = motsSansExplication(section);
-            if (!manquants.length) { setEtatCacheSection(section, 'ok', 3000); return; }
+            if (!manquants.length) { setEtatCacheSection(section, 'ok', 3000, '✓'); setStatutCacheSection(`✅ ${section} : tous les mots ont déjà leur explication`); return; }
             const choisis = tirerAuHasard(manquants, MOTS_PAR_APPEL_CACHE);
 
             setEtatCacheSection(section, 'attente', 0);
-            console.log(`[Cache] section « ${section} » : ${choisis.length} mot(s) demandé(s) sur ${manquants.length} sans explication — ${choisis.join(', ')}`);
+            journaliser(`Cache « ${section} » : ${choisis.length} mot(s) demandé(s) à ${modeleGemini} sur ${manquants.length} sans explication — ${choisis.join(', ')}`);
+            setStatutCacheSection(`⏳ ${section} : ${choisis.length} mot(s) demandé(s) à Gemini…`);
             try {
                 const question = buildChatGPTLinkQuery(choisis.join(', '), choisis.length > 1);
                 const texte = await appelerGemini(question, null);
                 const nouveaux = memoriserExplicationsGroupees(texte, choisis);
-                if (!nouveaux.length) throw new Error("Réponse reçue, mais aucun mot n'a pu y être isolé.");
-                console.log(`[Cache] section « ${section} » : ${nouveaux.length} explication(s) mémorisée(s), ${motsSansExplication(section).length} mot(s) restant(s)`);
-                setEtatCacheSection(section, 'ok', 3000);
-            } catch (e) {
-                console.log(`[Cache] section « ${section} » : échec — ${e.message}`);
-                if (e.status === 429) {
-                    // Délai imposé par Google : liseré rouge jusqu'à sa fin.
-                    const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + 1);
-                    delete etatCacheSection[section];
-                    bloquerGemini(secondes);
+                if (!nouveaux.length) throw new Error("Réponse reçue, mais aucun des mots demandés n'a pu y être isolé.");
+                // On vérifie mot par mot ce qui est réellement entré en cache :
+                // une réponse peut en oublier ou en mal titrer une partie.
+                const absents = choisis.filter(m => !motAExplication(m));
+                const restants = motsSansExplication(section).length;
+                const score = `${nouveaux.length}/${choisis.length}`;
+                if (!absents.length) {
+                    journaliser(`Cache « ${section} » : ${score} — ${nouveaux.join(', ')} · ${restants} mot(s) restant(s) dans la section`, 'ok');
+                    setStatutCacheSection(`✅ ${section} : les ${choisis.length} mots demandés sont mémorisés · ${restants} restant(s)`);
+                    setEtatCacheSection(section, 'ok', 3000, score);
                 } else {
-                    setEtatCacheSection(section, 'erreur', 5000);
+                    journaliser(`Cache « ${section} » : ${score} seulement — obtenus : ${nouveaux.join(', ')} · sans explication dans la réponse : ${absents.join(', ')}`, 'erreur');
+                    setStatutCacheSection(`⚠️ ${section} : ${score} mémorisés · non obtenus : ${absents.join(', ')}`);
+                    setEtatCacheSection(section, 'partiel', 5000, score);
+                }
+            } catch (e) {
+                journaliser(`Cache « ${section} » : échec — ${e.message}`, 'erreur');
+                setStatutCacheSection(`❌ ${section} : ${e.message}`);
+                if (e.status === 429) {
+                    // Délai imposé par Google : liseré rouge sur cette section
+                    // jusqu'à la fin du délai qu'il indique.
+                    const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + 1);
+                    bloquerSectionGemini(section, secondes);
+                } else {
+                    setEtatCacheSection(section, 'erreur', 5000, `0/${MOTS_PAR_APPEL_CACHE}`);
                     alert('❌ ' + messageErreurGemini(e.message));
                 }
             }
@@ -1289,7 +1359,7 @@
                 if (e.status !== 429) throw e;
                 const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 20 : e.retryDelay) + 1);
                 if (secondes > 120) throw e;
-                console.log(`[Gemini] quota atteint (429) — nouvelle tentative dans ${secondes}s`);
+                journaliser(`Quota atteint (429) — nouvelle tentative automatique dans ${secondes} s`, 'erreur');
                 await attendreAvecDecompte(secondes, onAttente);
                 return await appelerGemini(question, dataUrlImage);
             }
@@ -1425,7 +1495,7 @@
                     link.innerText = `⏳ Quota atteint — ${restant} s`;
                 });
                 geminiCache.set(question, texte);
-                console.log(`[Gemini] ${modeleGemini} · question ${question.length} car. · ${Math.round((Date.now() - debut) / 100) / 10}s · réponse ${texte.length} car. · « ${texte.slice(0, 80)} »`);
+                journaliser(`Gemini ${modeleGemini} · question ${question.length} car. · ${Math.round((Date.now() - debut) / 100) / 10} s · réponse ${texte.length} car. · « ${texte.slice(0, 80)}… »`, 'ok');
                 // Mot unique : l'explication est mémorisée durablement (local + dépôt).
                 let nouveauxMots = [];
                 if (mot && type) {
@@ -1455,7 +1525,7 @@
                     }
                 }
             } catch (e) {
-                console.log(`[Gemini] échec (${modeleGemini}) : ${e.message}`);
+                journaliser(`Gemini ${modeleGemini} : échec — ${e.message}`, 'erreur');
                 if (aiAnswerQuestion === question) {
                     setAiAnswerBody(renderLightMarkdown('❌ ' + messageErreurGemini(e.message)), 'ai-error');
                     setAiAnswerSource('');
@@ -1579,6 +1649,67 @@
             }, true);
         }
 
+        // ==================== JOURNAL DES APPELS IA ====================
+        // Tout ce qui partait dans la console est aussi consigné ici, horodaté et
+        // conservé d'une session à l'autre : c'est la seule façon de voir ce qui
+        // s'est réellement passé depuis l'iPhone, où la console est inaccessible.
+        const JOURNAL_KEY = 'vocab_journal_ia';
+        const JOURNAL_MAX = 200;
+        let journalIA = [];
+
+        function chargerJournalIA() {
+            try { journalIA = JSON.parse(localStorage.getItem(JOURNAL_KEY) || '[]') || []; }
+            catch (e) { journalIA = []; }
+        }
+
+        function journaliser(texte, niveau) {
+            const entree = { t: new Date().toISOString(), texte, niveau: niveau || '' };
+            journalIA.push(entree);
+            if (journalIA.length > JOURNAL_MAX) journalIA = journalIA.slice(-JOURNAL_MAX);
+            try { localStorage.setItem(JOURNAL_KEY, JSON.stringify(journalIA)); } catch (e) { /* quota local */ }
+            console.log(texte);
+            if (document.getElementById('journal-overlay').style.display === 'flex') renderJournalIA();
+        }
+
+        function heureCourte(iso) {
+            try {
+                const d = new Date(iso);
+                return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                     + ' ' + d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+            } catch (e) { return '?'; }
+        }
+
+        function renderJournalIA() {
+            const liste = document.getElementById('journal-list');
+            if (!journalIA.length) { liste.innerHTML = '<p>Aucun appel enregistré pour le moment.</p>'; return; }
+            // Le plus récent en haut.
+            liste.innerHTML = journalIA.slice().reverse()
+                .map(e => `<div class="journal-ligne ${e.niveau}"><b>${heureCourte(e.t)}</b> — ${escapeHtmlIA(e.texte)}</div>`)
+                .join('');
+        }
+
+        function showJournalIA() {
+            renderJournalIA();
+            document.getElementById('journal-overlay').style.display = 'flex';
+        }
+
+        function hideJournalIA() {
+            document.getElementById('journal-overlay').style.display = 'none';
+        }
+
+        function viderJournalIA() {
+            if (!confirm('Vider le journal des appels IA ?')) return;
+            journalIA = [];
+            try { localStorage.removeItem(JOURNAL_KEY); } catch (e) { /* rien */ }
+            renderJournalIA();
+        }
+
+        function setStatutCacheSection(texte) {
+            const el = document.getElementById('section-cache-status');
+            if (el) el.innerText = texte || '';
+        }
+        // ================== FIN JOURNAL DES APPELS IA ==================
+
         // ---- Explications mémorisées (fichier vocab-explications.json du dépôt) ----
 
         function chargerExplicationsLocales() {
@@ -1590,7 +1721,7 @@
 
         function sauverExplicationsLocales() {
             try { localStorage.setItem(EXPLICATIONS_LOCAL_KEY, JSON.stringify(explications)); }
-            catch (e) { console.log('[Explications] écriture locale impossible : ' + e.message); }
+            catch (e) { journaliser('Écriture locale des explications impossible : ' + e.message, 'erreur'); }
         }
 
         function getExplication(mot, type) {
@@ -1654,7 +1785,7 @@
             mots.forEach(mot => {
                 restants--;
                 const bloc = blocs[mot];
-                console.log(`[Explications] découpage : ${mots.length - restants}/${mots.length} · « ${mot} » ${bloc ? 'trouvé (' + bloc.length + ' car.)' : 'non trouvé'} · ${restants} restant(s)`);
+                journaliser(`Découpage ${mots.length - restants}/${mots.length} · « ${mot} » ${bloc ? 'trouvé (' + bloc.length + ' car.)' : 'NON trouvé dans la réponse'} · ${restants} restant(s)`, bloc ? '' : 'erreur');
                 if (!bloc) return;
                 if (!ecraser && getExplication(mot, 'link')) return; // déjà mémorisé : on n'écrase pas
                 setExplication(mot, 'link', bloc, true);
@@ -1699,7 +1830,7 @@
                 });
                 resultat[mot] = cible;
             });
-            if (mots.length) console.log(`[Explications] fusion : ${mots.length} mots traités, ${restantes} restants, ${ajoutees} entrées retenues`);
+            if (ajoutees) journaliser(`Fusion : ${mots.length} mot(s) traité(s), ${restantes} restant(s), ${ajoutees} entrée(s) retenue(s)`);
             return resultat;
         }
 
@@ -1715,12 +1846,12 @@
                     explications = fusionnerExplications(explications, file.data.mots);
                     sauverExplicationsLocales();
                     const c = compterExplications();
-                    console.log(`[Explications] ${c.mots} mots / ${c.entrees} explications disponibles`);
+                    journaliser(`Fichier d'explications lu sur GitHub : ${c.mots} mot(s) / ${c.entrees} explication(s)`);
                     refreshChatGPTLink();
                 }
             } catch (e) {
                 // Silencieux au démarrage : on garde le miroir local.
-                console.log('[Explications] lecture GitHub impossible : ' + e.message);
+                journaliser('Lecture du fichier d\'explications impossible : ' + e.message, 'erreur');
             }
         }
 
@@ -1743,9 +1874,9 @@
                     updatedAt: new Date().toISOString(),
                     appVersion: APP_VERSION
                 }, file.sha);
-                console.log(`[Explications] envoyées sur GitHub (${c.mots} mots / ${c.entrees} explications)`);
+                journaliser(`Explications envoyées sur GitHub (${c.mots} mot(s) / ${c.entrees} explication(s))`, 'ok');
             } catch (e) {
-                console.log('[Explications] envoi GitHub impossible : ' + e.message);
+                journaliser('Envoi des explications sur GitHub impossible : ' + e.message, 'erreur');
             } finally {
                 explicationsPushEnCours = false;
                 if (explicationsPushEnAttente) {
@@ -2754,6 +2885,7 @@
 
         document.getElementById('app-version').innerText = 'v' + APP_VERSION;
         applyAiProviderClass();
+        chargerJournalIA();
         chargerExplicationsLocales();
         if (aiProvider === 'gemini') loadExplicationsFromGithub();
         document.getElementById('chatgpt-link').addEventListener('click', onAiLinkClick);
