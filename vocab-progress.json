@@ -1704,7 +1704,7 @@
     "ngày nào": 0,
     "tháng 7, 8, 9": 1,
     "thường vào": 1,
-    "xin phép": 2,
+    "xin phép": 3,
     "vào lớp": 1,
     "vài phút": 1,
     "không có gì": 1,
@@ -1712,7 +1712,7 @@
     "đang vào": 0,
     "vừa": 1,
     "đưa": 1,
-    "ra": 0,
+    "ra": 1,
     "bằng": 0,
     "nhấn mạnh": 0,
     "xưng": 0,
@@ -1741,7 +1741,7 @@
     "em": 0,
     "anh": 1,
     "nhiều hơn": 0,
-    "ít hơn": 1,
+    "ít hơn": 2,
     "trẻ hơn": 0,
     "nhiều tuổi": 0,
     "2 tuổi": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T16:03:07.202Z",
-  "appVersion": "1.20.0"
+  "updatedAt": "2026-09-12T16:05:49.302Z",
+  "appVersion": "1.21.0"
 }
