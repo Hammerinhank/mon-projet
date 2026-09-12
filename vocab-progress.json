@@ -1717,7 +1717,7 @@
     "nhấn mạnh": 0,
     "xưng": 0,
     "chỉ nói tiếng Việt": 0,
-    "nhà văn hóa": 1,
+    "nhà văn hóa": 2,
     "thôn": 1,
     "làng": 1,
     "chữ kí / chữ ký": 0,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T15:41:57.575Z",
-  "appVersion": "1.19.0"
+  "updatedAt": "2026-09-12T15:45:30.946Z",
+  "appVersion": "1.20.0"
 }
