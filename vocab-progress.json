@@ -1708,8 +1708,8 @@
     "vào lớp": 2,
     "vài phút": 1,
     "không có gì": 4,
-    "không sao": 0,
-    "đang vào": 1,
+    "không sao": 5,
+    "đang vào": 2,
     "vừa": 2,
     "đưa": 1,
     "ra": 1,
@@ -1737,7 +1737,7 @@
     "bà thông gia": 0,
     "thông gia": 0,
     "giống": 2,
-    "ông": 2,
+    "ông": 5,
     "em": 3,
     "anh": 5,
     "nhiều hơn": 1,
@@ -1868,6 +1868,6 @@
   },
   "currentSection": "- Yến : 8 septembre 2026",
   "sectionUpdatedAt": "1789153611831",
-  "updatedAt": "2026-09-12T17:00:54.256Z",
+  "updatedAt": "2026-09-12T17:01:54.663Z",
   "appVersion": "1.21.0"
 }
