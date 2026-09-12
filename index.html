@@ -310,7 +310,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.28.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.29.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -537,10 +537,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.28.0';
+        const APP_VERSION = '1.29.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.29.0', d: "Le message d'attente imposée par Gemini devient vivant : il décompte les secondes, explique la cause (limite d'appels par minute de la clé API) et se remplace, à la fin du délai, par une invitation à relancer — puis disparaît. Il ne reste donc plus affiché figé après coup." },
             { v: '1.28.0', d: "Le bouton 🤖 d'une section affiche le résultat chiffré de l'appel (« 5/5 », « 3/5 ») pendant quelques secondes, avec un liseré vert si tous les mots demandés ont bien été mémorisés et orange si seuls certains l'ont été — les mots manquants sont alors nommés dans la ligne d'état et dans le journal. Rouge reste réservé à l'échec complet et au délai imposé par Gemini." },
             { v: '1.27.0', d: "Journal des appels IA consultable dans l'app (⚙️ Options → 🧾 Journal des appels IA) : chaque appel Gemini, chaque mot mémorisé, chaque erreur et chaque envoi vers GitHub y est horodaté, conservé d'une session à l'autre (200 dernières lignes). Une ligne d'état sous la liste des sections résume aussi la dernière opération de remplissage du cache." },
             { v: '1.26.0', d: "Le liseré rouge avec décompte, quand Gemini impose un délai, ne s'affiche plus que sur le bouton de la section réellement cliquée. Les autres gardent leur aspect normal ; si l'un d'eux est actionné pendant le délai, il affiche à son tour son décompte sans faire d'appel inutile." },
@@ -769,6 +770,7 @@
         const etatCacheSection = {};   // section -> { etat, jusqua }
         let geminiBloqueJusqua = 0;
         let minuteurBlocageGemini = null;
+        let derniereSectionBloquee = null;
 
         function setEtatCacheSection(section, etat, dureeMs, libelle) {
             if (!etat) delete etatCacheSection[section];
@@ -789,11 +791,12 @@
         // s'affiche que sur les boutons effectivement actionnés : les autres
         // sections gardent leur aspect normal.
         function bloquerSectionGemini(section, secondes) {
-            journaliser(`Section « ${section} » : délai imposé par Gemini, ${secondes} s à attendre`, 'erreur');
-            setStatutCacheSection(`⛔ ${section} : Gemini impose ${secondes} s d'attente`);
+            journaliser(`Section « ${section} » : limite d'appels Gemini atteinte, ${secondes} s à attendre`, 'erreur');
             const jusqua = Date.now() + secondes * 1000;
             geminiBloqueJusqua = Math.max(geminiBloqueJusqua, jusqua);
             etatCacheSection[section] = { etat: 'bloque', jusqua };
+            derniereSectionBloquee = section;
+            majStatutAttenteGemini();
             if (!minuteurBlocageGemini) {
                 minuteurBlocageGemini = setInterval(() => {
                     let encore = false;
@@ -803,11 +806,31 @@
                         if (Date.now() >= e.jusqua) delete etatCacheSection[sec]; else encore = true;
                     });
                     if (Date.now() >= geminiBloqueJusqua) geminiBloqueJusqua = 0;
+                    majStatutAttenteGemini();
                     if (!encore) { clearInterval(minuteurBlocageGemini); minuteurBlocageGemini = null; }
                     renderSectionButtons();
                 }, 1000);
             }
             renderSectionButtons();
+        }
+
+        // Le message d'attente se met à jour chaque seconde, puis annonce que
+        // Gemini est de nouveau disponible avant de s'effacer.
+        function majStatutAttenteGemini() {
+            const restant = secondesBlocageGemini();
+            if (restant) {
+                setStatutCacheSection(`⏳ Limite d'appels Gemini atteinte (quota par minute de ta clé API) — réessaie dans ${restant} s`);
+                return;
+            }
+            if (!derniereSectionBloquee) return;
+            const section = derniereSectionBloquee;
+            derniereSectionBloquee = null;
+            journaliser('Délai Gemini écoulé : les appels sont de nouveau possibles', 'ok');
+            setStatutCacheSection(`✅ Gemini est de nouveau disponible — reclique sur 🤖 en face de « ${section} »`);
+            setTimeout(() => {
+                const el = document.getElementById('section-cache-status');
+                if (el && el.innerText.startsWith('✅ Gemini est de nouveau disponible')) setStatutCacheSection('');
+            }, 10000);
         }
 
         function secondesBlocageGemini() {
@@ -897,7 +920,7 @@
                 }
             } catch (e) {
                 journaliser(`Cache « ${section} » : échec — ${e.message}`, 'erreur');
-                setStatutCacheSection(`❌ ${section} : ${e.message}`);
+                if (e.status !== 429) setStatutCacheSection(`❌ ${section} : ${e.message}`);
                 if (e.status === 429) {
                     // Délai imposé par Google : liseré rouge sur cette section
                     // jusqu'à la fin du délai qu'il indique.
