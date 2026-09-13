@@ -285,6 +285,21 @@
         }
         #ai-status { font-size: 0.8rem; color: #34495e; min-height: 1.2rem; margin: 8px 0; }
 
+        #validation-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 5100; align-items: center; justify-content: center; padding: 16px;
+        }
+        #validation-overlay .modal-content { text-align: left; }
+        #validation-overlay h3 { margin-top: 0; text-align: center; }
+        #validation-texte {
+            width: 100%; height: 42vh; box-sizing: border-box; padding: 8px;
+            border: 1px solid #bdc3c7; border-radius: 8px; background: #fff;
+            font-size: 0.8rem; line-height: 1.45; font-family: inherit; color: #2c3e50;
+            resize: vertical; -webkit-user-select: text; user-select: text;
+        }
+        .ai-reglage-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .ai-reglage-row label { flex: 1 1 auto; font-size: 0.85rem; color: #34495e; text-align: left; }
+        .ai-reglage-row input { flex: 0 0 70px; width: 70px; min-height: 38px; text-align: center; }
         #journal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 5000; align-items: center; justify-content: center; padding: 16px;
@@ -313,7 +328,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.31.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.33.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -411,6 +426,16 @@
         <button class="modal-btn btn-cancel" onclick="hideRawDataViewer()">Fermer</button>
     </div>
 
+    <div id="validation-overlay">
+        <div class="modal-content">
+            <h3>🔎 Valider la réponse de Gemini</h3>
+            <p id="validation-info" class="ai-note"></p>
+            <textarea id="validation-texte" readonly></textarea>
+            <button class="modal-btn btn-apply" onclick="repondreValidation(true)" style="margin-top:8px">✅ Mémoriser</button>
+            <button class="modal-btn btn-cancel" onclick="repondreValidation(false)" style="margin-top:5px">❌ Annuler, ne rien mémoriser</button>
+        </div>
+    </div>
+
     <div id="journal-overlay" onclick="if(event.target===this) hideJournalIA()">
         <div class="modal-content">
             <h3>🧾 Journal des appels IA</h3>
@@ -498,6 +523,14 @@
                         <input type="password" id="ai-gemini-key" class="gh-input" placeholder="Clé API Gemini" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
                         <button type="button" class="ai-eye-btn" onclick="toggleGeminiKeyVisibility(this)" aria-label="Afficher la clé">👁</button>
                     </div>
+                    <div class="ai-reglage-row">
+                        <label for="ai-mots-par-appel">Mots demandés par appel (bouton 🤖 d'une section)</label>
+                        <input type="number" id="ai-mots-par-appel" class="gh-input" min="1" max="20" step="1">
+                    </div>
+                    <div class="ai-reglage-row">
+                        <label for="ai-seuil-validation">Valider la réponse à partir de … mot(s) demandé(s) — 0 : jamais, 1 : toujours</label>
+                        <input type="number" id="ai-seuil-validation" class="gh-input" min="0" max="20" step="1">
+                    </div>
                     <select id="ai-gemini-model" class="gh-input">
                         <option value="gemini-2.5-flash">gemini-2.5-flash (rapide, défaut)</option>
                         <option value="gemini-2.5-pro">gemini-2.5-pro (plus fin, plus lent)</option>
@@ -540,10 +573,12 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.31.0';
+        const APP_VERSION = '1.33.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.33.0', d: "« En savoir plus » profite de chaque appel : la question porte toujours sur 5 mots — le mot visé, les autres mots de la colonne encore sans explication, puis, pour compléter, des mots de la section tirés au hasard. L'affichage, lui, ne montre que ce qui a été demandé : l'explication du seul mot sélectionné, ou celles des mots de la colonne. Les mots obtenus en avance sont simplement mémorisés." },
+            { v: '1.32.0', d: "Deux réglages ajoutés dans ⚙️ Options → 🤖 Assistant IA : le nombre de mots demandés à Gemini par appel de section (le 5 fixe disparaît), et le seuil à partir duquel la réponse brute est soumise à validation dans une fenêtre en lecture seule avant d'être mémorisée (0 pour ne jamais valider, 1 pour toujours)." },
             { v: '1.31.0', d: "Le refus de Gemini est maintenant lu en détail : la réponse indique si la limite touchée est celle par minute ou celle par jour. Quota journalier épuisé, plus de décompte trompeur mais l'heure de réinitialisation et les solutions. Quota par minute, le délai de Google est majoré d'une marge, puis doublé à chaque nouvel échec, et la relance automatique s'arrête après trois tentatives." },
             { v: '1.30.0', d: "Un quota Gemini dépassé n'affiche plus le message d'erreur brut de Google dans le panneau : message court en français rappelant la limite et le modèle concerné, décompte des secondes restantes, relance automatique de la question à la fin du délai si le panneau est toujours ouvert, et détail technique replié pour qui veut le lire." },
             { v: '1.29.0', d: "Le message d'attente imposée par Gemini devient vivant : il décompte les secondes, explique la cause (limite d'appels par minute de la clé API) et se remplace, à la fin du délai, par une invitation à relancer — puis disparaît. Il ne reste donc plus affiché figé après coup." },
@@ -771,7 +806,12 @@
         // État visuel de chaque bouton : liseré bleu pendant l'appel, vert 3 s en
         // cas de succès, rouge 5 s en cas d'erreur. Un quota Gemini dépassé bloque
         // tous les boutons en rouge, avec décompte, jusqu'à la fin du délai imposé.
-        const MOTS_PAR_APPEL_CACHE = 5;
+        // Réglables dans ⚙️ Options → 🤖 Assistant IA.
+        const MOTS_PAR_APPEL_KEY = 'vocab_mots_par_appel';
+        const SEUIL_VALIDATION_KEY = 'vocab_seuil_validation';
+        let motsParAppelCache = Math.min(20, Math.max(1, parseInt(localStorage.getItem(MOTS_PAR_APPEL_KEY), 10) || 5));
+        // 0 = ne jamais demander de validation, 1 = toujours.
+        let seuilValidation = Math.min(20, Math.max(0, parseInt(localStorage.getItem(SEUIL_VALIDATION_KEY), 10) || 0));
         const etatCacheSection = {};   // section -> { etat, jusqua }
         let geminiBloqueJusqua = 0;
         let minuteurBlocageGemini = null;
@@ -862,7 +902,7 @@
                 // (mots mémorisés / mots demandés) pendant quelques secondes.
                 btn.innerText = (etat && etat.libelle) ? etat.libelle : '🤖';
                 btn.title = manquants
-                    ? `Demander à Gemini l'explication de ${Math.min(MOTS_PAR_APPEL_CACHE, manquants)} mot(s) au hasard parmi les ${manquants} sans explication`
+                    ? `Demander à Gemini l'explication de ${Math.min(motsParAppelCache, manquants)} mot(s) au hasard parmi les ${manquants} sans explication`
                     : 'Tous les mots de cette section ont déjà leur explication';
                 if (etat) {
                     btn.classList.add(etat.etat);
@@ -871,6 +911,25 @@
             }
             btn.onclick = (e) => { e.stopPropagation(); remplirCacheSection(section); };
             return btn;
+        }
+
+        // Fenêtre de validation : la réponse est montrée telle qu'elle arrive,
+        // en lecture seule ; rien n'est mémorisé sans confirmation.
+        let resoudreValidation = null;
+
+        function demanderValidationReponse(section, mots, texte) {
+            document.getElementById('validation-info').innerText =
+                `Section « ${section} » · ${mots.length} mot(s) demandé(s) : ${mots.join(', ')} · réponse de ${modeleGemini} (${texte.length} caractères).`;
+            document.getElementById('validation-texte').value = texte;
+            document.getElementById('validation-overlay').style.display = 'flex';
+            return new Promise(resolve => { resoudreValidation = resolve; });
+        }
+
+        function repondreValidation(accepte) {
+            document.getElementById('validation-overlay').style.display = 'none';
+            const resoudre = resoudreValidation;
+            resoudreValidation = null;
+            if (resoudre) resoudre(accepte);
         }
 
         function tirerAuHasard(liste, combien) {
@@ -899,7 +958,7 @@
 
             const manquants = motsSansExplication(section);
             if (!manquants.length) { setEtatCacheSection(section, 'ok', 3000, '✓'); setStatutCacheSection(`✅ ${section} : tous les mots ont déjà leur explication`); return; }
-            const choisis = tirerAuHasard(manquants, MOTS_PAR_APPEL_CACHE);
+            const choisis = tirerAuHasard(manquants, motsParAppelCache);
 
             setEtatCacheSection(section, 'attente', 0);
             journaliser(`Cache « ${section} » : ${choisis.length} mot(s) demandé(s) à ${modeleGemini} sur ${manquants.length} sans explication — ${choisis.join(', ')}`);
@@ -907,6 +966,17 @@
             try {
                 const question = buildChatGPTLinkQuery(choisis.join(', '), choisis.length > 1);
                 const texte = await appelerGemini(question, null);
+                // Au-delà du seuil réglé, la réponse brute est soumise à validation.
+                if (seuilValidation > 0 && choisis.length >= seuilValidation) {
+                    journaliser(`Cache « ${section} » : réponse de ${texte.length} caractères soumise à validation (${choisis.length} mot(s) ≥ seuil ${seuilValidation})`);
+                    const accepte = await demanderValidationReponse(section, choisis, texte);
+                    if (!accepte) {
+                        journaliser(`Cache « ${section} » : réponse refusée, rien n'a été mémorisé`, 'erreur');
+                        setStatutCacheSection(`↩️ ${section} : réponse refusée, rien n'a été mémorisé`);
+                        setEtatCacheSection(section, null);
+                        return;
+                    }
+                }
                 const nouveaux = memoriserExplicationsGroupees(texte, choisis);
                 if (!nouveaux.length) throw new Error("Réponse reçue, mais aucun des mots demandés n'a pu y être isolé.");
                 // On vérifie mot par mot ce qui est réellement entré en cache :
@@ -941,7 +1011,7 @@
                     const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + MARGE_QUOTA_SECONDES);
                     bloquerSectionGemini(section, secondes);
                 } else {
-                    setEtatCacheSection(section, 'erreur', 5000, `0/${MOTS_PAR_APPEL_CACHE}`);
+                    setEtatCacheSection(section, 'erreur', 5000, `0/${motsParAppelCache}`);
                     alert('❌ ' + messageErreurGemini(e.message));
                 }
             }
@@ -1615,7 +1685,9 @@
                     if (mot && type) {
                         setAiAnswerSource('💾 Nouvelle explication mémorisée pour « ' + escapeHtmlIA(mot) + ' »');
                     } else if (listeComplete) {
-                        setAiAnswerSource(`💾 ${reutilises} explication(s) reprise(s) du fichier · ${nouveauxMots.length} demandée(s) à Gemini et mémorisée(s)${nouveauxMots.length ? ' : ' + escapeHtmlIA(nouveauxMots.join(', ')) : ''}`);
+                        const avance = nouveauxMots.filter(m => !listeComplete.includes(m));
+                        setAiAnswerSource(`💾 ${reutilises} reprise(s) du fichier · ${nouveauxMots.length} mémorisée(s)`
+                            + (avance.length ? ` dont ${avance.length} par avance (${escapeHtmlIA(avance.join(', '))})` : ''));
                     } else if (nouveauxMots.length) {
                         setAiAnswerSource(`💾 ${nouveauxMots.length} explication(s) mémorisée(s) : ${escapeHtmlIA(nouveauxMots.join(', '))}`);
                     } else {
@@ -1759,29 +1831,60 @@
 
         // Clic sur « En savoir plus » : inchangé pour ChatGPT (le lien s'ouvre),
         // intercepté pour Gemini (réponse dans le panneau).
+        // Un appel à Gemini coûte le même quota qu'il porte sur un mot ou sur
+        // cinq : on complète donc toujours le lot, d'abord avec les mots de la
+        // colonne encore sans explication, puis avec des mots de la section
+        // tirés au hasard. Seules les explications demandées sont affichées ;
+        // les autres sont mémorisées pour plus tard.
+        const LOT_EN_SAVOIR_PLUS = 5;
+
+        function composerLotDemande(prioritaires) {
+            const lot = [];
+            const ajouter = mot => {
+                if (lot.length >= LOT_EN_SAVOIR_PLUS) return;
+                if (!mot || lot.includes(mot)) return;
+                lot.push(mot);
+            };
+            prioritaires.forEach(ajouter);
+            currentPairs.map(p => p.vn).filter(m => !motAExplication(m)).forEach(ajouter);
+            if (lot.length < LOT_EN_SAVOIR_PLUS) {
+                const reste = motsSansExplication(currentSection).filter(m => !lot.includes(m));
+                tirerAuHasard(reste, LOT_EN_SAVOIR_PLUS - lot.length).forEach(ajouter);
+            }
+            return lot;
+        }
+
         function onAiLinkClick(e) {
             if (aiProvider !== 'gemini') return;
             e.preventDefault();
             const mots = aiLinkWords || currentPairs.map(p => p.vn).join(', ');
             if (!mots) return;
-            // Un seul mot visé : l'explication est mémorisée durablement.
+            const titre = `🤖 Gemini · ${mots}`;
+
+            // Un seul mot visé : on n'affichera que son explication.
             if (aiLinkMot) {
-                askGemini(buildChatGPTLinkQuery(mots, false), `🤖 Gemini · ${mots}`, { mot: aiLinkMot, type: 'link' });
+                const cle = buildChatGPTLinkQuery(mots, false);
+                if (motAExplication(aiLinkMot)) { afficherExplicationsAssemblees([aiLinkMot], cle, titre); return; }
+                const lot = composerLotDemande([aiLinkMot]);
+                journaliser(`En savoir plus « ${aiLinkMot} » : ${lot.length} mot(s) demandé(s) — ${lot.join(', ')}`);
+                askGemini(buildChatGPTLinkQuery(lot.join(', '), lot.length > 1), titre,
+                          { motsListe: lot, listeComplete: [aiLinkMot], dejaConnus: [] });
                 return;
             }
-            // Question sur les mots de la colonne : on ne demande à Gemini que
-            // ceux dont l'explication n'est pas déjà mémorisée.
+
+            // Aucun mot sélectionné : on affichera les mots de la colonne, et
+            // eux seuls, en ne demandant que ceux qui manquent.
             const liste = currentPairs.map(p => p.vn);
             const question = buildChatGPTLinkQuery(mots, liste.length > 1);
             const manquants = liste.filter(m => !motAExplication(m));
             if (liste.length && !manquants.length) {
-                afficherExplicationsAssemblees(liste, question, `🤖 Gemini · ${mots}`);
+                afficherExplicationsAssemblees(liste, question, titre);
                 return;
             }
-            const dejaConnus = liste.filter(motAExplication);
-            askGemini(buildChatGPTLinkQuery(manquants.join(', '), manquants.length > 1),
-                      `🤖 Gemini · ${mots}`,
-                      { motsListe: manquants, listeComplete: liste, dejaConnus });
+            const lot = composerLotDemande(manquants);
+            journaliser(`En savoir plus (colonne) : ${lot.length} mot(s) demandé(s) — ${lot.join(', ')}`);
+            askGemini(buildChatGPTLinkQuery(lot.join(', '), lot.length > 1), titre,
+                      { motsListe: lot, listeComplete: liste, dejaConnus: liste.filter(motAExplication) });
         }
 
         // Une explication issue d'un découpage commence déjà par son titre.
@@ -1794,15 +1897,16 @@
         // dans l'ordre, puis le texte brut si certains mots n'ont pas pu être
         // isolés dans la réponse.
         function composerAffichageMultiMots(liste, texteReponse) {
-            const blocs = [];
-            let manquants = false;
+            const blocs = [], absents = [];
             liste.forEach(mot => {
                 const e = getExplication(mot, 'link');
-                if (e) blocs.push(blocAvecTitre(mot, e.texte)); else manquants = true;
+                if (e) blocs.push(blocAvecTitre(mot, e.texte)); else absents.push(mot);
             });
+            // Aucun mot isolé dans la réponse : on montre le texte brut, faute de mieux.
+            if (!blocs.length) return texteReponse || '';
             let sortie = blocs.join('\n\n');
-            if (manquants && texteReponse) sortie += (sortie ? '\n\n---\n\n' : '') + texteReponse;
-            return sortie || texteReponse || '';
+            if (absents.length) sortie += `\n\n---\n\n*Pas d'explication obtenue pour : ${absents.join(', ')}*`;
+            return sortie;
         }
 
         // Reconstitue une réponse globale à partir des explications déjà mémorisées.
@@ -2083,11 +2187,15 @@
             document.getElementById('ai-gemini-key').value = cleGemini;
             document.getElementById('ai-gemini-key').type = 'password';
             document.getElementById('ai-gemini-model').value = modeleGemini;
+            document.getElementById('ai-mots-par-appel').value = motsParAppelCache;
+            document.getElementById('ai-seuil-validation').value = seuilValidation;
             const c = compterExplications();
             document.getElementById('ai-status').innerText = (aiProvider === 'gemini'
                 ? (cleGemini ? `Gemini actif (${modeleGemini}).` : "Gemini sélectionné, mais aucune clé sur cet appareil.")
                 : "ChatGPT actif (ouverture d'un onglet).")
-                + ` · ${c.mots} mot(s) expliqué(s) en mémoire (${c.entrees} explications).`;
+                + ` · ${c.mots} mot(s) expliqué(s) en mémoire (${c.entrees} explications)`
+                + ` · ${motsParAppelCache} mot(s) par appel`
+                + (seuilValidation > 0 ? ` · validation à partir de ${seuilValidation}` : ' · sans validation') + '.';
             syncAiPanelVisibility();
             document.getElementById('custom-modal').style.display = 'flex';
         }
@@ -2121,6 +2229,11 @@
             else localStorage.removeItem(GEMINI_API_KEY_STORAGE);
             modeleGemini = document.getElementById('ai-gemini-model').value || GEMINI_DEFAULT_MODEL;
             localStorage.setItem(GEMINI_MODEL_KEY, modeleGemini);
+            motsParAppelCache = Math.min(20, Math.max(1, parseInt(document.getElementById('ai-mots-par-appel').value, 10) || 5));
+            localStorage.setItem(MOTS_PAR_APPEL_KEY, motsParAppelCache);
+            const seuilSaisi = parseInt(document.getElementById('ai-seuil-validation').value, 10);
+            seuilValidation = Math.min(20, Math.max(0, isNaN(seuilSaisi) ? 0 : seuilSaisi));
+            localStorage.setItem(SEUIL_VALIDATION_KEY, seuilValidation);
             geminiCache.clear(); // un changement de modèle doit repartir de réponses fraîches
             hideAiAnswerPanel();
             aiAnswerQuestion = null;
