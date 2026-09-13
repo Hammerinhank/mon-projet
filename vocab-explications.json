@@ -566,8 +566,204 @@
         "modele": "gemini-3-flash-preview",
         "updatedAt": "2026-09-13T07:05:37.781Z"
       }
+    },
+    "gắp": {
+      "link": {
+        "texte": "### gắp\nCe mot est composé d'une seule syllabe. Il s'agit d'un verbe qui signifie « saisir » ou « prendre » quelque chose, presque exclusivement à l'aide de baguettes ou d'une pince. C'est le geste typique effectué lors d'un repas pour porter de la nourriture à sa bouche ou pour servir quelqu'un.\n\n**Exemples :**\n*   Mời bạn gắp thức ăn. (Je vous en prie, servez-vous / prenez de la nourriture.)\n*   Con dùng đũa gắp thịt nhé. (Utilise tes baguettes pour prendre la viande, d'accord ?)\n*   Đừng dùng tay, hãy dùng kẹp để gắp đá. (N'utilise pas tes mains, utilise la pince pour prendre les glaçons.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.632Z"
+      }
+    },
+    "đôi đũa": {
+      "link": {
+        "texte": "### đôi đũa\nCe mot est composé de deux syllabes :\n*   **đôi** : signifie « paire » ou « couple ».\n*   **đũa** : signifie « baguette » (l'ustensile de table).\nEnsemble, le terme désigne une paire de baguettes.\n\n**Exemples :**\n*   Lấy cho tôi một đôi đũa mới. (Donne-moi une nouvelle paire de baguettes.)\n*   Tôi vẫn chưa quen dùng đôi đũa này. (Je ne suis pas encore habitué à utiliser cette paire de baguettes.)\n*   Đôi đũa này được làm bằng gỗ tre. (Cette paire de baguettes est fabriquée en bambou.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.632Z"
+      }
+    },
+    "thờ cúng": {
+      "link": {
+        "texte": "### thờ cúng\nCe mot est composé de deux syllabes :\n*   **thờ** : signifie « vénérer », « honorer » ou « pratiquer un culte ».\n*   **cúng** : signifie « faire des offrandes » (nourriture, encens, objets) aux ancêtres ou aux divinités.\nL'expression désigne l'acte global du culte des ancêtres ou des pratiques rituelles religieuses domestiques.\n\n**Exemples :**\n*   Gia đình tôi thường thờ cúng tổ tiên vào ngày rằm. (Ma famille pratique habituellement le culte des ancêtres les jours de pleine lune.)\n*   Bàn thờ là nơi dùng để thờ cúng. (L'autel est l'endroit utilisé pour le culte et les offrandes.)\n*   Mẹ tôi đang chuẩn bị đồ để thờ cúng. (Ma mère prépare les objets pour les rites d'offrande.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.633Z"
+      }
+    },
+    "đựng": {
+      "link": {
+        "texte": "### đựng\nCe mot est composé d'une seule syllabe. C'est un verbe qui signifie « contenir », « porter » ou « servir de contenant ». On l'utilise pour indiquer qu'un objet (boîte, sac, bouteille) contient ou est utilisé pour ranger quelque chose.\n\n**Exemples :**\n*   Cái hộp này dùng để đựng bánh. (Cette boîte sert à contenir des gâteaux.)\n*   Chiếc túi này đựng được rất nhiều đồ. (Ce sac peut contenir beaucoup de choses.)\n*   Chén này dùng để đựng nước chấm. (Ce bol est utilisé pour contenir la sauce de trempage.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.633Z"
+      }
+    },
+    "Bồn rửa bát": {
+      "link": {
+        "texte": "### Bồn rửa bát\nCe mot est composé de trois syllabes :\n*   **Bồn** : signifie « bac », « cuve » ou « bassin ».\n*   **rửa** : signifie « laver ».\n*   **bát** : signifie « bol » (utilisé ici de manière générique pour désigner la vaisselle).\nL'ensemble désigne l'évier de la cuisine.\n\n**Exemples :**\n*   Bồn rửa bát đang bị tắc. (L'évier est bouché.)\n*   Hãy để bát đĩa bẩn vào bồn rửa bát. (Mets la vaisselle sale dans l'évier.)\n*   Tôi vừa mới lau dọn bồn rửa bát xong. (Je viens juste de finir de nettoyer l'évier.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.634Z"
+      }
+    },
+    "Lò vi sóng": {
+      "link": {
+        "texte": "### Lò vi sóng\nCe mot est composé de trois syllabes :\n*   **Lò** : signifie « four » ou « poêle ».\n*   **vi** : est un préfixe signifiant « micro ».\n*   **sóng** : signifie « onde ».\nL'ensemble désigne littéralement un « four à micro-ondes ».\n\n**Exemples :**\n*   Cho thức ăn vào lò vi sóng để hâm nóng. (Mets la nourriture au micro-ondes pour la réchauffer.)\n*   Lò vi sóng nhà tôi bị hỏng rồi. (Le micro-ondes de ma maison est cassé.)\n*   Đừng cho bát nhựa vào lò vi sóng. (Ne mets pas de bols en plastique au micro-ondes.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.634Z"
+      }
+    },
+    "chật": {
+      "link": {
+        "texte": "### chật\nCe mot est composé d'une seule syllabe. C'est un adjectif qui signifie « étroit », « serré » ou « encombré ». On l'utilise aussi bien pour des vêtements trop petits que pour un espace physique restreint.\n\n**Exemples :**\n*   Đôi giày này hơi chật đối với tôi. (Ces chaussures sont un peu serrées pour moi.)\n*   Căn phòng này quá chật cho bốn người. (Cette pièce est trop étroite pour quatre personnes.)\n*   Áo này mặc vào thấy chật bụng. (Ce haut me serre au ventre quand je le porte.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.634Z"
+      }
+    },
+    "Máy sấy": {
+      "link": {
+        "texte": "### Máy sấy\nCe mot est composé de deux syllabes :\n*   **Máy** : signifie « machine » ou « appareil ».\n*   **sấy** : signifie « sécher » (généralement à l'aide de chaleur ou d'air pulsé).\nSelon le contexte, cela peut désigner un sèche-cheveux ou un sèche-linge.\n\n**Exemples :**\n*   Tôi cần dùng máy sấy để làm khô tóc. (J'ai besoin d'utiliser le sèche-cheveux pour me sécher les cheveux.)\n*   Cho quần áo vào máy sấy cho nhanh khô. (Mets les vêtements dans le sèche-linge pour qu'ils sèchent vite.)\n*   Máy sấy này có chế độ sấy lạnh không ? (Est-ce que ce sèche-cheveux a un mode air froid ?)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.635Z"
+      }
+    },
+    "dao nĩa": {
+      "link": {
+        "texte": "### dao nĩa\nCe mot est composé de deux syllabes :\n*   **dao** : signifie « couteau ».\n*   **nĩa** : signifie « fourchette ».\nL'expression désigne les couverts occidentaux de base.\n\n**Exemples :**\n*   Bạn có biết dùng dao nĩa không ? (Sais-tu utiliser un couteau et une fourchette ?)\n*   Hãy dọn dao nĩa ra bàn ăn. (Installe les couteaux et les fourchettes sur la table.)\n*   Nhà hàng này cung cấp cả đũa và dao nĩa. (Ce restaurant propose à la fois des baguettes et des couverts.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.635Z"
+      }
+    },
+    "máy rửa bát": {
+      "link": {
+        "texte": "### máy rửa bát\nCe mot est composé de trois syllabes :\n*   **máy** : signifie « machine ».\n*   **rửa** : signifie « laver ».\n*   **bát** : signifie « bol » (désignant ici la vaisselle en général).\nIl s'agit du mot pour « lave-vaisselle ».\n\n**Exemples :**\n*   Máy rửa bát giúp tiết kiệm thời gian. (Le lave-vaisselle aide à gagner du temps.)\n*   Xếp bát đĩa vào máy rửa bát đi. (Range la vaisselle dans le lave-vaisselle.)\n*   Tôi định mua một chiếc máy rửa bát mới. (J'ai l'intention d'acheter un nouveau lave-vaisselle.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:54.635Z"
+      }
+    },
+    "nồi chiên không dầu": {
+      "link": {
+        "texte": "### nồi chiên không dầu\n\nCe terme désigne une « friteuse sans huile » (ou friteuse à air). Il se compose de quatre syllabes :\n*   **nồi** : une marmite, un pot ou un récipient de cuisson.\n*   **chiên** : frire.\n*   **không** : non, sans ou zéro.\n*   **dầu** : huile.\n\n**Exemples :**\n1. Tôi dùng nồi chiên không dầu để làm khoai tây chiên. (J'utilise une friteuse sans huile pour faire des frites.)\n2. Nồi chiên không dầu này rất tiện lợi. (Cette friteuse sans huile est très pratique.)\n3. Bạn có nên mua nồi chiên không dầu không? (Devrais-tu acheter une friteuse sans huile ?)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.153Z"
+      }
+    },
+    "dọn dẹp": {
+      "link": {
+        "texte": "### dọn dẹp\n\nCe verbe signifie « ranger » ou « nettoyer ». Il se compose de deux syllabes :\n*   **dọn** : arranger, débarrasser ou préparer un espace.\n*   **dẹp** : mettre de côté, ranger ou aplanir (utilisé ici pour renforcer l'idée de mettre de l'ordre).\n\n**Exemples :**\n1. Tôi phải dọn dẹp phòng ngủ. (Je dois ranger ma chambre.)\n2. Hãy dọn dẹp bàn ăn sau khi dùng bữa. (Débarrasse la table après le repas.)\n3. Cuối tuần tôi thường dọn dẹp nhà cửa. (Le week-end, je range souvent la maison.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.154Z"
+      }
+    },
+    "lò nướng thông thường": {
+      "link": {
+        "texte": "### lò nướng thông thường\n\nCe terme désigne un « four conventionnel » ou un « four traditionnel ». Il se compose de quatre syllabes :\n*   **lò** : un four, un fourneau ou un poêle.\n*   **nướng** : griller, rôtir ou cuire au four.\n*   **thông** : commun ou fluide.\n*   **thường** : ordinaire ou habituel. (L'association **thông thường** signifie « classique » ou « ordinaire »).\n\n**Exemples :**\n1. Bánh mì này được nướng bằng lò nướng thông thường. (Ce pain est cuit dans un four conventionnel.)\n2. Lò nướng thông thường mất nhiều thời gian hơn. (Le four conventionnel prend plus de temps.)\n3. Nhà tôi chỉ có lò nướng thông thường. (Ma maison n'a qu'un four conventionnel.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.154Z"
+      }
+    },
+    "nấu ăn": {
+      "link": {
+        "texte": "### nấu ăn\n\nCe verbe signifie « cuisiner ». Il se compose de deux syllabes :\n*   **nấu** : cuire ou bouillir.\n*   **ăn** : manger.\n\n**Exemples :**\n1. Mẹ tôi nấu ăn rất ngon. (Ma mère cuisine très bien.)\n2. Bạn thích nấu ăn không? (Aimes-tu cuisiner ?)\n3. Hôm nay ai sẽ nấu ăn? (Qui va cuisiner aujourd'hui ?)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.155Z"
+      }
+    },
+    "Chúc": {
+      "link": {
+        "texte": "### Chúc\n\nCe mot est un verbe qui signifie « souhaiter ». C'est un mot d'une seule syllabe.\n\n**Exemples :**\n1. Chúc mừng sinh nhật! (Joyeux anniversaire !)\n2. Chúc bạn một ngày tốt lành. (Je te souhaite une bonne journée.)\n3. Chúc ngủ ngon. (Bonne nuit.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.156Z"
+      }
+    },
+    "chảo": {
+      "link": {
+        "texte": "### chảo\n\nCe mot désigne une « poêle » ou un « wok ». C'est un mot d'une seule syllabe.\n\n**Exemples :**\n1. Cho một ít dầu vào chảo. (Mets un peu d'huile dans la poêle.)\n2. Cái chảo này quá nóng. (Cette poêle est trop chaude.)\n3. Tôi cần mua một cái chảo mới. (J'ai besoin d'acheter une nouvelle poêle.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.156Z"
+      }
+    },
+    "Tủ đựng quần áo": {
+      "link": {
+        "texte": "### Tủ đựng quần áo\n\nCe terme désigne une « armoire » ou une « garde-robe ». Il se compose de quatre syllabes :\n*   **Tủ** : une armoire, un buffet ou un placard.\n*   **đựng** : contenir ou stocker.\n*   **quần** : un pantalon.\n*   **áo** : une chemise ou un haut. (L'association **quần áo** signifie « vêtements »).\n\n**Exemples :**\n1. Tủ đựng quần áo của tôi đã đầy. (Ma garde-robe est déjà pleine.)\n2. Cô ấy đang sắp xếp tủ đựng quần áo. (Elle est en train d'organiser son armoire à vêtements.)\n3. Bạn mua cái tủ đựng quần áo này ở đâu? (Où as-tu acheté cette armoire ?)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.157Z"
+      }
+    },
+    "Pháp": {
+      "link": {
+        "texte": "### Pháp\n\nCe mot désigne la « France ». Il peut aussi faire référence à la langue française ou aux Français selon le contexte. C'est un mot d'une seule syllabe.\n\n**Exemples :**\n1. Tôi muốn đi du lịch Pháp. (Je veux voyager en France.)\n2. Anh ấy nói tiếng Pháp rất giỏi. (Il parle très bien français.)\n3. Rượu vang Pháp rất nổi tiếng. (Le vin français est très célèbre.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:06:10.157Z"
+      }
+    },
+    "đi đến": {
+      "link": {
+        "texte": "### đi đến\n\nCe terme verbal exprime l'action de se déplacer vers un endroit ou, au sens figuré, d'aboutir à un résultat, un accord ou une conclusion.\n\nExplication des syllabes :\n* **đi** : aller, marcher, se déplacer.\n* **đến** : arriver, atteindre, vers.\n\nExemples d'utilisation :\n* **Tôi đi đến trường bằng xe đạp.**\n  * *Je vais à l'école à vélo.*\n* **Họ đã đi đến một quyết định chung sau cuộc họp.**\n  * *Ils sont parvenus à une décision commune après la réunion.*\n* **Bạn có thể đi đến bệnh viện bằng xe buýt.**\n  * *Tu peux te rendre à l'hôpital en bus.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.468Z"
+      }
+    },
+    "tình huống": {
+      "link": {
+        "texte": "### tình huống\n\nCe nom d'origine sino-vietnamienne désigne une situation, une circonstance ou un cas de figure particulier auquel on fait face.\n\nExplication des syllabes :\n* **tình** (origine : 情) : état, situation, sentiment.\n* **huống** (origine : 況) : circonstance, cas, condition.\n\nExemples d'utilisation :\n* **Đây là một tình huống rất khó xử.**\n  * *C'est une situation très embarrassante.*\n* **Chúng ta cần chuẩn bị cho mọi tình huống có thể xảy ra.**\n  * *Nous devons nous préparer à toutes les situations qui pourraient survenir.*\n* **Trong tình huống khẩn cấp, hãy gọi số này.**\n  * *En cas de situation d'urgence, appelez ce numéro.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.469Z"
+      }
+    },
+    "bạn của bác": {
+      "link": {
+        "texte": "### bạn của bác\n\nCette locution nominale désigne « l'ami(e) de l'oncle / de la tante » ou « l'ami(e) de monsieur / madame ». Le mot *bác* est un terme de parenté (frère/sœur aîné(e) d'un des parents) souvent employé par respect pour désigner une personne de la génération de ses parents ou plus âgée.\n\nExplication des syllabes :\n* **bạn** : ami, amie, camarade.\n* **của** : de (marqueur de possession ou de relation).\n* **bác** : oncle ou tante (aîné(e) du père ou de la mère), ou formule d'adresse respectueuse pour une personne d'âge mûr.\n\nExemples d'utilisation :\n* **Người đàn ông kia là bạn của bác tôi.**\n  * *Cet homme là-bas est l'ami de mon oncle.*\n* **Hôm qua, bạn của bác đến nhà chơi.**\n  * *Hier, l'ami de l'oncle est venu rendre visite à la maison.*\n* **Cháu chào bạn của bác ạ!**\n  * *Bonjour à l'ami(e) de monsieur/madame !*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.470Z"
+      }
+    },
+    "y tá": {
+      "link": {
+        "texte": "### y tá\n\nCe nom d'origine sino-vietnamienne désigne un infirmier ou une infirmière dans le domaine médical.\n\nExplication des syllabes :\n* **y** (origine : 醫) : médecine, médical, soigner.\n* **tá** (origine : 佐) : assister, aider, seconder.\n\nExemples d'utilisation :\n* **Chị ấy làm y tá ở một bệnh viện lớn.**\n  * *Elle travaille comme infirmière dans un grand hôpital.*\n* **Cô y tá đang đo huyết áp cho bệnh nhân.**\n  * *L'infirmière est en train de prendre la tension du patient.*\n* **Bác sĩ và y tá phối hợp rất nhịp nhàng.**\n  * *Le médecin et l'infirmier collaborent très harmonieusement.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.471Z"
+      }
+    },
+    "thăm": {
+      "link": {
+        "texte": "### thăm\n\nCe mot est un verbe monosyllabique qui signifie rendre visite à quelqu'un, s'enquérir de la santé d'un proche, ou visiter un lieu chargé d'histoire ou d'affection.\n\nExemples d'utilisation :\n* **Cuối tuần này, tôi sẽ về quê thăm ông bà.**\n  * *Ce week-end, je rentrerai au village rendre visite à mes grands-parents.*\n* **Bác sĩ vào phòng thăm bệnh nhân mỗi buổi sáng.**\n  * *Le médecin entre dans la chambre pour voir le patient chaque matin.*\n* **Chúng tôi đến bệnh viện để thăm một người bạn ốm.**\n  * *Nous sommes allés à l'hôpital pour rendre visite à un ami malade.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.472Z"
+      }
+    },
+    "ổn": {
+      "link": {
+        "texte": "### ổn\n\nCe mot est un adjectif monosyllabique (d'origine sino-vietnamienne 穩) qui signifie stable, en ordre, convenable, sans problème. Dans la vie quotidienne, il s'emploie couramment pour dire que tout va bien (« ça va », « c'est bon », « OK »).\n\nExemples d'utilisation :\n* **Mọi chuyện vẫn ổn chứ?**\n  * *Est-ce que tout va toujours bien ?*\n* **Công việc dạo này khá ổn.**\n  * *Le travail en ce moment se passe plutôt bien.*\n* **Đừng lo, tôi ổn mà.**\n  * *Ne t'inquiète pas, je vais bien.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.472Z"
+      }
+    },
+    "cứ": {
+      "link": {
+        "texte": "### cứ\n\nCe mot est un terme grammatical monosyllabique. Il s'emploie principalement comme mot d'incitation signifiant « n'hésite pas à », « vas-y », « fais simplement », ou pour marquer une action continue ou répétée (« continuer à », « ne cesser de »).\n\nExemples d'utilisation :\n* **Bạn cứ tự nhiên như ở nhà nhé.**\n  * *Fais comme chez toi (sens littéral : sois tout à fait naturel comme à la maison).*\n* **Nếu có thắc mắc, anh cứ hỏi tôi.**\n  * *Si vous avez des questions, n'hésitez pas à me les poser.*\n* **Trời cứ mưa suốt từ sáng đến giờ.**\n  * *Il n'arrête pas de pleuvoir depuis ce matin.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.473Z"
+      }
+    },
+    "cách sử dụng": {
+      "link": {
+        "texte": "### cách sử dụng\n\nCette expression désigne le « mode d'emploi », la « méthode d'utilisation » ou la « manière d'utiliser » un objet, un appareil ou un produit.\n\nExplication des syllabes :\n* **cách** : manière, façon, procédé.\n* **sử** (origine : 使) : utiliser, employer.\n* **dụng** (origine : 用) : usage, employer (l'association *sử dụng* forme le verbe ou nom « utiliser / utilisation »).\n\nExemples d'utilisation :\n* **Hãy đọc kỹ cách sử dụng trước khi dùng thuốc.**\n  * *Lisez attentivement le mode d'emploi avant de prendre ce médicament.*\n* **Bạn có biết cách sử dụng chiếc máy này không?**\n  * *Sais-tu comment utiliser cette machine ?*\n* **Bản hướng dẫn cách sử dụng được đính kèm trong hộp.**\n  * *La notice d'utilisation est jointe dans la boîte.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.474Z"
+      }
+    },
+    "kết luận": {
+      "link": {
+        "texte": "### kết luận\n\nCe mot d'origine sino-vietnamienne s'emploie à la fois comme nom (« la conclusion ») et comme verbe (« conclure »). Il renvoie à la fin d'un raisonnement, à une décision prise après examen, ou au bilan final d'une affaire.\n\nExplication des syllabes :\n* **kết** (origine : 結) : nouer, clore, achever, finaliser.\n* **luận** (origine : 論) : discuter, débattre, raisonner, juger.\n\nExemples d'utilisation :\n* **Bác sĩ đã đưa ra kết luận sau khi xem xét nghiệm.**\n  * *Le médecin a tiré sa conclusion après avoir examiné les analyses.*\n* **Đừng vội vàng kết luận khi chưa biết rõ sự thật.**\n  * *Ne te hâte pas de conclure sans connaître la vérité.*\n* **Phần kết luận của bài luận rất thuyết phục.**\n  * *La conclusion de la dissertation est très convaincante.*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.474Z"
+      }
+    },
+    "con trai": {
+      "link": {
+        "texte": "### con trai\n\nCe nom désigne soit un « fils » (relation filiale), soit un « garçon / jeune homme » (sexe masculin).\n\nExplication des syllabes :\n* **con** : enfant (en tant que descendant), ou classificateur courant désignant les êtres animés.\n* **trai** : masculin, mâle (appliqué aux êtres humains).\n\nExemples d'utilisation :\n* **Vợ chồng anh ấy có một người con trai và một người con gái.**\n  * *Ce couple a un fils et une fille.*\n* **Cậu con trai đó rất thông minh và lễ phép.**\n  * *Ce garçon est très intelligent et poli.*\n* **Hôm nay con trai tôi bắt đầu vào lớp một.**\n  * *Aujourd'hui, mon fils rentre au cours préparatoire.*",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-13T16:38:31.475Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T07:05:38.772Z",
-  "appVersion": "1.37.0"
+  "updatedAt": "2026-09-13T16:38:31.921Z",
+  "appVersion": "1.40.0"
 }
