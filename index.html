@@ -313,7 +313,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.30.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.31.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -540,10 +540,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.30.0';
+        const APP_VERSION = '1.31.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.31.0', d: "Le refus de Gemini est maintenant lu en détail : la réponse indique si la limite touchée est celle par minute ou celle par jour. Quota journalier épuisé, plus de décompte trompeur mais l'heure de réinitialisation et les solutions. Quota par minute, le délai de Google est majoré d'une marge, puis doublé à chaque nouvel échec, et la relance automatique s'arrête après trois tentatives." },
             { v: '1.30.0', d: "Un quota Gemini dépassé n'affiche plus le message d'erreur brut de Google dans le panneau : message court en français rappelant la limite et le modèle concerné, décompte des secondes restantes, relance automatique de la question à la fin du délai si le panneau est toujours ouvert, et détail technique replié pour qui veut le lire." },
             { v: '1.29.0', d: "Le message d'attente imposée par Gemini devient vivant : il décompte les secondes, explique la cause (limite d'appels par minute de la clé API) et se remplace, à la fin du délai, par une invitation à relancer — puis disparaît. Il ne reste donc plus affiché figé après coup." },
             { v: '1.28.0', d: "Le bouton 🤖 d'une section affiche le résultat chiffré de l'appel (« 5/5 », « 3/5 ») pendant quelques secondes, avec un liseré vert si tous les mots demandés ont bien été mémorisés et orange si seuls certains l'ont été — les mots manquants sont alors nommés dans la ligne d'état et dans le journal. Rouge reste réservé à l'échec complet et au délai imposé par Gemini." },
@@ -925,10 +926,19 @@
             } catch (e) {
                 journaliser(`Cache « ${section} » : échec — ${e.message}`, 'erreur');
                 if (e.status !== 429) setStatutCacheSection(`❌ ${section} : ${e.message}`);
-                if (e.status === 429) {
-                    // Délai imposé par Google : liseré rouge sur cette section
-                    // jusqu'à la fin du délai qu'il indique.
-                    const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + 1);
+                if (e.status === 429 && e.quota && e.quota.periode === 'jour') {
+                    // Quota journalier : inutile de décompter, on le dit.
+                    const reinit = prochaineReinitQuotaJournalier();
+                    const heure = reinit.toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+                    geminiBloqueJusqua = Math.max(geminiBloqueJusqua, reinit.getTime());
+                    etatCacheSection[section] = { etat: 'bloque', jusqua: reinit.getTime(), libelle: '⛔' };
+                    journaliser(`Cache « ${section} » : quota JOURNALIER épuisé sur ${e.quota.modele || modeleGemini} — réinitialisation ${heure}`, 'erreur');
+                    setStatutCacheSection(`⛔ Quota journalier épuisé : le compteur repart ${heure}. Change de modèle ou active la facturation.`);
+                    renderSectionButtons();
+                } else if (e.status === 429) {
+                    // Délai par minute : liseré rouge sur cette section jusqu'à sa fin,
+                    // majoré d'une marge car l'estimation de Google est optimiste.
+                    const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + MARGE_QUOTA_SECONDES);
                     bloquerSectionGemini(section, secondes);
                 } else {
                     setEtatCacheSection(section, 'erreur', 5000, `0/${MOTS_PAR_APPEL_CACHE}`);
@@ -1332,7 +1342,10 @@
                 const message = (donnees && donnees.error && donnees.error.message) || ("HTTP " + reponse.status);
                 const erreur = new Error(message);
                 erreur.status = reponse.status;
-                if (reponse.status === 429) erreur.retryDelay = lireDelaiDeReessai(donnees, message);
+                if (reponse.status === 429) {
+                    erreur.retryDelay = lireDelaiDeReessai(donnees, message);
+                    erreur.quota = lireInfosQuota(donnees, message);
+                }
                 throw erreur;
             }
             let texte = "";
@@ -1362,6 +1375,54 @@
                 if (m) secondes = parseFloat(m[1]);
             }
             return secondes;
+        }
+
+        // Le corps d'une erreur 429 précise la limite touchée : quotaId du type
+        // GenerateRequestsPerDayPerProjectPerModel-FreeTier ou ...PerMinute...
+        // C'est ce qui distingue une attente d'une minute d'un quota journalier.
+        function lireInfosQuota(donnees, message) {
+            const infos = { periode: null, quotaId: null, limite: null, modele: null };
+            try {
+                const details = donnees && donnees.error && donnees.error.details;
+                if (Array.isArray(details)) {
+                    details.forEach(d => {
+                        const violations = d && d.violations;
+                        if (!Array.isArray(violations)) return;
+                        violations.forEach(v => {
+                            const id = (v.quotaId || v.quotaMetric || '') + '';
+                            if (!id) return;
+                            infos.quotaId = infos.quotaId || id;
+                            if (/PerDay/i.test(id)) infos.periode = 'jour';
+                            else if (/PerMinute/i.test(id) && infos.periode !== 'jour') infos.periode = 'minute';
+                            if (v.quotaValue) infos.limite = infos.limite || v.quotaValue;
+                            const dim = v.quotaDimensions || {};
+                            if (dim.model) infos.modele = infos.modele || dim.model;
+                        });
+                    });
+                }
+            } catch (e) { /* rien */ }
+            if (!infos.periode && message) {
+                if (/per\s*day|par\s*jour/i.test(message)) infos.periode = 'jour';
+                else if (/per\s*minute/i.test(message)) infos.periode = 'minute';
+            }
+            if (!infos.limite && message) {
+                const m = /limit:\s*(\d+)/i.exec(message);
+                if (m) infos.limite = m[1];
+            }
+            if (!infos.modele && message) {
+                const m = /model:\s*([\w.\-]+)/i.exec(message);
+                if (m) infos.modele = m[1];
+            }
+            return infos;
+        }
+
+        // Heure de réinitialisation des quotas journaliers : minuit, heure du
+        // Pacifique, exprimée dans l'heure locale de l'appareil.
+        function prochaineReinitQuotaJournalier() {
+            const maintenant = new Date();
+            const pt = new Date(maintenant.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+            const resteMs = ((23 - pt.getHours()) * 3600 + (59 - pt.getMinutes()) * 60 + (60 - pt.getSeconds())) * 1000;
+            return new Date(maintenant.getTime() + resteMs);
         }
 
         function attendreAvecDecompte(secondes, onSeconde) {
@@ -1526,6 +1587,7 @@
             showAiAnswerPanel();
             const debut = Date.now();
             try {
+                echecsQuotaConsecutifs = 0;
                 const texte = await appelerGeminiAvecReessai(question, null, restant => {
                     setAiAnswerBody(`<p>⏳ Quota Gemini atteint (limite par minute) — nouvelle tentative dans ${restant} s…</p>`, 'ai-waiting');
                     link.innerText = `⏳ Quota atteint — ${restant} s`;
@@ -1565,8 +1627,12 @@
                 if (aiAnswerQuestion === question) {
                     if (e.status === 429) {
                         // Quota : on garde la question pour pouvoir la relancer seule.
-                        const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + 1);
-                        afficherAttenteQuota(question, titre, opts, secondes, e.message);
+                        // Le délai de Google est majoré d'une marge, puis doublé à
+                        // chaque refus d'affilée — son estimation est optimiste.
+                        echecsQuotaConsecutifs++;
+                        const base = (e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + MARGE_QUOTA_SECONDES;
+                        const secondes = Math.min(300, Math.ceil(base * Math.pow(2, echecsQuotaConsecutifs - 1)));
+                        afficherAttenteQuota(question, titre, opts, secondes, e.message, e.quota);
                     } else {
                         setAiAnswerBody(renderLightMarkdown('❌ ' + messageErreurGemini(e.message)), 'ai-error');
                         setAiAnswerSource('');
@@ -1581,6 +1647,9 @@
         }
 
         let minuteurQuotaPanneau = null;
+        let echecsQuotaConsecutifs = 0;
+        const MAX_RELANCES_QUOTA = 3;
+        const MARGE_QUOTA_SECONDES = 5;
 
         // Le message de Google indique la limite et le modèle concernés.
         function extraireInfosQuota(message) {
@@ -1589,16 +1658,34 @@
             return { limite: lim ? lim[1] : null, modele: mod ? mod[1] : modeleGemini };
         }
 
+        // Quota journalier épuisé : aucun décompte n'a de sens, on annonce
+        // l'heure de réinitialisation et les deux vraies solutions.
+        function afficherQuotaJournalier(quota, messageBrut) {
+            const reinit = prochaineReinitQuotaJournalier();
+            const heure = reinit.toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+            geminiBloqueJusqua = Math.max(geminiBloqueJusqua, reinit.getTime());
+            journaliser(`Quota JOURNALIER épuisé sur ${quota.modele || modeleGemini}${quota.limite ? ' (' + quota.limite + ' requêtes/jour)' : ''} — réinitialisation ${heure}`, 'erreur');
+            setAiAnswerBody(
+                `<p><b>⛔ Quota journalier épuisé.</b></p>`
+                + `<p>${quota.limite ? 'Les ' + escapeHtmlIA(quota.limite) + ' requêtes' : 'Les requêtes'} offertes pour la journée sur ${escapeHtmlIA(quota.modele || modeleGemini)} sont consommées. Attendre quelques secondes ne sert à rien : le compteur ne repart que <b>${escapeHtmlIA(heure)}</b> (minuit, heure du Pacifique).</p>`
+                + `<p>D'ici là : choisis un autre modèle dans ⚙️ Options → 🤖 Assistant IA — chacun a son propre quota journalier — ou active la facturation sur le projet Google lié à la clé.</p>`
+                + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(messageBrut)}</p></details>`,
+                'ai-quota');
+            setAiAnswerSource('');
+            document.getElementById('chatgpt-link').innerHTML = aiLinkLabel;
+        }
+
         // Quota dépassé : message court et décompte dans le panneau, puis
         // relance automatique de la question quand le délai est écoulé.
-        function afficherAttenteQuota(question, titre, opts, secondes, messageBrut) {
-            const infos = extraireInfosQuota(messageBrut);
+        function afficherAttenteQuota(question, titre, opts, secondes, messageBrut, quota) {
+            quota = quota || extraireInfosQuota(messageBrut);
+            if (quota.periode === 'jour') { afficherQuotaJournalier(quota, messageBrut); return; }
             geminiBloqueJusqua = Math.max(geminiBloqueJusqua, Date.now() + secondes * 1000);
             let restant = secondes;
             const dessiner = () => {
                 setAiAnswerBody(
                     `<p><b>⏳ Limite d'appels Gemini atteinte.</b></p>`
-                    + `<p>Le palier gratuit autorise ${infos.limite ? infos.limite + ' requêtes par minute' : 'un nombre limité de requêtes par minute'} sur ${escapeHtmlIA(infos.modele)}. La question repart automatiquement dans <b>${restant} s</b>.</p>`
+                    + `<p>${quota.limite ? 'Limite de ' + escapeHtmlIA(quota.limite) + ' requêtes par minute' : 'Limite de requêtes par minute'} sur ${escapeHtmlIA(quota.modele || modeleGemini)}${echecsQuotaConsecutifs > 1 ? ` — ${echecsQuotaConsecutifs}ᵉ refus d'affilée, l'attente est allongée` : ''}. La question repart automatiquement dans <b>${restant} s</b>.</p>`
                     + `<p>Tu peux aussi changer de modèle dans ⚙️ Options → 🤖 Assistant IA : chacun a son propre compteur.</p>`
                     + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(messageBrut)}</p></details>`,
                     'ai-quota');
@@ -1616,9 +1703,16 @@
                     clearInterval(minuteurQuotaPanneau);
                     minuteurQuotaPanneau = null;
                     geminiBloqueJusqua = 0;
-                    if (toujoursLa) {
-                        journaliser('Délai Gemini écoulé — relance automatique de la question', 'ok');
+                    if (toujoursLa && echecsQuotaConsecutifs < MAX_RELANCES_QUOTA) {
+                        journaliser(`Délai Gemini écoulé — relance automatique (tentative ${echecsQuotaConsecutifs + 1})`, 'ok');
                         askGemini(question, titre, Object.assign({}, opts, { force: true }));
+                    } else if (toujoursLa) {
+                        journaliser(`Gemini refuse toujours après ${echecsQuotaConsecutifs} tentatives — relance automatique abandonnée`, 'erreur');
+                        setAiAnswerBody(
+                            `<p><b>⛔ Gemini refuse toujours après ${echecsQuotaConsecutifs} tentatives.</b></p>`
+                            + `<p>Le compteur ne se libère pas : il s'agit probablement d'une limite plus longue qu'une minute. Essaie un autre modèle dans ⚙️ Options → 🤖 Assistant IA, reviens plus tard, ou active la facturation sur le projet Google.</p>`,
+                            'ai-error');
+                        document.getElementById('chatgpt-link').innerHTML = aiLinkLabel;
                     } else {
                         journaliser('Délai Gemini écoulé — les appels sont de nouveau possibles', 'ok');
                         document.getElementById('chatgpt-link').innerHTML = aiLinkLabel;
