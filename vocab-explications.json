@@ -440,8 +440,134 @@
         "modele": "gemini-3-flash-preview",
         "updatedAt": "2026-09-13T07:04:33.189Z"
       }
+    },
+    "tiếng": {
+      "link": {
+        "texte": "### tiếng\n\nCe mot possède une seule syllabe. Il est polycémique et peut désigner la langue (parlée), un son, un bruit, ou encore une unité de temps (heure).\n\n**Exemples :**\n*   Tôi học tiếng Việt. (J'apprends le vietnamien.)\n*   Bạn nói tiếng Pháp không? (Est-ce que tu parles français ?)\n*   Có tiếng động lạ ở ngoài kia. (Il y a un bruit étrange là-bas dehors.)\n*   Tôi đợi bạn hai tiếng rồi. (Je t'attends depuis deux heures.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.713Z"
+      }
+    },
+    "hết thời gian": {
+      "link": {
+        "texte": "### hết thời gian\n\nCette expression est composée de trois syllabes :\n*   **hết** : signifie finir, s'épuiser, être à bout de quelque chose.\n*   **thời** : se rapporte au temps, à une époque ou une période.\n*   **gian** : évoque un intervalle ou un espace.\n*   *Note : l'association de \"thời\" et \"gian\" forme le mot signifiant \"le temps\" en général.*\n\n**Exemples :**\n*   Nhanh lên, sắp hết thời gian rồi. (Dépêche-toi, on va bientôt manquer de temps.)\n*   Hết thời gian làm bài, các em nộp bài. (Le temps pour l'examen est écoulé, rendez vos copies.)\n*   Tôi xin lỗi, tôi đã hết thời gian cho việc này. (Je suis désolé, je n'ai plus de temps pour cela.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.714Z"
+      }
+    },
+    "được": {
+      "link": {
+        "texte": "### được\n\nCe mot possède une seule syllabe. C'est l'un des mots les plus polyvalents du vietnamien. Il peut exprimer la possibilité (pouvoir), l'obtention de quelque chose de positif, ou servir de marqueur pour la voix passive (pour un événement bénéfique). Il signifie aussi simplement \"d'accord\" ou \"bien\".\n\n**Exemples :**\n*   Tôi làm được. (Je peux le faire / J'y arrive.)\n*   Ăn món này được không? (Est-ce qu'on peut manger ce plat ? / Ce plat est-il bon ?)\n*   Được rồi, chúng ta đi thôi. (D'accord / C'est bon, on y va.)\n*   Hôm nay tôi được nghỉ. (Aujourd'hui, j'ai congé / on m'a donné un jour de repos.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.715Z"
+      }
+    },
+    "có hai âm tiết": {
+      "link": {
+        "texte": "### có hai âm tiết\n\nCette expression est composée de quatre syllabes :\n*   **có** : avoir.\n*   **hai** : le chiffre deux.\n*   **âm** : le son.\n*   **tiết** : un segment ou une articulation.\n*   *Note : \"âm tiết\" signifie \"syllabe\".*\n\n**Exemples :**\n*   Từ này có hai âm tiết. (Ce mot a deux syllabes.)\n*   Tên của tôi có hai âm tiết. (Mon nom a deux syllabes.)\n*   Đa số từ ghép tiếng Việt có hai âm tiết. (La majorité des mots composés vietnamiens ont deux syllabes.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.715Z"
+      }
+    },
+    "miễn phí": {
+      "link": {
+        "texte": "### miễn phí\n\nCette expression est composée de deux syllabes :\n*   **miễn** : dispenser, exempter.\n*   **phí** : frais, coût, taxe.\n\n**Exemples :**\n*   Trẻ em được vào cửa miễn phí. (Les enfants entrent gratuitement.)\n*   Ở đây có wifi miễn phí không? (Est-ce qu'il y a le wifi gratuit ici ?)\n*   Tài liệu này được cấp miễn phí. (Ce document est fourni gratuitement.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.716Z"
+      }
+    },
+    "được gọi là": {
+      "link": {
+        "texte": "### được gọi là\n\nCette expression est composée de trois syllabes :\n*   **được** : marqueur de passivité (ici : \"est\").\n*   **gọi** : appeler.\n*   **là** : être (utilisé ici pour introduire la définition ou le nom).\n\n**Exemples :**\n*   Cái này được gọi là gì? (Comment appelle-t-on ceci ? / Comment ceci est-il appelé ?)\n*   Anh ấy được gọi là người hùng. (Il est considéré comme / appelé un héros.)\n*   Hoa này được gọi là hoa mai. (Cette fleur est appelée fleur de prunier.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.716Z"
+      }
+    },
+    "mạng mạnh": {
+      "link": {
+        "texte": "### mạng mạnh\n\nCette expression est composée de deux syllabes :\n*   **mạng** : le réseau (utilisé couramment pour désigner Internet).\n*   **mạnh** : fort, puissant.\n\n**Exemples :**\n*   Ở quán cà phê này mạng mạnh lắm. (Dans ce café, la connexion internet est très forte.)\n*   Tôi cần tìm chỗ nào có mạng mạnh. (J'ai besoin de trouver un endroit où le réseau est puissant.)\n*   Mạng mạnh nên xem phim rất mượt. (La connexion est forte donc on regarde les films de façon fluide.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.716Z"
+      }
+    },
+    "mới": {
+      "link": {
+        "texte": "### mới\n\nCe mot possède une seule syllabe. Il peut signifier \"nouveau\" (adjectif) ou \"venir de\" (adverbe pour une action récente).\n\n**Exemples :**\n*   Tôi mới mua xe máy mới. (Je viens d'acheter une nouvelle moto.)\n*   Chúc mừng năm mới! (Bonne année !)\n*   Tôi mới ăn cơm xong. (Je viens juste de finir de manger.)\n*   Cái áo này nhìn vẫn còn mới. (Cette chemise a l'air encore neuve.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:00.717Z"
+      }
+    },
+    "thuộc về": {
+      "link": {
+        "texte": "### thuộc về\n\nCe terme exprime la possession ou l'appartenance.\n\n*   **thuộc** : signifie dépendre de, faire partie de ou être classé dans.\n*   **về** : signifie normalement retourner ou vers, mais ici il agit comme une particule directionnelle qui complète l'idée d'appartenance à quelqu'un ou quelque chose.\n\n**Exemples :**\n1. Cuốn sách này thuộc về tôi. (Ce livre m'appartient.)\n2. Trái tim tôi thuộc về gia đình. (Mon cœur appartient à ma famille.)\n3. Những kỷ niệm này thuộc về quá khứ. (Ces souvenirs appartiennent au passé.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.776Z"
+      }
+    },
+    "mất đi": {
+      "link": {
+        "texte": "### mất đi\n\nCe terme est utilisé pour parler d'une perte, de la disparition de quelque chose ou du décès de quelqu'un.\n\n*   **mất** : signifie perdre ou être perdu.\n*   **đi** : signifie aller ou partir. Utilisé après un verbe de changement, il accentue le fait que l'action est terminée ou que la chose a disparu.\n\n**Exemples :**\n1. Cô ấy đã mất đi hy vọng. (Elle a perdu espoir.)\n2. Đừng để mất đi cơ hội này. (Ne laisse pas passer cette opportunité.)\n3. Niềm tin không bao giờ mất đi. (La confiance ne disparaît jamais.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.776Z"
+      }
+    },
+    "thìa": {
+      "link": {
+        "texte": "### thìa\n\nCe mot désigne un ustensile de cuisine courant.\n\n*   **thìa** : ce mot désigne une cuillère. Dans le nord du Vietnam, on utilise « thìa », tandis que dans le sud, on préfère souvent le mot « muỗng ».\n\n**Exemples :**\n1. Cho tôi xin một cái thìa. (Donnez-moi une cuillère, s'il vous plaît.)\n2. Em bé đang tập dùng thìa. (Le bébé apprend à utiliser une cuillère.)\n3. Đừng để thìa vào bát. (Ne laisse pas la cuillère dans le bol.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.777Z"
+      }
+    },
+    "điều tốt đẹp": {
+      "link": {
+        "texte": "### điều tốt đẹp\n\nCette expression désigne des concepts abstraits positifs.\n\n*   **điều** : est un classificateur utilisé pour les choses abstraites (idées, faits, paroles).\n*   **tốt** : signifie bon ou de bonne qualité.\n*   **đẹp** : signifie beau ou joli.\n\n**Exemples :**\n1. Tôi chúc bạn những điều tốt đẹp nhất. (Je vous souhaite les meilleures choses.)\n2. Hãy luôn nghĩ về những điều tốt đẹp. (Pensez toujours aux bonnes choses.)\n3. Cuộc sống luôn có những điều tốt đẹp. (La vie a toujours de belles choses à offrir.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.777Z"
+      }
+    },
+    "Máy giặt": {
+      "link": {
+        "texte": "### Máy giặt\n\nIl s'agit d'un appareil ménager courant.\n\n*   **Máy** : signifie machine ou appareil.\n*   **giặt** : signifie laver, spécifiquement pour les vêtements ou les tissus.\n\n**Exemples :**\n1. Máy giặt đang chạy. (La machine à laver tourne.)\n2. Tôi cần mua một chiếc máy giặt mới. (J'ai besoin d'acheter une nouvelle machine à laver.)\n3. Cho quần áo vào máy giặt đi. (Mets les vêtements dans la machine à laver.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.777Z"
+      }
+    },
+    "cái chăn": {
+      "link": {
+        "texte": "### cái chăn\n\nCe terme désigne un élément de literie utilisé pour se couvrir.\n\n*   **cái** : est le classificateur général pour les objets inanimés.\n*   **chăn** : signifie couverture ou couette.\n\n**Exemples :**\n1. Đắp chăn cho ấm. (Couvre-toi avec la couverture pour avoir chaud.)\n2. Cái chăn này rất mềm. (Cette couverture est très douce.)\n3. Tôi cần thêm một cái chăn nữa. (J'ai besoin d'une couverture supplémentaire.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.777Z"
+      }
+    },
+    "Bồn tắm": {
+      "link": {
+        "texte": "### Bồn tắm\n\nCe terme désigne un équipement sanitaire de la salle de bain.\n\n*   **Bồn** : signifie un bac, une cuve ou un réservoir.\n*   **tắm** : signifie se baigner ou prendre un bain/une douche.\n\n**Exemples :**\n1. Tôi thích thư giãn trong bồn tắm. (J'aime me détendre dans la baignoire.)\n2. Bồn tắm này rất rộng. (Cette baignoire est très large.)\n3. Xả nước vào bồn tắm đi. (Fais couler l'eau dans la baignoire.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.778Z"
+      }
+    },
+    "máy hút bụi": {
+      "link": {
+        "texte": "### máy hút bụi\n\nIl s'agit de l'appareil utilisé pour le nettoyage des sols.\n\n*   **máy** : signifie machine ou appareil.\n*   **hút** : signifie aspirer ou fumer.\n*   **bụi** : signifie poussière.\n\n**Exemples :**\n1. Bạn có thể dùng máy hút bụi để dọn nhà. (Tu peux utiliser l'aspirateur pour nettoyer la maison.)\n2. Máy hút bụi này kêu rất to. (Cet aspirateur fait beaucoup de bruit.)\n3. Túi của máy hút bụi đã đầy. (Le sac de l'aspirateur est plein.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.778Z"
+      }
+    },
+    "cái gối": {
+      "link": {
+        "texte": "### cái gối\n\nCe mot désigne l'objet sur lequel on pose la tête pour dormir.\n\n*   **cái** : est le classificateur pour les objets.\n*   **gối** : signifie oreiller.\n\n**Exemples :**\n1. Tôi không thể ngủ nếu thiếu cái gối này. (Je ne peux pas dormir sans cet oreiller.)\n2. Cái gối này quá cao. (Cet oreiller est trop haut.)\n3. Mua cho tôi hai cái gối mới. (Achète-moi deux nouveaux oreillers.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.778Z"
+      }
+    },
+    "nhà thờ": {
+      "link": {
+        "texte": "### nhà thờ\n\nCe terme désigne un bâtiment religieux.\n\n*   **nhà** : signifie maison ou bâtiment.\n*   **thờ** : signifie pratiquer un culte, vénérer ou honorer les ancêtres/divinités.\n\n**Exemples :**\n1. Chúng tôi đi lễ ở nhà thờ vào Chủ nhật. (Nous allons à la messe à l'église le dimanche.)\n2. Nhà thờ này rất cổ kính. (Cette église est très ancienne.)\n3. Du khách thường đến thăm nhà thờ lớn. (Les touristes visitent souvent la cathédrale.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:05:37.781Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T07:04:34.756Z",
+  "updatedAt": "2026-09-13T07:05:38.772Z",
   "appVersion": "1.37.0"
 }
