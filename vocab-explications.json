@@ -230,8 +230,78 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-13T05:44:21.671Z"
       }
+    },
+    "văn": {
+      "link": {
+        "texte": "### văn\nCe mot est monosyllabique.\n**Signification :**\nIl a plusieurs sens, les plus courants sont :\n1.  La littérature, les études littéraires.\n2.  Un texte, un écrit, un essai (scolaire).\n3.  La culture (dans des expressions comme \"văn hóa\" - culture).\n\n**Exemples :**\n*   Anh ấy rất giỏi môn Ngữ văn.\n    *   Il est très bon en littérature (littéralement : en matière de langue et littérature).\n*   Bài văn này rất cảm động.\n    *   Cet essai est très émouvant.\n*   Bạn có thể đọc cuốn sách văn học này không?\n    *   Peux-tu lire ce livre de littérature ?",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.211Z"
+      }
+    },
+    "pha cà phê": {
+      "link": {
+        "texte": "### pha cà phê\n**Décomposition et signification des syllabes :**\n*   **pha :** signifie \"mélanger\", \"préparer\", \"faire\" (une boisson).\n*   **cà :** est une particule qui n'a pas de sens autonome dans ce contexte mais qui est nécessaire pour former le mot \"cà phê\".\n*   **phê :** est la partie qui, combinée avec \"cà\", signifie \"café\".\n**Signification globale :** \"Faire du café\", \"préparer du café\", \"infuser du café\".\n\n**Exemples :**\n*   Mỗi sáng, tôi thích tự pha cà phê tại nhà.\n    *   Chaque matin, j'aime faire mon propre café à la maison.\n*   Bạn có thể pha cà phê cho tôi được không?\n    *   Peux-tu me faire du café ?\n*   Cách pha cà phê này rất đặc biệt.\n    *   Cette façon de faire le café est très spéciale.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.211Z"
+      }
+    },
+    "thức dậy sớm": {
+      "link": {
+        "texte": "### thức dậy sớm\n**Décomposition et signification des syllabes :**\n*   **thức :** signifie \"éveiller\", \"être éveillé\".\n*   **dậy :** signifie \"se lever\".\n*   **sớm :** signifie \"tôt\".\n**Signification globale :** \"Se lever tôt\", \"s'éveiller tôt\".\n\n**Exemples :**\n*   Tôi thường thức dậy sớm để tập thể dục.\n    *   Je me lève souvent tôt pour faire de l'exercice.\n*   Thức dậy sớm có nhiều lợi ích cho sức khỏe.\n    *   Se lever tôt a de nombreux bienfaits pour la santé.\n*   Bạn nên thức dậy sớm để chuẩn bị cho công việc.\n    *   Tu devrais te lever tôt pour te préparer au travail.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.211Z"
+      }
+    },
+    "khách sạn": {
+      "link": {
+        "texte": "### khách sạn\n**Décomposition et signification des syllabes :**\n*   **khách :** signifie \"invité\", \"client\".\n*   **sạn :** signifie \"établissement\", \"bâtiment\" (souvent pour l'hébergement, comme une auberge ou un logis dans des contextes plus anciens).\n**Signification globale :** \"Hôtel\".\n\n**Exemples :**\n*   Chúng tôi đã đặt phòng ở khách sạn này.\n    *   Nous avons réservé une chambre dans cet hôtel.\n*   Khách sạn đó rất gần bãi biển.\n    *   Cet hôtel est très proche de la plage.\n*   Bạn có thể giới thiệu một khách sạn tốt không?\n    *   Peux-tu recommander un bon hôtel ?",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.212Z"
+      }
+    },
+    "câu": {
+      "link": {
+        "texte": "### câu\nCe mot est monosyllabique.\n**Signification :**\nCe mot a plusieurs significations courantes :\n1.  **Phrase** (grammaticalement).\n2.  **Pêcher** (verbe) ou une canne à pêche (dans \"cần câu\" - canne à pêche).\n3.  **Appât** (rarement seul, mais présent dans \"mồi câu\" - appât).\n\n**Exemples :**\n*   **Pour \"phrase\" :**\n    *   Đây là một câu hỏi khó.\n        *   Ceci est une question difficile (ou une phrase difficile à comprendre).\n    *   Bạn hãy đặt một câu với từ này.\n        *   Fais une phrase avec ce mot.\n    *   Câu này có nghĩa gì?\n        *   Que signifie cette phrase ?\n*   **Pour \"pêcher\" :**\n    *   Anh ấy thích đi câu cá vào cuối tuần.\n        *   Il aime aller pêcher le week-end.\n    *   Chúng tôi đang câu cá trên sông.\n        *   Nous sommes en train de pêcher dans la rivière.\n    *   Tôi có một cái cần câu mới.\n        *   J'ai une nouvelle canne à pêche.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.212Z"
+      }
+    },
+    "còn": {
+      "link": {
+        "texte": "### còn\nCe mot est monosyllabique.\n**Signification :**\n\"Còn\" a de multiples usages très fréquents :\n1.  **Encore**, **toujours**, **restant** (indique une continuation ou une persistance).\n2.  **Et**, **quant à**, **d'autre part** (comme conjonction pour introduire un contraste ou une addition).\n3.  **Manquer**, **ne plus y avoir** (souvent dans des phrases négatives ou interrogatives).\n\n**Exemples :**\n*   **Pour \"encore\", \"toujours\" :**\n    *   Bạn còn nhớ tôi không?\n        *   Tu te souviens encore de moi ?\n    *   Trong tủ lạnh còn sữa không?\n        *   Y a-t-il encore du lait dans le réfrigérateur ?\n    *   Tôi còn nhiều việc phải làm.\n        *   J'ai encore beaucoup de choses à faire.\n*   **Pour \"et\", \"quant à\" (conjonction) :**\n    *   Anh ấy thích ăn phở, còn tôi thích bún chả.\n        *   Il aime manger du phở, et moi j'aime le bún chả.\n    *   Cửa hàng này bán quần áo, còn cửa hàng kia bán giày dép.\n        *   Ce magasin vend des vêtements, et l'autre magasin vend des chaussures.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.212Z"
+      }
+    },
+    "tự pha cà phê": {
+      "link": {
+        "texte": "### tự pha cà phê\n**Décomposition et signification des syllabes :**\n*   **tự :** signifie \"soi-même\", \"par soi-même\", \"autonome\".\n*   **pha :** signifie \"mélanger\", \"préparer\", \"faire\" (une boisson).\n*   **cà :** (particule pour \"cà phê\").\n*   **phê :** (pour \"café\").\n**Signification globale :** \"Faire son propre café\", \"préparer le café soi-même\".\n\n**Exemples :**\n*   Tôi thích tự pha cà phê ở nhà hơn là mua ở quán.\n    *   Je préfère faire mon propre café à la maison plutôt que de l'acheter au café.\n*   Bạn có biết cách tự pha cà phê ngon không?\n    *   Sais-tu comment faire un bon café toi-même ?\n*   Cô ấy quyết định tự pha cà phê mỗi sáng để tiết kiệm tiền.\n    *   Elle a décidé de faire son propre café chaque matin pour économiser de l'argent.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.213Z"
+      }
+    },
+    "lạ": {
+      "link": {
+        "texte": "### lạ\nCe mot est monosyllabique.\n**Signification :**\n1.  **Étrange**, **bizarre**.\n2.  **Étranger**, **inconnu**, **nouveau**.\n\n**Exemples :**\n*   Món ăn này có vị rất lạ.\n    *   Ce plat a un goût très étrange.\n*   Anh ấy là người lạ ở đây.\n    *   C'est un étranger ici (ou : c'est une personne inconnue ici).\n*   Tôi thấy hơi lạ về chuyện này.\n    *   Je trouve cette affaire un peu étrange.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.213Z"
+      }
+    },
+    "cấu tạo nên": {
+      "link": {
+        "texte": "### cấu tạo nên\n**Décomposition et signification des syllabes :**\n*   **cấu :** signifie \"structure\", \"composition\".\n*   **tạo :** signifie \"créer\", \"former\", \"faire\".\n*   **nên :** est souvent utilisé avec des verbes pour indiquer un résultat, une formation ou une constitution.\n**Signification globale :** \"Constituer\", \"former\", \"composer\", \"structurer\". Cela décrit comment quelque chose est fait ou de quoi il est composé.\n\n**Exemples :**\n*   Những nguyên tố này cấu tạo nên vật chất.\n    *   Ces éléments constituent la matière.\n*   Nước cấu tạo nên phần lớn cơ thể con người.\n    *   L'eau compose la majeure partie du corps humain.\n*   Các tế bào cấu tạo nên mô và cơ quan.\n    *   Les cellules forment les tissus et les organes.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.213Z"
+      }
+    },
+    "mỗi âm tiết": {
+      "link": {
+        "texte": "### mỗi âm tiết\n**Décomposition et signification des syllabes :**\n*   **mỗi :** signifie \"chaque\", \"tout\".\n*   **âm :** signifie \"son\", \"sonore\".\n*   **tiết :** signifie \"partie\", \"section\", \"segment\". Dans ce contexte, \"âm tiết\" signifie \"syllabe\".\n**Signification globale :** \"Chaque syllabe\", \"toute syllabe\".\n\n**Exemples :**\n*   Trong tiếng Việt, mỗi âm tiết có một thanh điệu.\n    *   En vietnamien, chaque syllabe a un ton.\n*   Bạn cần phát âm rõ ràng mỗi âm tiết.\n    *   Tu dois prononcer clairement chaque syllabe.\n*   Tôi đang học cách phân tích cấu trúc của mỗi âm tiết.\n    *   J'apprends à analyser la structure de chaque syllabe.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T06:22:43.214Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T05:44:21.685Z",
-  "appVersion": "1.33.0"
+  "updatedAt": "2026-09-13T06:22:43.558Z",
+  "appVersion": "1.34.0"
 }
