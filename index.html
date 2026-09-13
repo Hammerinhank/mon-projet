@@ -328,7 +328,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.37.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.38.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -575,10 +575,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.37.0';
+        const APP_VERSION = '1.38.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.38.0', d: "La liste des modèles est regroupée par génération (Gemini 3.x, 2.5…), avec les aperçus et versions expérimentales rassemblés à part et les alias « latest » en tête. Chaque modèle dont le quota du jour est épuisé est signalé par ⛔ avec l'heure de reprise, et un modèle en simple attente par ⏳ avec le temps restant." },
             { v: '1.37.0', d: "La liste des modèles n'est plus figée dans le code : elle est demandée à Google (modèles acceptant generateContent), mise en cache et actualisable d'un bouton ; un modèle retiré n'est donc plus proposé, et si l'API en signale un pendant un appel, l'app propose de basculer sur le remplaçant qu'elle indique. Le blocage par quota devient propre à chaque modèle : changer de modèle fait disparaître le ⛔ immédiatement, et y revenir le fait réapparaître tant que son délai court." },
             { v: '1.36.0', d: "Page « Sélectionner Section » : les boutons d'affichage et « Retour » sont doublés, en haut et en bas de la liste, pour ne plus avoir à la parcourir entièrement. Les deux boutons d'affichage portent toujours le même libellé." },
             { v: '1.35.0', d: "Les attentes longues s'affichent en minutes ou en heures au lieu de milliers de secondes, et un blocage par quota journalier montre ⛔ avec l'heure de reprise plutôt qu'un décompte. Le journal et la ligne d'état utilisent le même format." },
@@ -823,10 +824,26 @@
         // disparaître le ⛔ tout de suite, et y revenir le faire réapparaître
         // tant que son propre délai court. Il est donc rangé avec les délais
         // appris, modèle par modèle, et survit à une recharge de la page.
-        function setBlocageModele(jusquaMs, modele) {
+        function setBlocageModele(jusquaMs, modele, journalier) {
             const d = delaisModele(modele || modeleGemini);
             d.bloqueJusqua = Math.max(d.bloqueJusqua || 0, jusquaMs);
+            if (journalier) d.journalierJusqua = Math.max(d.journalierJusqua || 0, jusquaMs);
             sauverDelaisGemini();
+        }
+
+        // État affiché en face d'un modèle dans la liste déroulante.
+        function etatQuotaModele(id) {
+            const d = delaisGemini[id];
+            if (!d) return '';
+            const maintenant = Date.now();
+            if (d.journalierJusqua && d.journalierJusqua > maintenant) {
+                const h = new Date(d.journalierJusqua).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                return ` ⛔ quota du jour épuisé, reprise ${h}`;
+            }
+            if (d.bloqueJusqua && d.bloqueJusqua > maintenant) {
+                return ` ⏳ en attente ${formaterDuree(Math.ceil((d.bloqueJusqua - maintenant) / 1000))}`;
+            }
+            return '';
         }
 
         function effacerBlocageModele(modele) {
@@ -1051,7 +1068,7 @@
                     // Quota journalier : inutile de décompter, on le dit.
                     const reinit = prochaineReinitQuotaJournalier();
                     const heure = reinit.toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
-                    setBlocageModele(reinit.getTime());
+                    setBlocageModele(reinit.getTime(), modeleGemini, true);
                     etatCacheSection[section] = { etat: 'bloque', jusqua: reinit.getTime(), libelle: '⛔', modele: modeleGemini };
                     journaliser(`Cache « ${section} » : quota JOURNALIER épuisé sur ${e.quota.modele || modeleGemini} — réinitialisation ${heure}`, 'erreur');
                     setStatutCacheSection(`⛔ Quota journalier épuisé sur ${e.quota.modele || modeleGemini} : le compteur repart ${heure} (dans ${formaterDuree(Math.round((reinit.getTime() - Date.now()) / 1000))}). Change de modèle ou active la facturation.`);
@@ -1481,17 +1498,47 @@
             return liste;
         }
 
+        // Avec une trentaine de modèles, la liste n'est lisible que regroupée :
+        // un groupe par génération, les alias « latest » en tête, et tout ce qui
+        // est aperçu ou expérimental relégué dans un dernier groupe.
+        function groupeModele(id) {
+            if (/-latest$/.test(id)) return { cle: '0', titre: 'Alias toujours à jour' };
+            if (/preview|-exp|experimental|thinking/i.test(id)) return { cle: 'z', titre: 'Aperçus et versions expérimentales' };
+            const m = /gemini-(\d+(?:\.\d+)?)/.exec(id);
+            if (!m) return { cle: 'y', titre: 'Autres modèles' };
+            // Clé décroissante : les générations récentes en premier.
+            return { cle: '1' + String(1000 - Math.round(parseFloat(m[1]) * 10)).padStart(4, '0'), titre: `Gemini ${m[1]}` };
+        }
+
         function remplirSelectModeles() {
             const select = document.getElementById('ai-gemini-model');
             const liste = modelesGemini.length ? modelesGemini : MODELES_SECOURS.map(id => ({ id, label: '' }));
             const ids = liste.map(m => m.id);
-            let html = liste.map(m => `<option value="${m.id}">${m.id}${m.label && m.label !== m.id ? ' — ' + m.label : ''}</option>`).join('');
+            const groupes = {};
+            liste.forEach(m => {
+                const g = groupeModele(m.id);
+                if (!groupes[g.cle]) groupes[g.cle] = { titre: g.titre, modeles: [] };
+                groupes[g.cle].modeles.push(m);
+            });
+            const option = m => {
+                const suffixe = etatQuotaModele(m.id);
+                const nom = (m.label && m.label !== m.id && m.label.length <= 30) ? ` — ${m.label}` : '';
+                return `<option value="${m.id}">${m.id}${nom}${suffixe}</option>`;
+            };
+            let html = Object.keys(groupes).sort().map(cle => {
+                const g = groupes[cle];
+                return `<optgroup label="${g.titre} (${g.modeles.length})">${g.modeles.map(option).join('')}</optgroup>`;
+            }).join('');
             // Le modèle enregistré doit rester sélectionnable même s'il a disparu.
-            if (!ids.includes(modeleGemini)) html = `<option value="${modeleGemini}">${modeleGemini} (non listé)</option>` + html;
+            if (!ids.includes(modeleGemini)) {
+                html = `<optgroup label="Modèle enregistré"><option value="${modeleGemini}">${modeleGemini} (non listé)${etatQuotaModele(modeleGemini)}</option></optgroup>` + html;
+            }
             select.innerHTML = html;
             select.value = modeleGemini;
+            const bloques = Object.keys(delaisGemini).filter(id => etatQuotaModele(id)).length;
             document.getElementById('ai-modeles-status').innerText = modelesGemini.length
                 ? `${modelesGemini.length} modèle(s) disponibles · liste du ${formatDateCourte(modelesMaj)}`
+                    + (bloques ? ` · ${bloques} en attente ou à court de quota` : '')
                 : "Liste de secours : clique sur « Actualiser » pour demander à Google les modèles réellement disponibles.";
         }
 
@@ -1937,7 +1984,7 @@
         function afficherQuotaJournalier(quota, messageBrut) {
             const reinit = prochaineReinitQuotaJournalier();
             const heure = reinit.toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
-            setBlocageModele(reinit.getTime(), quota.modele || modeleGemini);
+            setBlocageModele(reinit.getTime(), quota.modele || modeleGemini, true);
             journaliser(`Quota JOURNALIER épuisé sur ${quota.modele || modeleGemini}${quota.limite ? ' (' + quota.limite + ' requêtes/jour)' : ''} — réinitialisation ${heure}`, 'erreur');
             setAiAnswerBody(
                 `<p><b>⛔ Quota journalier épuisé.</b></p>`
