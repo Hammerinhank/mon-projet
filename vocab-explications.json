@@ -160,8 +160,43 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-13T01:25:03.722Z"
       }
+    },
+    "ai đến Việt Nam": {
+      "link": {
+        "texte": "### ai đến Việt Nam\nCe groupe de mots signifie « qui vient au Vietnam » ou « quiconque vient au Vietnam ».\n\n*   **ai** : Ce mot signifie « qui » ou « quiconque », se référant à une personne indéterminée ou à toute personne.\n*   **đến** : Ce mot signifie « venir », « arriver », « atteindre ».\n*   **Việt Nam** : C'est le nom du pays, « Vietnam ».\n\nExemples :\n*   Ai đến Việt Nam lần đầu đều ngạc nhiên trước vẻ đẹp của cảnh quan.\n    *   Quiconque vient au Vietnam pour la première fois est surpris par la beauté du paysage.\n*   Bạn có biết ai đến Việt Nam tuần trước không?\n    *   Sais-tu qui est venu au Vietnam la semaine dernière ?\n*   Ai đến Việt Nam vào mùa hè sẽ cảm nhận được cái nóng.\n    *   Quiconque vient au Vietnam en été ressentira la chaleur.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T04:04:10.706Z"
+      }
+    },
+    "một mình": {
+      "link": {
+        "texte": "### một mình\nCe mot composé signifie « seul », « tout seul », « par soi-même ».\n\n*   **một** : Ce mot signifie « un » (le chiffre).\n*   **mình** : Ce mot signifie « soi-même », « moi » (forme informelle), ou « corps ». Ici, il est utilisé dans le sens de « soi-même ».\n\nExemples :\n*   Tôi thích đi du lịch một mình.\n    *   J'aime voyager seul.\n*   Anh ấy sống một mình trong căn hộ này.\n    *   Il vit seul dans cet appartement.\n*   Cô ấy đã hoàn thành dự án này một mình.\n    *   Elle a terminé ce projet par elle-même.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T04:04:10.706Z"
+      }
+    },
+    "phương tiện giao thông": {
+      "link": {
+        "texte": "### phương tiện giao thông\nCe groupe de mots signifie « moyen de transport », « véhicule de transport ».\n\n*   **phương** : Ce mot signifie « direction », « méthode », « moyen ».\n*   **tiện** : Ce mot signifie « pratique », « commode », « facilité », « moyen ».\n    *   Ensemble, **phương tiện** signifie « moyen », « instrument », « installation ».\n*   **giao** : Ce mot signifie « échanger », « communiquer », « croiser ».\n*   **thông** : Ce mot signifie « traverser », « être ouvert », « communiquer ».\n    *   Ensemble, **giao thông** signifie « circulation », « trafic », « communication ».\n\nExemples :\n*   Xe máy là phương tiện giao thông phổ biến nhất ở Việt Nam.\n    *   La moto est le moyen de transport le plus populaire au Vietnam.\n*   Bạn thường sử dụng phương tiện giao thông công cộng không?\n    *   Utilises-tu souvent les transports en commun ?\n*   Chính phủ đang tìm cách cải thiện các phương tiện giao thông công cộng.\n    *   Le gouvernement cherche à améliorer les moyens de transport public.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T04:04:10.707Z"
+      }
+    },
+    "học thêm": {
+      "link": {
+        "texte": "### học thêm\nCe mot composé signifie « prendre des cours supplémentaires », « étudier davantage », « faire des heures d'étude additionnelles ».\n\n*   **học** : Ce mot signifie « apprendre », « étudier ».\n*   **thêm** : Ce mot signifie « en plus », « davantage », « additionnel ».\n\nExemples :\n*   Con tôi phải học thêm tiếng Anh vào buổi tối.\n    *   Mon enfant doit prendre des cours supplémentaires d'anglais le soir.\n*   Để chuẩn bị cho kỳ thi, tôi phải học thêm rất nhiều.\n    *   Pour me préparer à l'examen, je dois étudier beaucoup plus.\n*   Cô giáo khuyên em nên học thêm môn toán.\n    *   La maîtresse a conseillé à l'enfant de prendre des cours supplémentaires de mathématiques.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T04:04:10.707Z"
+      }
+    },
+    "cụm từ": {
+      "link": {
+        "texte": "### cụm từ\nCe mot composé signifie « expression », « locution », « groupe de mots », « phrase ».\n\n*   **cụm** : Ce mot signifie « groupe », « amas », « grappe ».\n*   **từ** : Ce mot signifie « mot ».\n\nExemples :\n*   Đây là một cụm từ rất thông dụng trong giao tiếp hàng ngày.\n    *   C'est une expression très courante dans la communication quotidienne.\n*   Hãy cố gắng ghi nhớ những cụm từ này.\n    *   Essaie de mémoriser ces expressions.\n*   Bạn có thể giải thích ý nghĩa của cụm từ này không?\n    *   Peux-tu expliquer le sens de cette expression ?",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T04:04:10.707Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T01:25:03.739Z",
+  "updatedAt": "2026-09-13T04:04:10.723Z",
   "appVersion": "1.30.0"
 }
