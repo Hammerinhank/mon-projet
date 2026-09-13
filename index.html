@@ -253,7 +253,15 @@
         #ai-answer-body p { margin: 6px 0; }
         #ai-answer-body ul { margin: 6px 0; padding-left: 20px; }
         #ai-answer-body li { margin: 2px 0; }
-        #ai-answer-body h4 { margin: 10px 0 4px 0; font-size: 1rem; color: #1b4f72; }
+        #ai-answer-body h4 { margin: 10px 0 4px 0; font-size: 1.05em; color: #1b4f72; }
+        #ai-answer-body { cursor: zoom-in; }
+        #ai-zoom-indicateur {
+            position: absolute; right: 10px; bottom: 8px; background: rgba(44,62,80,0.85);
+            color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 11px;
+            opacity: 0; transition: opacity 0.2s; pointer-events: none;
+        }
+        #ai-zoom-indicateur.visible { opacity: 1; }
+        #ai-answer-panel { position: relative; }
         #ai-answer-body strong { color: #1b4f72; }
         #ai-answer-body code { background: #f4f7f6; padding: 1px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
         #ai-answer-body.ai-error { color: #c0392b; font-weight: bold; }
@@ -328,7 +336,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.38.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.39.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -360,6 +368,7 @@
             </div>
             <div id="ai-answer-body"></div>
             <div id="ai-answer-source"></div>
+            <span id="ai-zoom-indicateur"></span>
         </div>
     </div>
 
@@ -575,10 +584,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.38.0';
+        const APP_VERSION = '1.39.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.39.0', d: "Dans le panneau d'explication, un appui sur la moitié droite du texte agrandit les caractères, un appui sur la moitié gauche les réduit (de 11 à 26 px). La taille choisie est conservée d'une explication à l'autre et d'une session à l'autre." },
             { v: '1.38.0', d: "La liste des modèles est regroupée par génération (Gemini 3.x, 2.5…), avec les aperçus et versions expérimentales rassemblés à part et les alias « latest » en tête. Chaque modèle dont le quota du jour est épuisé est signalé par ⛔ avec l'heure de reprise, et un modèle en simple attente par ⏳ avec le temps restant." },
             { v: '1.37.0', d: "La liste des modèles n'est plus figée dans le code : elle est demandée à Google (modèles acceptant generateContent), mise en cache et actualisable d'un bouton ; un modèle retiré n'est donc plus proposé, et si l'API en signale un pendant un appel, l'app propose de basculer sur le remplaçant qu'elle indique. Le blocage par quota devient propre à chaque modèle : changer de modèle fait disparaître le ⛔ immédiatement, et y revenir le fait réapparaître tant que son délai court." },
             { v: '1.36.0', d: "Page « Sélectionner Section » : les boutons d'affichage et « Retour » sont doublés, en haut et en bas de la liste, pour ne plus avoir à la parcourir entièrement. Les deux boutons d'affichage portent toujours le même libellé." },
@@ -2036,6 +2046,41 @@
             }, 0);
         }
 
+        // Appui sur la moitié droite du texte : caractères plus grands ;
+        // sur la moitié gauche : plus petits. La taille est conservée.
+        const TAILLE_EXPLICATION_KEY = 'vocab_taille_explication';
+        const TAILLE_MIN = 11, TAILLE_MAX = 26;
+        let tailleExplication = Math.min(TAILLE_MAX, Math.max(TAILLE_MIN,
+            parseInt(localStorage.getItem(TAILLE_EXPLICATION_KEY), 10) || 15));
+
+        function appliquerTailleExplication() {
+            document.getElementById('ai-answer-body').style.fontSize = tailleExplication + 'px';
+        }
+
+        function montrerIndicateurZoom() {
+            const el = document.getElementById('ai-zoom-indicateur');
+            el.innerText = `${tailleExplication} px`;
+            el.classList.add('visible');
+            clearTimeout(el._minuteur);
+            el._minuteur = setTimeout(() => el.classList.remove('visible'), 900);
+        }
+
+        function installerZoomExplication() {
+            const corps = document.getElementById('ai-answer-body');
+            corps.addEventListener('click', e => {
+                // On laisse vivre les éléments interactifs (détail replié, liens).
+                if (e.target.closest && e.target.closest('details, a, button, summary')) return;
+                const rect = corps.getBoundingClientRect();
+                const droite = (e.clientX - rect.left) > rect.width / 2;
+                const nouvelle = Math.min(TAILLE_MAX, Math.max(TAILLE_MIN, tailleExplication + (droite ? 1 : -1)));
+                if (nouvelle === tailleExplication) { montrerIndicateurZoom(); return; }
+                tailleExplication = nouvelle;
+                try { localStorage.setItem(TAILLE_EXPLICATION_KEY, tailleExplication); } catch (err) { /* rien */ }
+                appliquerTailleExplication();
+                montrerIndicateurZoom();
+            });
+        }
+
         function setAiAnswerSource(html) {
             document.getElementById('ai-answer-source').innerHTML = html || '';
         }
@@ -3441,6 +3486,8 @@
         if (aiProvider === 'gemini') loadExplicationsFromGithub();
         document.getElementById('chatgpt-link').addEventListener('click', onAiLinkClick);
         installAiOutsideClickHandler();
+        installerZoomExplication();
+        appliquerTailleExplication();
         applyGameAnswerFontSize();
         loadChatGPTPromptsFromGithub();
         loadGistData();
