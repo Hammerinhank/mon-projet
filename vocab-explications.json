@@ -370,8 +370,78 @@
         "modele": "gemini-3-flash-preview",
         "updatedAt": "2026-09-13T07:03:31.048Z"
       }
+    },
+    "sắp": {
+      "link": {
+        "texte": "### sắp\n\nCe mot est un adverbe qui indique un futur proche ou une action imminente. Il se traduit généralement par « être sur le point de », « bientôt » ou « aller » (au futur immédiat).\n\nExemples :\n* Tôi sắp đi làm. (Je vais bientôt partir au travail.)\n* Trời sắp mưa rồi. (Il va bientôt pleuvoir.)\n* Chúng tôi sắp đến nơi. (Nous sommes sur le point d'arriver.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.185Z"
+      }
+    },
+    "bác gái": {
+      "link": {
+        "texte": "### bác gái\n\nCe terme est utilisé pour désigner ou s'adresser à une femme d'un certain âge.\n* **bác** : désigne le frère ou la sœur aîné(e) des parents. Dans un contexte social plus large, il sert à s'adresser poliment à une personne de la génération de ses parents mais plus âgée qu'eux.\n* **gái** : indique le genre féminin.\n\nL'expression désigne spécifiquement l'épouse du frère aîné du père, ou plus généralement, une femme plus âgée que ses propres parents à qui l'on souhaite témoigner du respect.\n\nExemples :\n* Chào bác gái ạ ! (Bonjour Madame ! / Bonjour ma tante !)\n* Bác gái đang nấu cơm trong bếp. (Ma tante est en train de cuisiner dans la cuisine.)\n* Bác gái năm nay bao nhiêu tuổi rồi ? (Quel âge a Madame cette année ?)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.185Z"
+      }
+    },
+    "10 phút sau": {
+      "link": {
+        "texte": "### 10 phút sau\n\nCette expression temporelle signifie « 10 minutes plus tard » ou « après 10 minutes ».\n* **10 (mười)** : le chiffre dix.\n* **phút** : minute.\n* **sau** : après, plus tard ou derrière.\n\nExemples :\n* 10 phút sau, anh ấy đã đến. (10 minutes plus tard, il est arrivé.)\n* Hẹn gặp lại bạn 10 phút sau. (Rendez-vous dans 10 minutes.)\n* Tôi sẽ gọi lại cho bạn 10 phút sau. (Je vous rappellerai 10 minutes plus tard.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.185Z"
+      }
+    },
+    "đã": {
+      "link": {
+        "texte": "### đã\n\nCe mot est une particule grammaticale placée avant le verbe pour indiquer que l'action est accomplie ou appartient au passé. Il se traduit souvent par le passé composé ou par « déjà ».\n\nExemples :\n* Tôi đã ăn cơm rồi. (J'ai déjà mangé.)\n* Cô ấy đã đi Hà Nội. (Elle est allée à Hanoï.)\n* Chúng tôi đã làm xong bài tập. (Nous avons fini les devoirs.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.186Z"
+      }
+    },
+    "chúng tôi": {
+      "link": {
+        "texte": "### chúng tôi\n\nC'est un pronom personnel de la première personne du pluriel.\n* **chúng** : marqueur de pluralité pour les êtres humains.\n* **tôi** : je / moi.\n\nAttention : « chúng tôi » est un « nous » exclusif. Il désigne le locuteur et ses compagnons, mais exclut la personne à qui l'on s'adresse.\n\nExemples :\n* Chúng tôi là sinh viên. (Nous sommes étudiants.)\n* Chúng tôi đang làm việc. (Nous sommes en train de travailler.)\n* Tối nay chúng tôi sẽ đi xem phim. (Ce soir, nous irons voir un film.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.186Z"
+      }
+    },
+    "nhà hàng": {
+      "link": {
+        "texte": "### nhà hàng\n\nCe mot signifie « restaurant ».\n* **nhà** : maison ou bâtiment.\n* **hàng** : commerce, marchandise ou boutique.\n\nL'association des deux désigne un établissement commercial où l'on sert des repas.\n\nExemples :\n* Nhà hàng này rất nổi tiếng. (Ce restaurant est très célèbre.)\n* Chúng ta đi nhà hàng nhé ? (On va au restaurant ?)\n* Tôi muốn đặt bàn tại nhà hàng. (Je voudrais réserver une table au restaurant.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.186Z"
+      }
+    },
+    "thành phần": {
+      "link": {
+        "texte": "### thành phần\n\nCe mot signifie « ingrédient », « composant » ou « élément ».\n* **thành** : devenir ou former.\n* **phần** : partie ou portion.\n\nIl est couramment utilisé pour parler des ingrédients d'une recette ou des composants d'un produit.\n\nExemples :\n* Thành phần của món ăn này là gì ? (Quels sont les ingrédients de ce plat ?)\n* Kiểm tra kỹ thành phần trên bao bì. (Vérifiez bien la liste des composants sur l'emballage.)\n* Thuốc này có nhiều thành phần tự nhiên. (Ce médicament contient de nombreux composants naturels.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.187Z"
+      }
+    },
+    "cấu tạo": {
+      "link": {
+        "texte": "### cấu tạo\n\nCe mot signifie « structure », « constitution » ou « composition ».\n* **cấu** : structure ou agencement.\n* **tạo** : créer ou fabriquer.\n\nIl s'utilise pour parler de la manière dont une chose (un objet, un organe, une machine) est construite ou organisée techniquement.\n\nExemples :\n* Cấu tạo của cơ thể người rất phức tạp. (La structure du corps humain est très complexe.)\n* Tìm hiểu về cấu tạo của máy móc. (Apprendre la composition des machines.)\n* Cấu tạo nguyên tử gồm có hạt nhân và electron. (La structure de l'atome comprend un noyau et des électrons.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.188Z"
+      }
+    },
+    "mạng yếu": {
+      "link": {
+        "texte": "### mạng yếu\n\nCette expression est utilisée pour dire que la connexion internet est faible.\n* **mạng** : le réseau ou internet.\n* **yếu** : faible.\n\nExemples :\n* Ở đây mạng yếu quá, không vào được web. (Ici le réseau est trop faible, on ne peut pas accéder au web.)\n* Tại sao mạng yếu thế nhỉ ? (Pourquoi le réseau est-il si faible ?)\n* Mạng yếu nên tôi không xem được video. (La connexion est faible donc je ne peux pas regarder la vidéo.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.188Z"
+      }
+    },
+    "mật khẩu wifi": {
+      "link": {
+        "texte": "### mật khẩu wifi\n\nCette expression signifie « mot de passe wifi ».\n* **mật** : secret.\n* **khẩu** : bouche ou ouverture (le duo « mật khẩu » signifie littéralement « bouche secrète », soit le mot de passe).\n* **wifi** : terme international pour le réseau sans fil.\n\nExemples :\n* Cho tôi xin mật khẩu wifi. (Donnez-moi le mot de passe wifi, s'il vous plaît.)\n* Mật khẩu wifi là gì vậy ? (Quel est le mot de passe wifi ?)\n* Tôi đã quên mật khẩu wifi rồi. (J'ai oublié le mot de passe wifi.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:04:33.189Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T07:03:32.650Z",
+  "updatedAt": "2026-09-13T07:04:34.756Z",
   "appVersion": "1.37.0"
 }
