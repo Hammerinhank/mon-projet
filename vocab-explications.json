@@ -300,8 +300,78 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-13T06:22:43.214Z"
       }
+    },
+    "hơn": {
+      "link": {
+        "texte": "### hơn\n\nCe mot est composé d'une seule syllabe. Il est utilisé principalement comme marqueur de comparaison pour exprimer la supériorité ou une quantité supplémentaire. Il se traduit généralement par « plus » ou « plus que ».\n\n**Exemples :**\n*   Tôi cao hơn anh ấy. (Je suis plus grand que lui.)\n*   Cái này tốt hơn. (Celui-ci est meilleur / est mieux.)\n*   Tôi cần nhiều hơn. (J'en ai besoin de plus.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.044Z"
+      }
+    },
+    "mật khẩu": {
+      "link": {
+        "texte": "### mật khẩu\n\nCe mot est composé de deux syllabes :\n1.  **mật** : signifie secret, caché ou dense (peut aussi désigner le miel dans un autre contexte).\n2.  **khẩu** : désigne la bouche, une ouverture ou une unité de mesure pour les personnes.\nL'association des deux désigne littéralement une « ouverture secrète » ou un « mot secret », soit un mot de passe.\n\n**Exemples :**\n*   Mật khẩu của bạn là gì? (Quel est votre mot de passe ?)\n*   Tôi đã quên mật khẩu. (J'ai oublié le mot de passe.)\n*   Đừng cho ai biết mật khẩu. (Ne donne le mot de passe à personne.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.044Z"
+      }
+    },
+    "chỉ": {
+      "link": {
+        "texte": "### chỉ\n\nCe mot est composé d'une seule syllabe. C'est un mot polyvalent qui peut signifier « seulement » ou « uniquement » lorsqu'il est utilisé comme adverbe, ou « indiquer / montrer » lorsqu'il est utilisé comme verbe. Il peut aussi désigner le « fil » à coudre.\n\n**Exemples :**\n*   Tôi chỉ có một ít tiền. (Je n'ai que peu d'argent.)\n*   Anh có thể chỉ đường cho tôi không? (Pouvez-vous m'indiquer le chemin ?)\n*   Cô ấy chỉ muốn giúp đỡ. (Elle veut seulement aider.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.045Z"
+      }
+    },
+    "âm tiết": {
+      "link": {
+        "texte": "### âm tiết\n\nCe mot est composé de deux syllabes :\n1.  **âm** : signifie le son ou la voix.\n2.  **tiết** : signifie un segment, une section, un nœud (comme sur un bambou) ou une période.\nL'assemblage des deux désigne un segment sonore, c'est-à-dire une syllabe.\n\n**Exemples :**\n*   Từ này có hai âm tiết. (Ce mot a deux syllabes.)\n*   Hãy phát âm rõ từng âm tiết. (Prononcez clairement chaque syllabe.)\n*   Tiếng Việt là ngôn ngữ đơn lập, mỗi chữ là một âm tiết. (Le vietnamien est une langue isolante, chaque caractère est une syllabe.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.045Z"
+      }
+    },
+    "từng": {
+      "link": {
+        "texte": "### từng\n\nCe mot est composé d'une seule syllabe. Il est utilisé pour indiquer que quelque chose a déjà eu lieu dans le passé (marqueur d'expérience) ou pour exprimer l'idée de « chaque » de manière successive.\n\n**Exemples :**\n*   Tôi từng đến Việt Nam. (Je suis déjà allé au Vietnam par le passé.)\n*   Chúng tôi đi từng người một. (Nous y allons un par un / l'un après l'autre.)\n*   Anh đã từng ăn món này chưa? (As-tu déjà mangé ce plat auparavant ?)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.046Z"
+      }
+    },
+    "đang": {
+      "link": {
+        "texte": "### đang\n\nCe mot est composé d'une seule syllabe. C'est une particule temporelle placée devant le verbe pour indiquer une action en cours de réalisation. Il correspond à la forme « être en train de ».\n\n**Exemples :**\n*   Tôi đang ăn cơm. (Je suis en train de manger.)\n*   Trời đang mưa. (Il est en train de pleuvoir.)\n*   Họ đang làm việc. (Ils sont en train de travailler.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.046Z"
+      }
+    },
+    "sớm hơn": {
+      "link": {
+        "texte": "### sớm hơn\n\nCette expression est composée de deux syllabes :\n1.  **sớm** : signifie tôt.\n2.  **hơn** : signifie plus (comparatif).\nEnsemble, cela signifie « plus tôt ».\n\n**Exemples :**\n*   Hãy đến sớm hơn nhé. (Viens plus tôt, s'il te plaît.)\n*   Hôm nay tôi dậy sớm hơn thường lệ. (Aujourd'hui, je me suis levé plus tôt que d'habitude.)\n*   Xe buýt đã đến sớm hơn dự kiến. (Le bus est arrivé plus tôt que prévu.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.046Z"
+      }
+    },
+    "ai": {
+      "link": {
+        "texte": "### ai\n\nCe mot est composé d'une seule syllabe. C'est un pronom interrogatif signifiant « qui ». Il peut aussi signifier « n'importe qui », « quelqu'un » ou « personne » selon la structure de la phrase.\n\n**Exemples :**\n*   Ai đó? (Qui est là ?)\n*   Tôi không thấy ai cả. (Je ne vois personne.)\n*   Ai cũng biết điều đó. (Tout le monde sait cela / N'importe qui sait cela.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.047Z"
+      }
+    },
+    "bệnh viện": {
+      "link": {
+        "texte": "### bệnh viện\n\nCe mot est composé de deux syllabes :\n1.  **bệnh** : signifie maladie ou malade.\n2.  **viện** : désigne un institut ou un établissement public.\nL'association des deux désigne l'institut pour les malades, c'est-à-dire l'hôpital.\n\n**Exemples :**\n*   Bệnh viện ở đâu? (Où est l'hôpital ?)\n*   Tôi phải đi bệnh viện. (Je dois aller à l'hôpital.)\n*   Anh ấy đang nằm bệnh viện. (Il est hospitalisé.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.047Z"
+      }
+    },
+    "wifi miễn phí": {
+      "link": {
+        "texte": "### wifi miễn phí\n\nCette expression est composée de trois unités sonores distinctes (en considérant « wifi » comme un bloc emprunté) :\n1.  **wifi** : terme international pour le réseau sans fil.\n2.  **miễn** : signifie dispenser de, exempter de.\n3.  **phí** : signifie frais, coût ou taxe.\nL'expression « miễn phí » signifie « gratuit » (exempt de frais). L'ensemble signifie « wifi gratuit ».\n\n**Exemples :**\n*   Ở đây có wifi miễn phí không? (Y a-t-il le wifi gratuit ici ?)\n*   Khách sạn này cung cấp wifi miễn phí. (Cet hôtel propose le wifi gratuit.)\n*   Bạn có thể dùng wifi miễn phí tại quán cà phê. (Tu peux utiliser le wifi gratuit au café.)",
+        "modele": "gemini-3-flash-preview",
+        "updatedAt": "2026-09-13T07:03:31.048Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T06:22:43.558Z",
-  "appVersion": "1.34.0"
+  "updatedAt": "2026-09-13T07:03:32.650Z",
+  "appVersion": "1.37.0"
 }
