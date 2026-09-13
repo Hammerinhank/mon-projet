@@ -1880,7 +1880,7 @@
     "Bồn rửa bát": 0,
     "máy rửa bát": 1,
     "đựng": 0,
-    "dao nĩa": 0,
+    "dao nĩa": 1,
     "gắp": 0,
     "chảo": 0,
     "thìa": 0,
@@ -1893,6 +1893,6 @@
   },
   "currentSection": "- Thu : 12 septembre 2026",
   "sectionUpdatedAt": "1789283186196",
-  "updatedAt": "2026-09-13T07:47:37.065Z",
+  "updatedAt": "2026-09-13T07:48:41.394Z",
   "appVersion": "1.39.0"
 }
