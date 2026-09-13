@@ -328,7 +328,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.35.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.36.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -482,10 +482,12 @@
             </div>
             <div id="section-list">
                 <h3>Sélectionner Section</h3>
-                <button class="modal-btn btn-top" id="progress-toggle-btn" onclick="toggleSectionProgress()">📊 Afficher la progression</button>
+                <button class="modal-btn btn-top progress-toggle" onclick="toggleSectionProgress()">📊 Afficher la progression</button>
+                <button class="modal-btn btn-cancel" onclick="hideSectionPicker()" style="margin-bottom:12px">Retour</button>
                 <div id="section-buttons"></div>
                 <p id="section-cache-status"></p>
-                <button class="modal-btn btn-cancel" onclick="hideSectionPicker()" style="margin-top:15px">Retour</button>
+                <button class="modal-btn btn-top progress-toggle" onclick="toggleSectionProgress()" style="margin-top:15px">📊 Afficher la progression</button>
+                <button class="modal-btn btn-cancel" onclick="hideSectionPicker()" style="margin-top:5px">Retour</button>
             </div>
             <div id="github-panel">
                 <h3>☁️ Synchronisation GitHub</h3>
@@ -575,10 +577,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.35.0';
+        const APP_VERSION = '1.36.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.36.0', d: "Page « Sélectionner Section » : les boutons d'affichage et « Retour » sont doublés, en haut et en bas de la liste, pour ne plus avoir à la parcourir entièrement. Les deux boutons d'affichage portent toujours le même libellé." },
             { v: '1.35.0', d: "Les attentes longues s'affichent en minutes ou en heures au lieu de milliers de secondes, et un blocage par quota journalier montre ⛔ avec l'heure de reprise plutôt qu'un décompte. Le journal et la ligne d'état utilisent le même format." },
             { v: '1.34.0', d: "Le délai d'attente après un refus de Gemini n'est plus celui annoncé par Google ni un doublement aveugle : l'app apprend, modèle par modèle, le temps réellement nécessaire. Un refus après N secondes fixe une borne « trop tôt », un succès après N secondes une borne « suffisant », et l'estimation converge entre les deux. Plus aucune relance automatique : le décompte est indicatif, on peut recliquer à tout moment — chaque essai affine l'estimation." },
             { v: '1.33.0', d: "« En savoir plus » profite de chaque appel : la question porte toujours sur 5 mots — le mot visé, les autres mots de la colonne encore sans explication, puis, pour compléter, des mots de la section tirés au hasard. L'affichage, lui, ne montre que ce qui a été demandé : l'explication du seul mot sélectionné, ou celles des mots de la colonne. Les mots obtenus en avance sont simplement mémorisés." },
@@ -779,8 +782,8 @@
 
         // Le bouton annonce l'état suivant : progression → % en cache → rien.
         function majLibelleModeSection() {
-            const btn = document.getElementById('progress-toggle-btn');
-            if (btn) btn.innerText = LIBELLES_MODE_SECTION[sectionDisplayMode];
+            document.querySelectorAll('.progress-toggle')
+                .forEach(btn => btn.innerText = LIBELLES_MODE_SECTION[sectionDisplayMode]);
         }
 
         // Teinte stable propre à chaque section, dérivée de son nom.
