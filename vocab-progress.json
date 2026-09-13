@@ -1878,7 +1878,7 @@
     "lò nướng thông thường": 0,
     "nồi chiên không dầu": 0,
     "Bồn rửa bát": 0,
-    "máy rửa bát": 0,
+    "máy rửa bát": 1,
     "đựng": 0,
     "dao nĩa": 0,
     "gắp": 0,
@@ -1893,6 +1893,6 @@
   },
   "currentSection": "- Thu : 12 septembre 2026",
   "sectionUpdatedAt": "1789283186196",
-  "updatedAt": "2026-09-13T07:06:32.330Z",
-  "appVersion": "1.37.0"
+  "updatedAt": "2026-09-13T07:47:37.065Z",
+  "appVersion": "1.39.0"
 }
