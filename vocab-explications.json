@@ -125,8 +125,43 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-12T21:21:00.783Z"
       }
+    },
+    "uống cà phê": {
+      "link": {
+        "texte": "### uống cà phê\n\"uống cà phê\" signifie \"boire du café\".\n*   `uống` signifie \"boire\".\n*   `cà phê` signifie \"café\". Les syllabes `cà` et `phê` n'ont pas de sens autonome dans ce contexte ; ensemble, elles forment le mot désignant la boisson.\n\n**Exemples de phrases usuelles :**\n*   Tôi thích uống cà phê vào buổi sáng. (J'aime boire du café le matin.)\n*   Bạn có muốn đi uống cà phê không? (Tu veux aller boire un café ?)\n*   Sau bữa ăn, chúng ta sẽ uống cà phê. (Après le repas, nous boirons du café.)",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T01:25:03.721Z"
+      }
+    },
+    "một chút nữa": {
+      "link": {
+        "texte": "### một chút nữa\n\"một chút nữa\" signifie \"dans un instant\", \"un petit moment encore\", \"un tout petit peu plus\", \"encore un peu\". Cette expression est utilisée pour indiquer une petite quantité supplémentaire, un court délai ou une continuation pour un court moment.\n*   `một` signifie \"un\", \"une\" (le nombre).\n*   `chút` signifie \"peu\", \"un petit peu\".\n*   `nữa` signifie \"encore\", \"de plus\", \"à nouveau\".\n\n**Exemples de phrases usuelles :**\n*   Chờ tôi một chút nữa nhé. (Attends-moi encore un petit instant, s'il te plaît.)\n*   Chỉ cần một chút nữa là xong rồi. (Encore un tout petit peu et ce sera fini.)\n*   Bạn có thể cho tôi thêm một chút nữa không? (Tu peux m'en donner un petit peu plus ?)",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T01:25:03.722Z"
+      }
+    },
+    "thứ hai": {
+      "link": {
+        "texte": "### thứ hai\n\"thứ hai\" signifie \"lundi\". C'est le deuxième jour de la semaine.\n*   `thứ` est un mot qui indique le rang ou l'ordre. Il est utilisé pour former les noms des jours de la semaine (sauf pour le dimanche).\n*   `hai` signifie \"deux\" (le nombre).\n\n**Exemples de phrases usuelles :**\n*   Hôm nay là thứ hai. (Aujourd'hui, c'est lundi.)\n*   Tôi có một cuộc họp quan trọng vào thứ hai tuần sau. (J'ai une réunion importante lundi prochain.)\n*   Thứ hai bạn có rảnh không? (Es-tu libre lundi ?)",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T01:25:03.722Z"
+      }
+    },
+    "thức dậy": {
+      "link": {
+        "texte": "### thức dậy\n\"thức dậy\" signifie \"se réveiller\", \"se lever\" (dans le sens de sortir du sommeil et de se mettre debout).\n*   `thức` signifie \"éveillé\", \"être éveillé\".\n*   `dậy` signifie \"se lever\", \"se dresser\", \"se redresser\".\n\n**Exemples de phrases usuelles :**\n*   Tôi thường thức dậy lúc 7 giờ sáng. (Je me réveille habituellement à 7 heures du matin.)\n*   Bạn có thích thức dậy sớm không? (Tu aimes te réveiller tôt ?)\n*   Xin lỗi, tôi vừa mới thức dậy. (Désolé, je viens juste de me réveiller.)",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T01:25:03.722Z"
+      }
+    },
+    "sau": {
+      "link": {
+        "texte": "### sau\n\"sau\" signifie \"après\", \"derrière\", \"plus tard\", \"suivant\".\nCe mot est monosyllabique, il n'est donc pas décomposé en plusieurs syllabes.\n\n**Exemples de phrases usuelles :**\n*   Gặp lại sau nhé! (À plus tard !)\n*   Anh ấy ngồi sau tôi. (Il est assis derrière moi.)\n*   Sau khi ăn tối, chúng ta sẽ xem phim. (Après le dîner, nous regarderons un film.)\n*   Xin mời xem trang sau. (Veuillez voir la page suivante.)",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T01:25:03.722Z"
+      }
     }
   },
-  "updatedAt": "2026-09-12T21:21:01.075Z",
-  "appVersion": "1.29.0"
+  "updatedAt": "2026-09-13T01:25:03.739Z",
+  "appVersion": "1.30.0"
 }
