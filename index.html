@@ -336,7 +336,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.39.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.40.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -543,7 +543,8 @@
                         <input type="number" id="ai-seuil-validation" class="gh-input" min="0" max="20" step="1">
                     </div>
                     <select id="ai-gemini-model" class="gh-input"></select>
-                    <button class="modal-btn btn-cancel" onclick="actualiserModelesGemini()" style="margin:5px 0">🔄 Actualiser la liste des modèles</button>
+                    <button class="modal-btn btn-cancel" onclick="testerModeleSelectionne()" style="margin:5px 0">🔍 Tester le modèle sélectionné</button>
+                    <button class="modal-btn btn-cancel" onclick="actualiserModelesGemini()" style="margin-bottom:5px">🔄 Actualiser la liste des modèles</button>
                     <p id="ai-modeles-status" class="ai-note"></p>
                 </div>
                 <p id="ai-status"></p>
@@ -584,10 +585,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.39.0';
+        const APP_VERSION = '1.40.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.40.0', d: "La consommation de quota est comptée localement, modèle par modèle et par journée de quota (remise à zéro à minuit Pacifique), dans une clé localStorage commune à toutes les apps de la même origine. La liste des modèles affiche donc « 12/20 aujourd'hui » ou « ⛔ épuisé » avant même de tenter un appel, et un bouton « Tester ce modèle » permet de vérifier un modèle d'une requête minuscule." },
             { v: '1.39.0', d: "Dans le panneau d'explication, un appui sur la moitié droite du texte agrandit les caractères, un appui sur la moitié gauche les réduit (de 11 à 26 px). La taille choisie est conservée d'une explication à l'autre et d'une session à l'autre." },
             { v: '1.38.0', d: "La liste des modèles est regroupée par génération (Gemini 3.x, 2.5…), avec les aperçus et versions expérimentales rassemblés à part et les alias « latest » en tête. Chaque modèle dont le quota du jour est épuisé est signalé par ⛔ avec l'heure de reprise, et un modèle en simple attente par ⏳ avec le temps restant." },
             { v: '1.37.0', d: "La liste des modèles n'est plus figée dans le code : elle est demandée à Google (modèles acceptant generateContent), mise en cache et actualisable d'un bouton ; un modèle retiré n'est donc plus proposé, et si l'API en signale un pendant un appel, l'app propose de basculer sur le remplaçant qu'elle indique. Le blocage par quota devient propre à chaque modèle : changer de modèle fait disparaître le ⛔ immédiatement, et y revenir le fait réapparaître tant que son délai court." },
@@ -843,17 +845,20 @@
 
         // État affiché en face d'un modèle dans la liste déroulante.
         function etatQuotaModele(id) {
-            const d = delaisGemini[id];
-            if (!d) return '';
             const maintenant = Date.now();
-            if (d.journalierJusqua && d.journalierJusqua > maintenant) {
+            const d = delaisGemini[id];
+            if (d && d.journalierJusqua && d.journalierJusqua > maintenant) {
                 const h = new Date(d.journalierJusqua).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-                return ` ⛔ quota du jour épuisé, reprise ${h}`;
+                return ` ⛔ épuisé, reprise ${h}`;
             }
-            if (d.bloqueJusqua && d.bloqueJusqua > maintenant) {
+            if (d && d.bloqueJusqua && d.bloqueJusqua > maintenant) {
                 return ` ⏳ en attente ${formaterDuree(Math.ceil((d.bloqueJusqua - maintenant) / 1000))}`;
             }
-            return '';
+            // Sinon, ce que l'app a consommé elle-même aujourd'hui.
+            const c = consommationModele(id);
+            if (!c.appels) return '';
+            if (c.limite) return ` · ${c.appels}/${c.limite} aujourd'hui${c.appels >= c.limite ? ' ⚠️' : ''}`;
+            return ` · ${c.appels} appel(s) aujourd'hui`;
         }
 
         function effacerBlocageModele(modele) {
@@ -1468,6 +1473,73 @@
         // se masque au clic ailleurs, et se réaffiche sans nouvel appel tant que la
         // question (donc les mots) n'a pas changé.
 
+        // ---- Consommation de quota, comptée localement ----
+        // L'API n'expose aucun moyen de connaître le quota restant : la seule
+        // source fiable est le refus. On compte donc nous-mêmes les appels
+        // acceptés, modèle par modèle, sur la journée de quota de Google
+        // (minuit heure du Pacifique). La clé est commune à toutes les apps
+        // servies depuis la même origine, pour qu'elles puissent l'alimenter.
+        // Format : { jour: 'AAAA-MM-JJ', compte: { modele: n }, limites: { modele: n } }
+        const QUOTA_USAGE_KEY = 'gemini_quota_usage';
+        let quotaUsage = { jour: null, compte: {}, limites: {} };
+
+        function jourQuotaCourant() {
+            return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+        }
+
+        function chargerQuotaUsage() {
+            try {
+                const brut = JSON.parse(localStorage.getItem(QUOTA_USAGE_KEY) || 'null');
+                if (brut && typeof brut === 'object') {
+                    quotaUsage = { jour: brut.jour || null, compte: brut.compte || {}, limites: brut.limites || {} };
+                }
+            } catch (e) { /* rien */ }
+            verifierJourQuota();
+        }
+
+        function sauverQuotaUsage() {
+            try { localStorage.setItem(QUOTA_USAGE_KEY, JSON.stringify(quotaUsage)); } catch (e) { /* rien */ }
+        }
+
+        // Journée de quota écoulée : les compteurs et les épuisements tombent.
+        function verifierJourQuota() {
+            const jour = jourQuotaCourant();
+            if (quotaUsage.jour === jour) return;
+            if (quotaUsage.jour) journaliser(`Nouvelle journée de quota (${jour}) : compteurs remis à zéro`);
+            quotaUsage.jour = jour;
+            quotaUsage.compte = {};
+            Object.keys(delaisGemini).forEach(id => {
+                if (delaisGemini[id].journalierJusqua && delaisGemini[id].journalierJusqua <= Date.now()) {
+                    delaisGemini[id].journalierJusqua = 0;
+                    delaisGemini[id].bloqueJusqua = 0;
+                }
+            });
+            sauverDelaisGemini();
+            sauverQuotaUsage();
+        }
+
+        function noterAppelGemini(modele) {
+            verifierJourQuota();
+            const m = modele || modeleGemini;
+            quotaUsage.compte[m] = (quotaUsage.compte[m] || 0) + 1;
+            sauverQuotaUsage();
+        }
+
+        function noterLimiteQuota(modele, limite) {
+            const m = modele || modeleGemini;
+            const n = parseInt(limite, 10);
+            if (!n) return;
+            verifierJourQuota();
+            quotaUsage.limites[m] = n;
+            quotaUsage.compte[m] = Math.max(quotaUsage.compte[m] || 0, n);   // le refus prouve l'épuisement
+            sauverQuotaUsage();
+        }
+
+        function consommationModele(id) {
+            verifierJourQuota();
+            return { appels: quotaUsage.compte[id] || 0, limite: quotaUsage.limites[id] || null };
+        }
+
         // ---- Liste des modèles disponibles, demandée à Google ----
         // Les modèles sont retirés au fil du temps : plutôt qu'une liste figée
         // dans le code, on demande à l'API ceux qui acceptent generateContent.
@@ -1520,6 +1592,56 @@
             return { cle: '1' + String(1000 - Math.round(parseFloat(m[1]) * 10)).padStart(4, '0'), titre: `Gemini ${m[1]}` };
         }
 
+        // Test volontaire d'un modèle : une requête minuscule, qui ne coûte rien
+        // si elle est refusée et une unité de quota si elle passe.
+        async function testerModeleSelectionne() {
+            const statut = document.getElementById('ai-modeles-status');
+            const id = document.getElementById('ai-gemini-model').value;
+            if (!cleGemini) { statut.innerText = "Renseigne d'abord la clé API."; return; }
+            statut.innerText = `⏳ Test de ${id}…`;
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${id}:generateContent?key=${encodeURIComponent(cleGemini)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: 'ping' }] }], generationConfig: { maxOutputTokens: 1 } })
+                });
+                const donnees = await res.json().catch(() => null);
+                if (res.ok) {
+                    noterAppelGemini(id);
+                    const c = consommationModele(id);
+                    journaliser(`Test de ${id} : disponible (${c.appels}${c.limite ? '/' + c.limite : ''} appel(s) aujourd'hui)`, 'ok');
+                    statut.innerText = `✅ ${id} répond — 1 requête consommée (${c.appels}${c.limite ? '/' + c.limite : ''} aujourd'hui).`;
+                } else {
+                    const message = (donnees && donnees.error && donnees.error.message) || ('HTTP ' + res.status);
+                    if (res.status === 429) {
+                        const quota = lireInfosQuota(donnees, message);
+                        if (quota.periode === 'jour') {
+                            const reinit = prochaineReinitQuotaJournalier();
+                            setBlocageModele(reinit.getTime(), id, true);
+                            noterLimiteQuota(id, quota.limite);
+                            statut.innerText = `⛔ ${id} : quota du jour épuisé, reprise ${reinit.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}.`;
+                        } else {
+                            const secondes = lireDelaiDeReessai(donnees, message) || 60;
+                            setBlocageModele(Date.now() + secondes * 1000, id);
+                            statut.innerText = `⏳ ${id} : limite par minute atteinte, réessaie dans ${formaterDuree(Math.ceil(secondes))}.`;
+                        }
+                        journaliser(`Test de ${id} : refusé — ${message}`, 'erreur');
+                    } else if (/no longer available|is not found|not supported/i.test(message)) {
+                        journaliser(`Test de ${id} : modèle retiré — ${message}`, 'erreur');
+                        statut.innerText = `⚠️ ${id} n'est plus proposé par Google.`;
+                        actualiserModelesGemini(true);
+                    } else {
+                        journaliser(`Test de ${id} : échec — ${message}`, 'erreur');
+                        statut.innerText = '❌ ' + message;
+                    }
+                }
+            } catch (e) {
+                journaliser(`Test de ${id} : échec — ${e.message}`, 'erreur');
+                statut.innerText = '❌ ' + e.message;
+            }
+            remplirSelectModeles();
+        }
+
         function remplirSelectModeles() {
             const select = document.getElementById('ai-gemini-model');
             const liste = modelesGemini.length ? modelesGemini : MODELES_SECOURS.map(id => ({ id, label: '' }));
@@ -1545,10 +1667,16 @@
             }
             select.innerHTML = html;
             select.value = modeleGemini;
-            const bloques = Object.keys(delaisGemini).filter(id => etatQuotaModele(id)).length;
+            verifierJourQuota();
+            const epuises = Object.keys(delaisGemini).filter(id => {
+                const d = delaisGemini[id];
+                return (d.journalierJusqua && d.journalierJusqua > Date.now()) || (d.bloqueJusqua && d.bloqueJusqua > Date.now());
+            }).length;
+            const totalAppels = Object.values(quotaUsage.compte).reduce((a, b) => a + b, 0);
             document.getElementById('ai-modeles-status').innerText = modelesGemini.length
-                ? `${modelesGemini.length} modèle(s) disponibles · liste du ${formatDateCourte(modelesMaj)}`
-                    + (bloques ? ` · ${bloques} en attente ou à court de quota` : '')
+                ? `${modelesGemini.length} modèle(s) · liste du ${formatDateCourte(modelesMaj)}`
+                    + ` · ${totalAppels} appel(s) depuis cet appareil aujourd'hui`
+                    + (epuises ? ` · ${epuises} indisponible(s)` : '')
                 : "Liste de secours : clique sur « Actualiser » pour demander à Google les modèles réellement disponibles.";
         }
 
@@ -1605,7 +1733,7 @@
             });
             let donnees = null;
             try { donnees = await reponse.json(); } catch (e) { donnees = null; }
-            if (reponse.ok) noterSuccesGemini(modeleGemini);
+            if (reponse.ok) { noterSuccesGemini(modeleGemini); noterAppelGemini(modeleGemini); }
             if (!reponse.ok) {
                 const message = (donnees && donnees.error && donnees.error.message) || ("HTTP " + reponse.status);
                 const erreur = new Error(message);
@@ -1618,6 +1746,8 @@
                     // sauf pour un quota journalier, qui se compte en heures.
                     if (erreur.quota.periode !== 'jour') {
                         erreur.delaiEstime = noterRefusGemini(modeleGemini, erreur.retryDelay);
+                    } else {
+                        noterLimiteQuota(erreur.quota.modele || modeleGemini, erreur.quota.limite);
                     }
                 }
                 throw erreur;
@@ -3482,6 +3612,7 @@
         chargerJournalIA();
         chargerDelaisGemini();
         chargerModelesCache();
+        chargerQuotaUsage();
         chargerExplicationsLocales();
         if (aiProvider === 'gemini') loadExplicationsFromGithub();
         document.getElementById('chatgpt-link').addEventListener('click', onAiLinkClick);
