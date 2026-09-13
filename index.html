@@ -328,7 +328,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.33.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.34.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -538,6 +538,8 @@
                     </select>
                 </div>
                 <p id="ai-status"></p>
+                <p id="ai-delai-status" class="ai-note"></p>
+                <button class="modal-btn btn-cancel" onclick="reinitialiserDelaisGemini()" style="margin-bottom:5px">⏱️ Oublier les délais appris</button>
                 <button class="modal-btn btn-apply" onclick="saveAiSettings()">💾 Enregistrer</button>
                 <button class="modal-btn btn-cancel" onclick="hideAiPanel()" style="margin-top:5px">↩️ Retour</button>
             </div>
@@ -573,10 +575,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.33.0';
+        const APP_VERSION = '1.34.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.34.0', d: "Le délai d'attente après un refus de Gemini n'est plus celui annoncé par Google ni un doublement aveugle : l'app apprend, modèle par modèle, le temps réellement nécessaire. Un refus après N secondes fixe une borne « trop tôt », un succès après N secondes une borne « suffisant », et l'estimation converge entre les deux. Plus aucune relance automatique : le décompte est indicatif, on peut recliquer à tout moment — chaque essai affine l'estimation." },
             { v: '1.33.0', d: "« En savoir plus » profite de chaque appel : la question porte toujours sur 5 mots — le mot visé, les autres mots de la colonne encore sans explication, puis, pour compléter, des mots de la section tirés au hasard. L'affichage, lui, ne montre que ce qui a été demandé : l'explication du seul mot sélectionné, ou celles des mots de la colonne. Les mots obtenus en avance sont simplement mémorisés." },
             { v: '1.32.0', d: "Deux réglages ajoutés dans ⚙️ Options → 🤖 Assistant IA : le nombre de mots demandés à Gemini par appel de section (le 5 fixe disparaît), et le seuil à partir duquel la réponse brute est soumise à validation dans une fenêtre en lecture seule avant d'être mémorisée (0 pour ne jamais valider, 1 pour toujours)." },
             { v: '1.31.0', d: "Le refus de Gemini est maintenant lu en détail : la réponse indique si la limite touchée est celle par minute ou celle par jour. Quota journalier épuisé, plus de décompte trompeur mais l'heure de réinitialisation et les solutions. Quota par minute, le délai de Google est majoré d'une marge, puis doublé à chaque nouvel échec, et la relance automatique s'arrête après trois tentatives." },
@@ -836,7 +839,7 @@
         // s'affiche que sur les boutons effectivement actionnés : les autres
         // sections gardent leur aspect normal.
         function bloquerSectionGemini(section, secondes) {
-            journaliser(`Section « ${section} » : limite d'appels Gemini atteinte, ${secondes} s à attendre`, 'erreur');
+            journaliser(`Section « ${section} » : appel refusé, délai estimé à ${secondes} s (${resumeEstimation(modeleGemini)})`, 'erreur');
             const jusqua = Date.now() + secondes * 1000;
             geminiBloqueJusqua = Math.max(geminiBloqueJusqua, jusqua);
             etatCacheSection[section] = { etat: 'bloque', jusqua };
@@ -864,7 +867,7 @@
         function majStatutAttenteGemini() {
             const restant = secondesBlocageGemini();
             if (restant) {
-                setStatutCacheSection(`⏳ Limite d'appels Gemini atteinte (quota par minute de ta clé API) — réessaie dans ${restant} s`);
+                setStatutCacheSection(`⏳ Limite d'appels atteinte — délai estimé : encore ${restant} s (tu peux essayer avant, l'estimation s'ajustera)`);
                 return;
             }
             if (!derniereSectionBloquee) return;
@@ -950,10 +953,8 @@
                 alert("⚠️ Aucune clé API Gemini sur cet appareil (⚙️ Options → 🤖 Assistant IA).");
                 return;
             }
-            // Délai Gemini en cours : ce bouton affiche à son tour son décompte,
-            // sans lancer d'appel voué à échouer.
-            const attente = secondesBlocageGemini();
-            if (attente) { bloquerSectionGemini(section, attente); return; }
+            // Un clic pendant le décompte est permis : c'est un essai de plus,
+            // qui affinera l'estimation du délai.
             if (etatCacheSection[section] && etatCacheSection[section].etat === 'attente') return;
 
             const manquants = motsSansExplication(section);
@@ -1006,9 +1007,9 @@
                     setStatutCacheSection(`⛔ Quota journalier épuisé : le compteur repart ${heure}. Change de modèle ou active la facturation.`);
                     renderSectionButtons();
                 } else if (e.status === 429) {
-                    // Délai par minute : liseré rouge sur cette section jusqu'à sa fin,
-                    // majoré d'une marge car l'estimation de Google est optimiste.
-                    const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + MARGE_QUOTA_SECONDES);
+                    // Délai par minute : décompte indicatif fondé sur l'estimation
+                    // apprise, que chaque nouvel essai corrige.
+                    const secondes = e.delaiEstime || estimationDelai(modeleGemini, e.retryDelay);
                     bloquerSectionGemini(section, secondes);
                 } else {
                     setEtatCacheSection(section, 'erreur', 5000, `0/${motsParAppelCache}`);
@@ -1408,6 +1409,7 @@
             });
             let donnees = null;
             try { donnees = await reponse.json(); } catch (e) { donnees = null; }
+            if (reponse.ok) noterSuccesGemini(modeleGemini);
             if (!reponse.ok) {
                 const message = (donnees && donnees.error && donnees.error.message) || ("HTTP " + reponse.status);
                 const erreur = new Error(message);
@@ -1415,6 +1417,11 @@
                 if (reponse.status === 429) {
                     erreur.retryDelay = lireDelaiDeReessai(donnees, message);
                     erreur.quota = lireInfosQuota(donnees, message);
+                    // L'estimation apprise remplace le délai annoncé par Google,
+                    // sauf pour un quota journalier, qui se compte en heures.
+                    if (erreur.quota.periode !== 'jour') {
+                        erreur.delaiEstime = noterRefusGemini(modeleGemini, erreur.retryDelay);
+                    }
                 }
                 throw erreur;
             }
@@ -1495,33 +1502,93 @@
             return new Date(maintenant.getTime() + resteMs);
         }
 
-        function attendreAvecDecompte(secondes, onSeconde) {
-            return new Promise(resolve => {
-                let restant = secondes;
-                if (onSeconde) onSeconde(restant);
-                const minuteur = setInterval(() => {
-                    restant--;
-                    if (restant <= 0) { clearInterval(minuteur); resolve(); }
-                    else if (onSeconde) onSeconde(restant);
-                }, 1000);
-            });
+        // ---- Apprentissage du délai réellement imposé par Gemini ----
+        // Google annonce un retryDelay souvent faux. On encadre donc le vrai
+        // délai par deux bornes, modèle par modèle : la plus longue attente qui
+        // s'est révélée trop courte, et la plus courte qui a suffi. L'estimation
+        // affichée est le milieu des deux, et se resserre à chaque essai.
+        const DELAIS_KEY = 'vocab_delais_gemini';
+        const DELAI_MIN = 5, DELAI_MAX = 900;
+        let delaisGemini = {};
+
+        function chargerDelaisGemini() {
+            try { delaisGemini = JSON.parse(localStorage.getItem(DELAIS_KEY) || '{}') || {}; }
+            catch (e) { delaisGemini = {}; }
         }
 
-        // Quota dépassé (429) : on attend le délai indiqué par Google, puis on
-        // renvoie la question une seule fois. Une attente de plus de deux minutes
-        // signale un quota journalier : inutile de patienter, on remonte l'erreur.
-        async function appelerGeminiAvecReessai(question, dataUrlImage, onAttente) {
-            try {
-                return await appelerGemini(question, dataUrlImage);
-            } catch (e) {
-                if (e.status !== 429) throw e;
-                const secondes = Math.ceil((e.retryDelay === null || e.retryDelay === undefined ? 20 : e.retryDelay) + 1);
-                if (secondes > 120) throw e;
-                journaliser(`Quota atteint (429) — nouvelle tentative automatique dans ${secondes} s`, 'erreur');
-                await attendreAvecDecompte(secondes, onAttente);
-                return await appelerGemini(question, dataUrlImage);
-            }
+        function sauverDelaisGemini() {
+            try { localStorage.setItem(DELAIS_KEY, JSON.stringify(delaisGemini)); } catch (e) { /* rien */ }
         }
+
+        function delaisModele(modele) {
+            const m = modele || modeleGemini;
+            if (!delaisGemini[m]) delaisGemini[m] = { inf: 0, sup: null, estim: null, dernierRefus: null };
+            return delaisGemini[m];
+        }
+
+        function calculerEstimation(d, defaut) {
+            let estim;
+            if (d.sup !== null && d.inf > 0 && d.inf < d.sup) estim = Math.ceil((d.inf + d.sup) / 2);
+            else if (d.sup !== null) estim = Math.ceil(d.sup * 0.8);   // on sonde plus bas
+            else if (d.inf > 0) estim = Math.ceil(d.inf * 1.5);        // encore trop tôt à inf
+            else estim = Math.ceil(defaut || 60);
+            return Math.min(DELAI_MAX, Math.max(DELAI_MIN, estim));
+        }
+
+        // Appel refusé : l'attente écoulée depuis le refus précédent était
+        // insuffisante, elle devient la borne basse.
+        function noterRefusGemini(modele, defautGoogle) {
+            const d = delaisModele(modele);
+            const avant = d.estim;
+            if (d.dernierRefus) {
+                const attendu = Math.round((Date.now() - d.dernierRefus) / 1000);
+                if (attendu > d.inf && attendu < DELAI_MAX) d.inf = attendu;
+                if (d.sup !== null && d.sup <= d.inf) d.sup = null;     // borne haute démentie
+                journaliser(`Refus après ${attendu} s d'attente : c'était trop tôt (borne basse portée à ${d.inf} s)`, 'erreur');
+            }
+            d.dernierRefus = Date.now();
+            d.estim = calculerEstimation(d, defautGoogle);
+            sauverDelaisGemini();
+            if (avant !== d.estim) journaliser(`Estimation du délai pour ${modele || modeleGemini} : ${d.estim} s${d.sup !== null ? ` (entre ${d.inf} et ${d.sup} s)` : ` (au moins ${d.inf} s)`}`);
+            return d.estim;
+        }
+
+        // Appel accepté : si un refus précédait, l'attente écoulée a suffi,
+        // elle devient la borne haute — l'estimation peut donc baisser.
+        function noterSuccesGemini(modele) {
+            const d = delaisModele(modele);
+            if (!d.dernierRefus) return;
+            const attendu = Math.round((Date.now() - d.dernierRefus) / 1000);
+            if (attendu < DELAI_MAX && (d.sup === null || attendu < d.sup)) {
+                d.sup = attendu;
+                if (d.inf >= d.sup) d.inf = Math.floor(d.sup / 2);
+                journaliser(`Succès après ${attendu} s d'attente : ce délai suffit (borne haute ramenée à ${d.sup} s)`, 'ok');
+            }
+            d.dernierRefus = null;
+            d.estim = calculerEstimation(d, null);
+            sauverDelaisGemini();
+        }
+
+        function estimationDelai(modele, defautGoogle) {
+            const d = delaisModele(modele);
+            return d.estim || calculerEstimation(d, defautGoogle);
+        }
+
+        function resumeEstimation(modele) {
+            const d = delaisModele(modele);
+            if (!d.estim) return "aucune estimation pour l'instant";
+            if (d.sup !== null) return `${d.estim} s (trop tôt à ${d.inf} s, suffisant à ${d.sup} s)`;
+            return `${d.estim} s (au moins ${d.inf || '?'} s)`;
+        }
+
+        function reinitialiserDelaisGemini() {
+            if (!confirm("Oublier ce qui a été appris sur les délais d'attente de Gemini ?")) return;
+            delaisGemini = {};
+            sauverDelaisGemini();
+            journaliser("Estimations des délais Gemini réinitialisées");
+            showAiPanel();
+        }
+
 
         function messageErreurGemini(message) {
             if (/referer/i.test(message)) {
@@ -1638,15 +1705,10 @@
                 showAiAnswerPanel();
                 return;
             }
-            // Délai Gemini encore en cours : on réaffiche le décompte plutôt
-            // que de lancer un appel voué au même refus.
-            const attenteQuota = geminiBloqueJusqua > Date.now() ? Math.ceil((geminiBloqueJusqua - Date.now()) / 1000) : 0;
-            if (attenteQuota) {
-                aiAnswerQuestion = question;
-                showAiAnswerPanel();
-                afficherAttenteQuota(question, titre, opts, attenteQuota, `Limite d'appels atteinte sur ${modeleGemini}.`);
-                return;
-            }
+            // Un clic pendant le décompte est autorisé : c'est un essai de plus,
+            // et son résultat affine l'estimation du délai.
+            if (minuteurQuotaPanneau) { clearInterval(minuteurQuotaPanneau); minuteurQuotaPanneau = null; }
+            geminiBloqueJusqua = 0;
             aiAnswerQuestion = question;
             geminiEnCours = true;
             const link = document.getElementById('chatgpt-link');
@@ -1657,11 +1719,7 @@
             showAiAnswerPanel();
             const debut = Date.now();
             try {
-                echecsQuotaConsecutifs = 0;
-                const texte = await appelerGeminiAvecReessai(question, null, restant => {
-                    setAiAnswerBody(`<p>⏳ Quota Gemini atteint (limite par minute) — nouvelle tentative dans ${restant} s…</p>`, 'ai-waiting');
-                    link.innerText = `⏳ Quota atteint — ${restant} s`;
-                });
+                const texte = await appelerGemini(question, null);
                 geminiCache.set(question, texte);
                 journaliser(`Gemini ${modeleGemini} · question ${question.length} car. · ${Math.round((Date.now() - debut) / 100) / 10} s · réponse ${texte.length} car. · « ${texte.slice(0, 80)}… »`, 'ok');
                 // Mot unique : l'explication est mémorisée durablement (local + dépôt).
@@ -1698,12 +1756,9 @@
                 journaliser(`Gemini ${modeleGemini} : échec — ${e.message}`, 'erreur');
                 if (aiAnswerQuestion === question) {
                     if (e.status === 429) {
-                        // Quota : on garde la question pour pouvoir la relancer seule.
-                        // Le délai de Google est majoré d'une marge, puis doublé à
-                        // chaque refus d'affilée — son estimation est optimiste.
-                        echecsQuotaConsecutifs++;
-                        const base = (e.retryDelay === null || e.retryDelay === undefined ? 60 : e.retryDelay) + MARGE_QUOTA_SECONDES;
-                        const secondes = Math.min(300, Math.ceil(base * Math.pow(2, echecsQuotaConsecutifs - 1)));
+                        // Quota : décompte fondé sur l'estimation apprise, pas sur
+                        // le délai annoncé par Google.
+                        const secondes = e.delaiEstime || estimationDelai(modeleGemini, e.retryDelay);
                         afficherAttenteQuota(question, titre, opts, secondes, e.message, e.quota);
                     } else {
                         setAiAnswerBody(renderLightMarkdown('❌ ' + messageErreurGemini(e.message)), 'ai-error');
@@ -1719,9 +1774,7 @@
         }
 
         let minuteurQuotaPanneau = null;
-        let echecsQuotaConsecutifs = 0;
-        const MAX_RELANCES_QUOTA = 3;
-        const MARGE_QUOTA_SECONDES = 5;
+
 
         // Le message de Google indique la limite et le modèle concernés.
         function extraireInfosQuota(message) {
@@ -1756,9 +1809,9 @@
             let restant = secondes;
             const dessiner = () => {
                 setAiAnswerBody(
-                    `<p><b>⏳ Limite d'appels Gemini atteinte.</b></p>`
-                    + `<p>${quota.limite ? 'Limite de ' + escapeHtmlIA(quota.limite) + ' requêtes par minute' : 'Limite de requêtes par minute'} sur ${escapeHtmlIA(quota.modele || modeleGemini)}${echecsQuotaConsecutifs > 1 ? ` — ${echecsQuotaConsecutifs}ᵉ refus d'affilée, l'attente est allongée` : ''}. La question repart automatiquement dans <b>${restant} s</b>.</p>`
-                    + `<p>Tu peux aussi changer de modèle dans ⚙️ Options → 🤖 Assistant IA : chacun a son propre compteur.</p>`
+                    `<p><b>⏳ Appel refusé : limite d'appels atteinte sur ${escapeHtmlIA(quota.modele || modeleGemini)}.</b></p>`
+                    + `<p>D'après ce que l'app a appris de tes essais précédents, il faut compter environ <b>${restant} s</b>.</p>`
+                    + `<p>Estimation courante : ${escapeHtmlIA(resumeEstimation(quota.modele || modeleGemini))}. Tu peux recliquer avant la fin — un refus allongera l'estimation, un succès la raccourcira.</p>`
                     + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(messageBrut)}</p></details>`,
                     'ai-quota');
                 document.getElementById('chatgpt-link').innerText = `⏳ Quota atteint — ${restant} s`;
@@ -1775,20 +1828,14 @@
                     clearInterval(minuteurQuotaPanneau);
                     minuteurQuotaPanneau = null;
                     geminiBloqueJusqua = 0;
-                    if (toujoursLa && echecsQuotaConsecutifs < MAX_RELANCES_QUOTA) {
-                        journaliser(`Délai Gemini écoulé — relance automatique (tentative ${echecsQuotaConsecutifs + 1})`, 'ok');
-                        askGemini(question, titre, Object.assign({}, opts, { force: true }));
-                    } else if (toujoursLa) {
-                        journaliser(`Gemini refuse toujours après ${echecsQuotaConsecutifs} tentatives — relance automatique abandonnée`, 'erreur');
+                    journaliser("Fin du délai estimé — à toi de relancer la question", 'ok');
+                    if (toujoursLa) {
                         setAiAnswerBody(
-                            `<p><b>⛔ Gemini refuse toujours après ${echecsQuotaConsecutifs} tentatives.</b></p>`
-                            + `<p>Le compteur ne se libère pas : il s'agit probablement d'une limite plus longue qu'une minute. Essaie un autre modèle dans ⚙️ Options → 🤖 Assistant IA, reviens plus tard, ou active la facturation sur le projet Google.</p>`,
-                            'ai-error');
-                        document.getElementById('chatgpt-link').innerHTML = aiLinkLabel;
-                    } else {
-                        journaliser('Délai Gemini écoulé — les appels sont de nouveau possibles', 'ok');
-                        document.getElementById('chatgpt-link').innerHTML = aiLinkLabel;
+                            `<p><b>⏱️ Délai estimé écoulé.</b></p>`
+                            + `<p>Reclique sur « En savoir plus » pour relancer la question. Si Gemini refuse encore, l'estimation sera allongée ; si ça passe, elle sera raccourcie.</p>`,
+                            'ai-quota');
                     }
+                    document.getElementById('chatgpt-link').innerHTML = aiLinkLabel;
                 }, 1000);
             }, 0);
         }
@@ -2196,6 +2243,8 @@
                 + ` · ${c.mots} mot(s) expliqué(s) en mémoire (${c.entrees} explications)`
                 + ` · ${motsParAppelCache} mot(s) par appel`
                 + (seuilValidation > 0 ? ` · validation à partir de ${seuilValidation}` : ' · sans validation') + '.';
+            document.getElementById('ai-delai-status').innerText =
+                `Délai d'attente appris après un refus de ${modeleGemini} : ${resumeEstimation(modeleGemini)}.`;
             syncAiPanelVisibility();
             document.getElementById('custom-modal').style.display = 'flex';
         }
@@ -3182,6 +3231,7 @@
         document.getElementById('app-version').innerText = 'v' + APP_VERSION;
         applyAiProviderClass();
         chargerJournalIA();
+        chargerDelaisGemini();
         chargerExplicationsLocales();
         if (aiProvider === 'gemini') loadExplicationsFromGithub();
         document.getElementById('chatgpt-link').addEventListener('click', onAiLinkClick);
