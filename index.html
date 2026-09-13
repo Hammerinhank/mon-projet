@@ -328,7 +328,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.36.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.37.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -533,11 +533,9 @@
                         <label for="ai-seuil-validation">Valider la réponse à partir de … mot(s) demandé(s) — 0 : jamais, 1 : toujours</label>
                         <input type="number" id="ai-seuil-validation" class="gh-input" min="0" max="20" step="1">
                     </div>
-                    <select id="ai-gemini-model" class="gh-input">
-                        <option value="gemini-2.5-flash">gemini-2.5-flash (rapide, défaut)</option>
-                        <option value="gemini-2.5-pro">gemini-2.5-pro (plus fin, plus lent)</option>
-                        <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-                    </select>
+                    <select id="ai-gemini-model" class="gh-input"></select>
+                    <button class="modal-btn btn-cancel" onclick="actualiserModelesGemini()" style="margin:5px 0">🔄 Actualiser la liste des modèles</button>
+                    <p id="ai-modeles-status" class="ai-note"></p>
                 </div>
                 <p id="ai-status"></p>
                 <p id="ai-delai-status" class="ai-note"></p>
@@ -577,10 +575,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.36.0';
+        const APP_VERSION = '1.37.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.37.0', d: "La liste des modèles n'est plus figée dans le code : elle est demandée à Google (modèles acceptant generateContent), mise en cache et actualisable d'un bouton ; un modèle retiré n'est donc plus proposé, et si l'API en signale un pendant un appel, l'app propose de basculer sur le remplaçant qu'elle indique. Le blocage par quota devient propre à chaque modèle : changer de modèle fait disparaître le ⛔ immédiatement, et y revenir le fait réapparaître tant que son délai court." },
             { v: '1.36.0', d: "Page « Sélectionner Section » : les boutons d'affichage et « Retour » sont doublés, en haut et en bas de la liste, pour ne plus avoir à la parcourir entièrement. Les deux boutons d'affichage portent toujours le même libellé." },
             { v: '1.35.0', d: "Les attentes longues s'affichent en minutes ou en heures au lieu de milliers de secondes, et un blocage par quota journalier montre ⛔ avec l'heure de reprise plutôt qu'un décompte. Le journal et la ligne d'état utilisent le même format." },
             { v: '1.34.0', d: "Le délai d'attente après un refus de Gemini n'est plus celui annoncé par Google ni un doublement aveugle : l'app apprend, modèle par modèle, le temps réellement nécessaire. Un refus après N secondes fixe une borne « trop tôt », un succès après N secondes une borne « suffisant », et l'estimation converge entre les deux. Plus aucune relance automatique : le décompte est indicatif, on peut recliquer à tout moment — chaque essai affine l'estimation." },
@@ -820,7 +819,21 @@
         // 0 = ne jamais demander de validation, 1 = toujours.
         let seuilValidation = Math.min(20, Math.max(0, parseInt(localStorage.getItem(SEUIL_VALIDATION_KEY), 10) || 0));
         const etatCacheSection = {};   // section -> { etat, jusqua }
-        let geminiBloqueJusqua = 0;
+        // Le blocage appartient au modèle : changer de modèle doit faire
+        // disparaître le ⛔ tout de suite, et y revenir le faire réapparaître
+        // tant que son propre délai court. Il est donc rangé avec les délais
+        // appris, modèle par modèle, et survit à une recharge de la page.
+        function setBlocageModele(jusquaMs, modele) {
+            const d = delaisModele(modele || modeleGemini);
+            d.bloqueJusqua = Math.max(d.bloqueJusqua || 0, jusquaMs);
+            sauverDelaisGemini();
+        }
+
+        function effacerBlocageModele(modele) {
+            const d = delaisModele(modele || modeleGemini);
+            d.bloqueJusqua = 0;
+            sauverDelaisGemini();
+        }
         let minuteurBlocageGemini = null;
         let derniereSectionBloquee = null;
 
@@ -845,11 +858,16 @@
         function bloquerSectionGemini(section, secondes) {
             journaliser(`Section « ${section} » : appel refusé, délai estimé à ${secondes} s (${resumeEstimation(modeleGemini)})`, 'erreur');
             const jusqua = Date.now() + secondes * 1000;
-            geminiBloqueJusqua = Math.max(geminiBloqueJusqua, jusqua);
-            etatCacheSection[section] = { etat: 'bloque', jusqua };
+            setBlocageModele(jusqua);
+            etatCacheSection[section] = { etat: 'bloque', jusqua, modele: modeleGemini };
             derniereSectionBloquee = section;
             majStatutAttenteGemini();
-            if (!minuteurBlocageGemini) {
+            if (!minuteurBlocageGemini) bloquerSectionGeminiMinuteur();
+            renderSectionButtons();
+        }
+
+        function bloquerSectionGeminiMinuteur() {
+            {
                 minuteurBlocageGemini = setInterval(() => {
                     let encore = false;
                     Object.keys(etatCacheSection).forEach(sec => {
@@ -857,7 +875,7 @@
                         if (e.etat !== 'bloque') return;
                         if (Date.now() >= e.jusqua) delete etatCacheSection[sec]; else encore = true;
                     });
-                    if (Date.now() >= geminiBloqueJusqua) geminiBloqueJusqua = 0;
+                    if (secondesBlocageGemini()) encore = true; else effacerBlocageModele();
                     majStatutAttenteGemini();
                     if (!encore) { clearInterval(minuteurBlocageGemini); minuteurBlocageGemini = null; }
                     renderSectionButtons();
@@ -894,12 +912,29 @@
         }
 
         function secondesBlocageGemini() {
-            return geminiBloqueJusqua > Date.now() ? Math.ceil((geminiBloqueJusqua - Date.now()) / 1000) : 0;
+            const d = delaisModele(modeleGemini);
+            return (d.bloqueJusqua && d.bloqueJusqua > Date.now()) ? Math.ceil((d.bloqueJusqua - Date.now()) / 1000) : 0;
         }
 
         function secondesBlocageSection(section) {
             const e = etatCacheSection[section];
-            return (e && e.etat === 'bloque' && e.jusqua > Date.now()) ? Math.ceil((e.jusqua - Date.now()) / 1000) : 0;
+            if (!e || e.etat !== 'bloque' || e.jusqua <= Date.now()) return 0;
+            // Un blocage constaté sur un autre modèle ne concerne pas celui-ci.
+            if (e.modele && e.modele !== modeleGemini) return 0;
+            return Math.ceil((e.jusqua - Date.now()) / 1000);
+        }
+
+        // Après un changement de modèle, le décompte repart si le nouveau
+        // modèle est lui aussi en attente, et s'arrête sinon.
+        function relancerMinuteurBlocage() {
+            if (secondesBlocageGemini()) {
+                if (!minuteurBlocageGemini) bloquerSectionGeminiMinuteur();
+            } else if (minuteurBlocageGemini) {
+                clearInterval(minuteurBlocageGemini);
+                minuteurBlocageGemini = null;
+            }
+            majStatutAttenteGemini();
+            renderSectionButtons();
         }
 
         function creerBoutonCacheSection(section) {
@@ -1016,8 +1051,8 @@
                     // Quota journalier : inutile de décompter, on le dit.
                     const reinit = prochaineReinitQuotaJournalier();
                     const heure = reinit.toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
-                    geminiBloqueJusqua = Math.max(geminiBloqueJusqua, reinit.getTime());
-                    etatCacheSection[section] = { etat: 'bloque', jusqua: reinit.getTime(), libelle: '⛔' };
+                    setBlocageModele(reinit.getTime());
+                    etatCacheSection[section] = { etat: 'bloque', jusqua: reinit.getTime(), libelle: '⛔', modele: modeleGemini };
                     journaliser(`Cache « ${section} » : quota JOURNALIER épuisé sur ${e.quota.modele || modeleGemini} — réinitialisation ${heure}`, 'erreur');
                     setStatutCacheSection(`⛔ Quota journalier épuisé sur ${e.quota.modele || modeleGemini} : le compteur repart ${heure} (dans ${formaterDuree(Math.round((reinit.getTime() - Date.now()) / 1000))}). Change de modèle ou active la facturation.`);
                     renderSectionButtons();
@@ -1026,6 +1061,10 @@
                     // apprise, que chaque nouvel essai corrige.
                     const secondes = e.delaiEstime || estimationDelai(modeleGemini, e.retryDelay);
                     bloquerSectionGemini(section, secondes);
+                } else if (e.modeleRetire) {
+                    setEtatCacheSection(section, 'erreur', 5000, '⚠️');
+                    setStatutCacheSection(`⚠️ Le modèle ${modeleGemini} n'est plus proposé par Google — choisis-en un autre dans ⚙️ → 🤖 Assistant IA.`);
+                    gererModeleRetire(e.message);
                 } else {
                     setEtatCacheSection(section, 'erreur', 5000, `0/${motsParAppelCache}`);
                     alert('❌ ' + messageErreurGemini(e.message));
@@ -1402,6 +1441,91 @@
         // se masque au clic ailleurs, et se réaffiche sans nouvel appel tant que la
         // question (donc les mots) n'a pas changé.
 
+        // ---- Liste des modèles disponibles, demandée à Google ----
+        // Les modèles sont retirés au fil du temps : plutôt qu'une liste figée
+        // dans le code, on demande à l'API ceux qui acceptent generateContent.
+        const MODELES_KEY = 'vocab_modeles_gemini';
+        const MODELES_SECOURS = ['gemini-2.5-flash', 'gemini-2.5-pro'];
+        let modelesGemini = [];        // [{ id, label }]
+        let modelesMaj = null;         // date ISO du dernier rafraîchissement
+
+        function chargerModelesCache() {
+            try {
+                const brut = JSON.parse(localStorage.getItem(MODELES_KEY) || 'null');
+                if (brut && Array.isArray(brut.modeles)) { modelesGemini = brut.modeles; modelesMaj = brut.maj || null; }
+            } catch (e) { modelesGemini = []; }
+        }
+
+        function rangModele(id) {
+            const m = /gemini-(\d+(?:\.\d+)?)/.exec(id);
+            return m ? parseFloat(m[1]) : 0;
+        }
+
+        async function recupererModelesGemini() {
+            if (!cleGemini) throw new Error("Aucune clé API Gemini sur cet appareil");
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=${encodeURIComponent(cleGemini)}`, { cache: 'no-store' });
+            const donnees = await res.json().catch(() => null);
+            if (!res.ok) throw new Error((donnees && donnees.error && donnees.error.message) || ('HTTP ' + res.status));
+            const liste = (donnees.models || [])
+                .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+                .map(m => ({ id: (m.name || '').replace(/^models\//, ''), label: m.displayName || '' }))
+                .filter(m => /^gemini-/.test(m.id) && !/embedding|imagen|veo|tts|audio/i.test(m.id));
+            // Les plus récents d'abord, les « flash » avant les « pro ».
+            liste.sort((a, b) => rangModele(b.id) - rangModele(a.id)
+                || (/flash/.test(b.id) ? 1 : 0) - (/flash/.test(a.id) ? 1 : 0)
+                || a.id.localeCompare(b.id));
+            modelesGemini = liste;
+            modelesMaj = new Date().toISOString();
+            try { localStorage.setItem(MODELES_KEY, JSON.stringify({ modeles: modelesGemini, maj: modelesMaj })); } catch (e) { /* rien */ }
+            journaliser(`Liste des modèles actualisée : ${liste.length} modèle(s) acceptant generateContent`);
+            return liste;
+        }
+
+        function remplirSelectModeles() {
+            const select = document.getElementById('ai-gemini-model');
+            const liste = modelesGemini.length ? modelesGemini : MODELES_SECOURS.map(id => ({ id, label: '' }));
+            const ids = liste.map(m => m.id);
+            let html = liste.map(m => `<option value="${m.id}">${m.id}${m.label && m.label !== m.id ? ' — ' + m.label : ''}</option>`).join('');
+            // Le modèle enregistré doit rester sélectionnable même s'il a disparu.
+            if (!ids.includes(modeleGemini)) html = `<option value="${modeleGemini}">${modeleGemini} (non listé)</option>` + html;
+            select.innerHTML = html;
+            select.value = modeleGemini;
+            document.getElementById('ai-modeles-status').innerText = modelesGemini.length
+                ? `${modelesGemini.length} modèle(s) disponibles · liste du ${formatDateCourte(modelesMaj)}`
+                : "Liste de secours : clique sur « Actualiser » pour demander à Google les modèles réellement disponibles.";
+        }
+
+        async function actualiserModelesGemini(silencieux) {
+            const statut = document.getElementById('ai-modeles-status');
+            if (!cleGemini) { if (statut) statut.innerText = "Renseigne d'abord la clé API pour interroger la liste des modèles."; return; }
+            if (statut) statut.innerText = '⏳ Interrogation de la liste des modèles…';
+            try {
+                await recupererModelesGemini();
+                remplirSelectModeles();
+            } catch (e) {
+                journaliser('Liste des modèles indisponible : ' + e.message, 'erreur');
+                if (statut) statut.innerText = '❌ ' + e.message;
+                if (!silencieux) alert('❌ Impossible de récupérer la liste des modèles : ' + e.message);
+            }
+        }
+
+        // Modèle retiré par Google : le message indique le remplaçant, on propose de basculer.
+        function gererModeleRetire(message) {
+            const m = /use\s+models\/([\w.\-]+)/i.exec(message || '');
+            const remplacant = m ? m[1] : null;
+            journaliser(`Modèle ${modeleGemini} retiré par Google${remplacant ? ' — remplaçant proposé : ' + remplacant : ''}`, 'erreur');
+            actualiserModelesGemini(true);
+            if (remplacant && confirm(`Le modèle ${modeleGemini} n'est plus disponible.\n\nGoogle recommande ${remplacant}. Basculer dessus maintenant ?`)) {
+                modeleGemini = remplacant;
+                localStorage.setItem(GEMINI_MODEL_KEY, modeleGemini);
+                geminiCache.clear();
+                journaliser(`Modèle basculé sur ${remplacant}`, 'ok');
+                renderSectionButtons();
+                return true;
+            }
+            return false;
+        }
+
         function applyAiProviderClass() {
             document.body.classList.toggle('ia-gemini', aiProvider === 'gemini');
         }
@@ -1429,6 +1553,7 @@
                 const message = (donnees && donnees.error && donnees.error.message) || ("HTTP " + reponse.status);
                 const erreur = new Error(message);
                 erreur.status = reponse.status;
+                if (/no longer available|is not found|not supported/i.test(message)) erreur.modeleRetire = true;
                 if (reponse.status === 429) {
                     erreur.retryDelay = lireDelaiDeReessai(donnees, message);
                     erreur.quota = lireInfosQuota(donnees, message);
@@ -1723,7 +1848,7 @@
             // Un clic pendant le décompte est autorisé : c'est un essai de plus,
             // et son résultat affine l'estimation du délai.
             if (minuteurQuotaPanneau) { clearInterval(minuteurQuotaPanneau); minuteurQuotaPanneau = null; }
-            geminiBloqueJusqua = 0;
+            effacerBlocageModele();
             aiAnswerQuestion = question;
             geminiEnCours = true;
             const link = document.getElementById('chatgpt-link');
@@ -1775,6 +1900,15 @@
                         // le délai annoncé par Google.
                         const secondes = e.delaiEstime || estimationDelai(modeleGemini, e.retryDelay);
                         afficherAttenteQuota(question, titre, opts, secondes, e.message, e.quota);
+                    } else if (e.modeleRetire) {
+                        setAiAnswerBody(
+                            `<p><b>⚠️ Le modèle ${escapeHtmlIA(modeleGemini)} n'est plus proposé par Google.</b></p>`
+                            + `<p>La liste des modèles vient d'être actualisée : choisis-en un autre dans ⚙️ Options → 🤖 Assistant IA.</p>`
+                            + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(e.message)}</p></details>`,
+                            'ai-error');
+                        setAiAnswerSource('');
+                        aiAnswerQuestion = null;
+                        gererModeleRetire(e.message);
                     } else {
                         setAiAnswerBody(renderLightMarkdown('❌ ' + messageErreurGemini(e.message)), 'ai-error');
                         setAiAnswerSource('');
@@ -1803,7 +1937,7 @@
         function afficherQuotaJournalier(quota, messageBrut) {
             const reinit = prochaineReinitQuotaJournalier();
             const heure = reinit.toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
-            geminiBloqueJusqua = Math.max(geminiBloqueJusqua, reinit.getTime());
+            setBlocageModele(reinit.getTime(), quota.modele || modeleGemini);
             journaliser(`Quota JOURNALIER épuisé sur ${quota.modele || modeleGemini}${quota.limite ? ' (' + quota.limite + ' requêtes/jour)' : ''} — réinitialisation ${heure}`, 'erreur');
             setAiAnswerBody(
                 `<p><b>⛔ Quota journalier épuisé.</b></p>`
@@ -1820,7 +1954,7 @@
         function afficherAttenteQuota(question, titre, opts, secondes, messageBrut, quota) {
             quota = quota || extraireInfosQuota(messageBrut);
             if (quota.periode === 'jour') { afficherQuotaJournalier(quota, messageBrut); return; }
-            geminiBloqueJusqua = Math.max(geminiBloqueJusqua, Date.now() + secondes * 1000);
+            setBlocageModele(Date.now() + secondes * 1000, quota.modele || modeleGemini);
             let restant = secondes;
             const dessiner = () => {
                 setAiAnswerBody(
@@ -1842,7 +1976,7 @@
                     if (restant > 0) { if (toujoursLa) dessiner(); return; }
                     clearInterval(minuteurQuotaPanneau);
                     minuteurQuotaPanneau = null;
-                    geminiBloqueJusqua = 0;
+                    effacerBlocageModele();
                     journaliser("Fin du délai estimé — à toi de relancer la question", 'ok');
                     if (toujoursLa) {
                         setAiAnswerBody(
@@ -2248,7 +2382,10 @@
             });
             document.getElementById('ai-gemini-key').value = cleGemini;
             document.getElementById('ai-gemini-key').type = 'password';
-            document.getElementById('ai-gemini-model').value = modeleGemini;
+            remplirSelectModeles();
+            // Liste jamais récupérée ou vieille de plus d'une semaine : on rafraîchit en fond.
+            const tropVieille = !modelesMaj || (Date.now() - new Date(modelesMaj).getTime()) > 7 * 24 * 3600 * 1000;
+            if (cleGemini && tropVieille) actualiserModelesGemini(true);
             document.getElementById('ai-mots-par-appel').value = motsParAppelCache;
             document.getElementById('ai-seuil-validation').value = seuilValidation;
             const c = compterExplications();
@@ -2299,6 +2436,11 @@
             seuilValidation = Math.min(20, Math.max(0, isNaN(seuilSaisi) ? 0 : seuilSaisi));
             localStorage.setItem(SEUIL_VALIDATION_KEY, seuilValidation);
             geminiCache.clear(); // un changement de modèle doit repartir de réponses fraîches
+            // Le ⛔ et le décompte suivent le modèle : on réaligne tout de suite.
+            if (minuteurQuotaPanneau && !secondesBlocageGemini()) { clearInterval(minuteurQuotaPanneau); minuteurQuotaPanneau = null; }
+            derniereSectionBloquee = null;
+            if (!secondesBlocageGemini()) setStatutCacheSection('');
+            relancerMinuteurBlocage();
             hideAiAnswerPanel();
             aiAnswerQuestion = null;
             aiCurrentMot = null;
@@ -3247,6 +3389,7 @@
         applyAiProviderClass();
         chargerJournalIA();
         chargerDelaisGemini();
+        chargerModelesCache();
         chargerExplicationsLocales();
         if (aiProvider === 'gemini') loadExplicationsFromGithub();
         document.getElementById('chatgpt-link').addEventListener('click', onAiLinkClick);
