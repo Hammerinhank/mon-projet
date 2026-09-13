@@ -336,7 +336,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.40.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.41.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -585,10 +585,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.40.0';
+        const APP_VERSION = '1.41.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.41.0', d: "La surcharge temporaire d'un modèle (« high demand », erreur 503) est distinguée d'un dépassement de quota : message en français avec un court décompte, aucun appel décompté, aucune estimation de délai faussée, et la liste des modèles signale « surchargé » plutôt que « épuisé »." },
             { v: '1.40.0', d: "La consommation de quota est comptée localement, modèle par modèle et par journée de quota (remise à zéro à minuit Pacifique), dans une clé localStorage commune à toutes les apps de la même origine. La liste des modèles affiche donc « 12/20 aujourd'hui » ou « ⛔ épuisé » avant même de tenter un appel, et un bouton « Tester ce modèle » permet de vérifier un modèle d'une requête minuscule." },
             { v: '1.39.0', d: "Dans le panneau d'explication, un appui sur la moitié droite du texte agrandit les caractères, un appui sur la moitié gauche les réduit (de 11 à 26 px). La taille choisie est conservée d'une explication à l'autre et d'une session à l'autre." },
             { v: '1.38.0', d: "La liste des modèles est regroupée par génération (Gemini 3.x, 2.5…), avec les aperçus et versions expérimentales rassemblés à part et les alias « latest » en tête. Chaque modèle dont le quota du jour est épuisé est signalé par ⛔ avec l'heure de reprise, et un modèle en simple attente par ⏳ avec le temps restant." },
@@ -836,10 +837,11 @@
         // disparaître le ⛔ tout de suite, et y revenir le faire réapparaître
         // tant que son propre délai court. Il est donc rangé avec les délais
         // appris, modèle par modèle, et survit à une recharge de la page.
-        function setBlocageModele(jusquaMs, modele, journalier) {
+        function setBlocageModele(jusquaMs, modele, journalier, surcharge) {
             const d = delaisModele(modele || modeleGemini);
             d.bloqueJusqua = Math.max(d.bloqueJusqua || 0, jusquaMs);
             if (journalier) d.journalierJusqua = Math.max(d.journalierJusqua || 0, jusquaMs);
+            d.surchargeJusqua = surcharge ? Math.max(d.surchargeJusqua || 0, jusquaMs) : 0;
             sauverDelaisGemini();
         }
 
@@ -850,6 +852,9 @@
             if (d && d.journalierJusqua && d.journalierJusqua > maintenant) {
                 const h = new Date(d.journalierJusqua).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 return ` ⛔ épuisé, reprise ${h}`;
+            }
+            if (d && d.surchargeJusqua && d.surchargeJusqua > maintenant) {
+                return ` 🌩️ surchargé, nouvel essai dans ${formaterDuree(Math.ceil((d.surchargeJusqua - maintenant) / 1000))}`;
             }
             if (d && d.bloqueJusqua && d.bloqueJusqua > maintenant) {
                 return ` ⏳ en attente ${formaterDuree(Math.ceil((d.bloqueJusqua - maintenant) / 1000))}`;
@@ -887,8 +892,8 @@
         // Le quota est global (il porte sur la clé API), mais le décompte ne
         // s'affiche que sur les boutons effectivement actionnés : les autres
         // sections gardent leur aspect normal.
-        function bloquerSectionGemini(section, secondes) {
-            journaliser(`Section « ${section} » : appel refusé, délai estimé à ${secondes} s (${resumeEstimation(modeleGemini)})`, 'erreur');
+        function bloquerSectionGemini(section, secondes, surcharge) {
+            if (!surcharge) journaliser(`Section « ${section} » : appel refusé, délai estimé à ${secondes} s (${resumeEstimation(modeleGemini)})`, 'erreur');
             const jusqua = Date.now() + secondes * 1000;
             setBlocageModele(jusqua);
             etatCacheSection[section] = { etat: 'bloque', jusqua, modele: modeleGemini };
@@ -921,7 +926,10 @@
         function majStatutAttenteGemini() {
             const restant = secondesBlocageGemini();
             if (restant) {
-                setStatutCacheSection(`⏳ Limite d'appels atteinte — délai estimé : encore ${formaterDuree(restant)} (tu peux essayer avant, l'estimation s'ajustera)`);
+                const d = delaisModele(modeleGemini);
+                setStatutCacheSection(d.surchargeJusqua > Date.now()
+                    ? `🌩️ ${modeleGemini} surchargé chez Google — nouvel essai dans ${formaterDuree(restant)} (ce n'est pas ton quota)`
+                    : `⏳ Limite d'appels atteinte — délai estimé : encore ${formaterDuree(restant)} (tu peux essayer avant, l'estimation s'ajustera)`);
                 return;
             }
             if (!derniereSectionBloquee) return;
@@ -1093,6 +1101,10 @@
                     // apprise, que chaque nouvel essai corrige.
                     const secondes = e.delaiEstime || estimationDelai(modeleGemini, e.retryDelay);
                     bloquerSectionGemini(section, secondes);
+                } else if (e.surcharge) {
+                    journaliser(`Cache « ${section} » : ${modeleGemini} surchargé chez Google (503)`, 'erreur');
+                    setBlocageModele(Date.now() + SURCHARGE_SECONDES * 1000, modeleGemini, false, true);
+                    bloquerSectionGemini(section, SURCHARGE_SECONDES, true);
                 } else if (e.modeleRetire) {
                     setEtatCacheSection(section, 'erreur', 5000, '⚠️');
                     setStatutCacheSection(`⚠️ Le modèle ${modeleGemini} n'est plus proposé par Google — choisis-en un autre dans ⚙️ → 🤖 Assistant IA.`);
@@ -1626,6 +1638,10 @@
                             statut.innerText = `⏳ ${id} : limite par minute atteinte, réessaie dans ${formaterDuree(Math.ceil(secondes))}.`;
                         }
                         journaliser(`Test de ${id} : refusé — ${message}`, 'erreur');
+                    } else if (res.status === 503 || /high demand|overloaded|currently unavailable|UNAVAILABLE/i.test(message)) {
+                        setBlocageModele(Date.now() + SURCHARGE_SECONDES * 1000, id, false, true);
+                        journaliser(`Test de ${id} : modèle surchargé chez Google (503)`, 'erreur');
+                        statut.innerText = `🌩️ ${id} est surchargé chez Google en ce moment — ce n'est pas ton quota, réessaie dans un instant.`;
                     } else if (/no longer available|is not found|not supported/i.test(message)) {
                         journaliser(`Test de ${id} : modèle retiré — ${message}`, 'erreur');
                         statut.innerText = `⚠️ ${id} n'est plus proposé par Google.`;
@@ -1739,6 +1755,11 @@
                 const erreur = new Error(message);
                 erreur.status = reponse.status;
                 if (/no longer available|is not found|not supported/i.test(message)) erreur.modeleRetire = true;
+                // Surcharge passagère côté Google : ce n'est ni un quota, ni une
+                // erreur de notre fait — rien à compter, rien à apprendre.
+                if (reponse.status === 503 || /high demand|overloaded|currently unavailable|UNAVAILABLE/i.test(message)) {
+                    erreur.surcharge = true;
+                }
                 if (reponse.status === 429) {
                     erreur.retryDelay = lireDelaiDeReessai(donnees, message);
                     erreur.quota = lireInfosQuota(donnees, message);
@@ -2087,6 +2108,10 @@
                         // le délai annoncé par Google.
                         const secondes = e.delaiEstime || estimationDelai(modeleGemini, e.retryDelay);
                         afficherAttenteQuota(question, titre, opts, secondes, e.message, e.quota);
+                    } else if (e.surcharge) {
+                        journaliser(`Modèle ${modeleGemini} surchargé chez Google (503) — nouvel essai possible sous peu`, 'erreur');
+                        afficherAttenteQuota(question, titre, opts, SURCHARGE_SECONDES, e.message,
+                                             { periode: 'surcharge', modele: modeleGemini });
                     } else if (e.modeleRetire) {
                         setAiAnswerBody(
                             `<p><b>⚠️ Le modèle ${escapeHtmlIA(modeleGemini)} n'est plus proposé par Google.</b></p>`
@@ -2110,6 +2135,7 @@
         }
 
         let minuteurQuotaPanneau = null;
+        const SURCHARGE_SECONDES = 30;   // pic de charge côté Google : court par nature
 
 
         // Le message de Google indique la limite et le modèle concernés.
@@ -2141,16 +2167,23 @@
         function afficherAttenteQuota(question, titre, opts, secondes, messageBrut, quota) {
             quota = quota || extraireInfosQuota(messageBrut);
             if (quota.periode === 'jour') { afficherQuotaJournalier(quota, messageBrut); return; }
+            const surcharge = quota.periode === 'surcharge';
             setBlocageModele(Date.now() + secondes * 1000, quota.modele || modeleGemini);
             let restant = secondes;
             const dessiner = () => {
-                setAiAnswerBody(
-                    `<p><b>⏳ Appel refusé : limite d'appels atteinte sur ${escapeHtmlIA(quota.modele || modeleGemini)}.</b></p>`
-                    + `<p>D'après ce que l'app a appris de tes essais précédents, il faut compter environ <b>${formaterDuree(restant)}</b>.</p>`
-                    + `<p>Estimation courante : ${escapeHtmlIA(resumeEstimation(quota.modele || modeleGemini))}. Tu peux recliquer avant la fin — un refus allongera l'estimation, un succès la raccourcira.</p>`
-                    + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(messageBrut)}</p></details>`,
+                setAiAnswerBody(surcharge
+                    ? `<p><b>🌩️ ${escapeHtmlIA(quota.modele || modeleGemini)} est momentanément surchargé chez Google.</b></p>`
+                      + `<p>Ce n'est pas ton quota : trop de monde l'utilise en ce moment. Ces pics durent rarement longtemps — nouvel essai possible dans <b>${formaterDuree(restant)}</b>, ou tout de suite si tu veux tenter ta chance.</p>`
+                      + `<p>Un autre modèle de la liste passera peut-être immédiatement (⚙️ Options → 🤖 Assistant IA).</p>`
+                      + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(messageBrut)}</p></details>`
+                    : `<p><b>⏳ Appel refusé : limite d'appels atteinte sur ${escapeHtmlIA(quota.modele || modeleGemini)}.</b></p>`
+                      + `<p>D'après ce que l'app a appris de tes essais précédents, il faut compter environ <b>${formaterDuree(restant)}</b>.</p>`
+                      + `<p>Estimation courante : ${escapeHtmlIA(resumeEstimation(quota.modele || modeleGemini))}. Tu peux recliquer avant la fin — un refus allongera l'estimation, un succès la raccourcira.</p>`
+                      + `<details><summary>Détail renvoyé par Google</summary><p>${escapeHtmlIA(messageBrut)}</p></details>`,
                     'ai-quota');
-                document.getElementById('chatgpt-link').innerText = `⏳ Quota atteint — ${formaterDuree(restant)}`;
+                document.getElementById('chatgpt-link').innerText = surcharge
+                    ? `🌩️ Modèle surchargé — ${formaterDuree(restant)}`
+                    : `⏳ Quota atteint — ${formaterDuree(restant)}`;
             };
             dessiner();
             setAiAnswerSource('');
