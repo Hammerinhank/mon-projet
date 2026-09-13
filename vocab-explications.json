@@ -195,8 +195,43 @@
         "modele": "gemini-2.5-flash",
         "updatedAt": "2026-09-13T04:04:10.707Z"
       }
+    },
+    "lại": {
+      "link": {
+        "texte": "### lại\nCe mot vietnamien est polysémique et son sens dépend du contexte. Il peut signifier :\n*   \"encore\", \"de nouveau\" (répétition d'une action)\n*   \"de retour\", \"revenir\" (indique un mouvement de retour)\n*   \"par contre\", \"d'un autre côté\" (introduit un contraste ou une information inattendue)\n*   \"venir\", \"ici\" (pour inviter quelqu'un à s'approcher, ou indiquer une direction vers le locuteur)\n\nC'est un mot monosyllabique.\n\nExemples de phrases :\n*   Anh ấy lại đến trễ.\n    *   Il est encore en retard.\n*   Bạn có thể nói lại điều đó không?\n    *   Pouvez-vous répéter cela ?\n*   Cô ấy đã về lại quê hương.\n    *   Elle est retournée dans son pays natal.\n*   Tôi muốn đi chơi, nhưng lại phải làm việc.\n    *   Je veux sortir, mais d'un autre côté, je dois travailler.\n*   Lại đây, đừng sợ!\n    *   Viens ici, n'aie pas peur !",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T05:44:21.669Z"
+      }
+    },
+    "mạng wi-fi": {
+      "link": {
+        "texte": "### mạng wi-fi\nCette expression désigne le \"réseau Wi-Fi\". Elle est composée de deux parties :\n*   **mạng** : Ce mot signifie \"réseau\" (dans le sens de réseau internet, de communication, mais aussi un filet de pêche, une toile d'araignée).\n*   **wi-fi** : Il s'agit d'un emprunt direct de l'anglais \"Wi-Fi\", désignant la technologie de réseau sans fil.\n\nExemples de phrases :\n*   Ở đây có mạng wi-fi không?\n    *   Y a-t-il le Wi-Fi ici ?\n*   Mạng wi-fi nhà tôi rất yếu.\n    *   Le réseau Wi-Fi de ma maison est très faible.\n*   Bạn có mật khẩu mạng wi-fi không?\n    *   As-tu le mot de passe du réseau Wi-Fi ?",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T05:44:21.670Z"
+      }
+    },
+    "vẫn": {
+      "link": {
+        "texte": "### vẫn\nCe mot signifie \"toujours\", \"encore\", \"néanmoins\", \"quand même\". Il exprime la persistance d'une situation ou d'une action, ou une légère contradiction.\n\nC'est un mot monosyllabique.\n\nExemples de phrases :\n*   Trời vẫn mưa.\n    *   Il pleut toujours.\n*   Anh ấy vẫn chưa về nhà.\n    *   Il n'est pas encore rentré à la maison.\n*   Mặc dù rất bận, tôi vẫn cố gắng giúp bạn.\n    *   Bien que très occupé, j'essaie quand même de t'aider.\n*   Cửa hàng vẫn mở cửa chứ?\n    *   Le magasin est-il toujours ouvert ?",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T05:44:21.670Z"
+      }
+    },
+    "thứ nhất": {
+      "link": {
+        "texte": "### thứ nhất\nCette expression signifie \"premier\" (en tant que nombre ordinal). Elle est composée de deux syllabes :\n*   **thứ** : C'est un classificateur utilisé pour former les nombres ordinaux (par exemple, \"thứ hai\" pour le deuxième, \"thứ ba\" pour le troisième). Il indique la position ou le rang dans une série.\n*   **nhất** : Ce mot signifie \"un\", \"le premier\", ou \"le plus\" (dans une construction superlative). Associé à \"thứ\", il forme \"le premier\".\n\nExemples de phrases :\n*   Đây là lần thứ nhất tôi đến Hà Nội.\n    *   C'est la première fois que je viens à Hanoï.\n*   Giải thưởng thứ nhất là một chiếc điện thoại mới.\n    *   Le premier prix est un nouveau téléphone.\n*   Điều quan trọng thứ nhất là phải giữ sức khỏe.\n    *   La première chose importante est de rester en bonne santé.",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T05:44:21.671Z"
+      }
+    },
+    "sẽ": {
+      "link": {
+        "texte": "### sẽ\nCe mot est un marqueur de temps qui indique le futur. Il se traduit par \"va\", \"sera\", \"fera\" (pour marquer le futur simple).\n\nC'est un mot monosyllabique.\n\nExemples de phrases :\n*   Tôi sẽ gọi lại cho bạn sau.\n    *   Je te rappellerai plus tard.\n*   Ngày mai trời sẽ nắng.\n    *   Demain, il fera beau (ensoleillé).\n*   Chúng ta sẽ gặp nhau lúc mấy giờ?\n    *   À quelle heure allons-nous nous rencontrer ?",
+        "modele": "gemini-2.5-flash",
+        "updatedAt": "2026-09-13T05:44:21.671Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T04:04:10.723Z",
-  "appVersion": "1.30.0"
+  "updatedAt": "2026-09-13T05:44:21.685Z",
+  "appVersion": "1.33.0"
 }
