@@ -762,8 +762,78 @@
         "modele": "gemini-flash-latest",
         "updatedAt": "2026-09-13T16:38:31.475Z"
       }
+    },
+    "làm thế nào": {
+      "link": {
+        "texte": "### làm thế nào\n\n**Signification globale :**  \nCette expression interrogative signifie « comment » ou « de quelle manière (faire quelque chose) ».\n\n**Explication des syllabes :**\n* **làm** : faire, agir, travailler.\n* **thế** : manière, façon, posture.\n* **nào** : quel, lequel (mot interrogatif).  \nL'association de *thế* et *nào* forme la locution interrogative *thế nào* (« comment »), à laquelle s'ajoute le verbe *làm* (« faire ») pour exprimer l'idée de « comment faire ».\n\n**Exemples :**\n* Làm thế nào để đến sân bay?  \n  *(Comment faire pour aller à l'aéroport ?)*\n* Tôi phải làm thế nào bây giờ?  \n  *(Que dois-je faire maintenant ? / Comment dois-je faire maintenant ?)*\n* Bạn làm thế nào để giải quyết vấn đề này?  \n  *(Comment fais-tu pour résoudre ce problème ?)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.429Z"
+      }
+    },
+    "về nhà": {
+      "link": {
+        "texte": "### về nhà\n\n**Signification globale :**  \nCette locution verbale signifie « rentrer à la maison », « revenir chez soi ».\n\n**Explication des syllabes :**\n* **về** : retourner, rentrer, revenir (vers son point d'origine).\n* **nhà** : maison, chez-soi, foyer.\n\n**Exemples :**\n* Tôi mệt rồi, tôi muốn về nhà.  \n  *(Je suis fatigué, je veux rentrer à la maison.)*\n* Mấy giờ bạn về nhà?  \n  *(À quelle heure rentres-tu chez toi ?)*\n* Sau giờ làm, anh ấy về nhà nấu cơm.  \n  *(Après le travail, il rentre à la maison préparer le repas.)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.430Z"
+      }
+    },
+    "bắt đầu": {
+      "link": {
+        "texte": "### bắt đầu\n\n**Signification globale :**  \nCe mot signifie « commencer », « débuter ».\n\n**Explication des syllabes :**\n* **bắt** : saisir, prendre, engager, amorcer.\n* **đầu** : tête, début, commencement.\n\n**Exemples :**\n* Cuộc họp bắt đầu lúc chín giờ sáng.  \n  *(La réunion commence à neuf heures du matin.)*\n* Chúng ta bắt đầu ăn thôi!  \n  *(Commençons à manger !)*\n* Trời bắt đầu mưa rồi.  \n  *(Il commence à pleuvoir.)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.430Z"
+      }
+    },
+    "bác sỹ": {
+      "link": {
+        "texte": "### bác sỹ\n\n**Signification globale :**  \nCe nom désigne un « médecin » ou un « docteur ».\n\n**Explication des syllabes (d'origine sino-vietnamienne) :**\n* **bác** : vaste, étendu, érudit (renvoie à l'idée d'un savoir étendu).\n* **sỹ** : lettré, personne instruite, spécialiste.\n\n**Exemples :**\n* Tôi cảm thấy không khỏe, tôi cần đi gặp bác sỹ.  \n  *(Je ne me sens pas bien, j'ai besoin d'aller voir le médecin.)*\n* Bác sỹ khuyên tôi nên uống nhiều nước.  \n  *(Le médecin m'a conseillé de boire beaucoup d'eau.)*\n* Chị ấy là một bác sỹ rất tận tâm.  \n  *(C'est un médecin très dévoué.)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.431Z"
+      }
+    },
+    "vết thương": {
+      "link": {
+        "texte": "### vết thương\n\n**Signification globale :**  \nCe nom désigne une « blessure », une « plaie ».\n\n**Explication des syllabes :**\n* **vết** : trace, marque, empreinte.\n* **thương** : blessure, fait d'être blessé (mot d'origine sino-vietnamienne).\n\n**Exemples :**\n* Vết thương này không quá nghiêm trọng.  \n  *(Cette blessure n'est pas trop grave.)*\n* Bác sỹ đang rửa sạch vết thương cho bệnh nhân.  \n  *(Le médecin est en train de nettoyer la plaie du patient.)*\n* Vết thương ở tay đã lành hẳn rồi.  \n  *(La blessure au bras a complètement cicatrisé.)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.432Z"
+      }
+    },
+    "chờ": {
+      "link": {
+        "texte": "### chờ\n\n**Signification globale :**  \nCe verbe signifie « attendre », « patienter ».\n\n**Explication de la syllabe :**\n* Mot monosyllabique : **chờ** porte à lui seul le sens d'attendre.\n\n**Exemples :**\n* Xin vui lòng chờ một chút.  \n  *(Veuillez patienter un instant, s'il vous plaît.)*\n* Tôi đang chờ xe buýt ở trạm.  \n  *(J'attends le bus à l'arrêt.)*\n* Đừng chờ tôi, cứ ăn trước đi.  \n  *(Ne m'attends pas, mange d'abord.)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.432Z"
+      }
+    },
+    "sử dụng": {
+      "link": {
+        "texte": "### sử dụng\n\n**Signification globale :**  \nCe verbe signifie « utiliser », « faire usage de », « employer ».\n\n**Explication des syllabes (d'origine sino-vietnamienne) :**\n* **sử** : employer, faire agir, mettre en œuvre.\n* **dụng** : utilité, user, appliquer.\n\n**Exemples :**\n* Bạn có biết sử dụng máy tính này không?  \n  *(Sais-tu utiliser cet ordinateur ?)*\n* Không được sử dụng điện thoại trong phòng thi.  \n  *(Il est interdit d'utiliser son téléphone dans la salle d'examen.)*\n* Ứng dụng này rất dễ sử dụng.  \n  *(Cette application est très facile à utiliser.)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.433Z"
+      }
+    },
+    "trả lời": {
+      "link": {
+        "texte": "### trả lời\n\n**Signification globale :**  \nCe verbe signifie « répondre ».\n\n**Explication des syllabes :**\n* **trả** : rendre, renvoyer, restituer.\n* **lời** : parole, mot, propos.  \nLittéralement, « renvoyer des paroles ».\n\n**Exemples :**\n* Hãy trả lời câu hỏi của tôi.  \n  *(Réponds à ma question.)*\n* Anh ấy vẫn chưa trả lời email.  \n  *(Il n'a pas encore répondu au courriel.)*\n* Tôi không biết phải trả lời thế nào.  \n  *(Je ne sais pas comment répondre.)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.434Z"
+      }
+    },
+    "bạn": {
+      "link": {
+        "texte": "### bạn\n\n**Signification globale :**  \nCe mot a deux usages majeurs : comme nom, il signifie « ami » ou « camarade » ; comme pronom personnel, il correspond à « tu » ou « vous » (utilisé pour s'adresser à quelqu'un du même âge ou dans un cadre poli et neutre).\n\n**Explication de la syllabe :**\n* Mot monosyllabique : **bạn** porte à lui seul ces sens.\n\n**Exemples :**\n* Bạn tên là gì?  \n  *(Comment t'appelles-tu ? / Comment vous appelez-vous ?)*\n* Nam là một người bạn tốt của tôi.  \n  *(Nam est un bon ami à moi.)*\n* Cuối tuần này bạn có rảnh không?  \n  *(Es-tu libre ce week-end ?)*\n\n---",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.434Z"
+      }
+    },
+    "cách đây": {
+      "link": {
+        "texte": "### cách đây\n\n**Signification globale :**  \nCette locution temporelle correspond au français « il y a » suivi d'une durée passée (par exemple : *il y a deux jours*).\n\n**Explication des syllabes :**\n* **cách** : être distant de, être espacé de, séparer.\n* **đây** : ici, le présent, ce point-ci.  \nLittéralement, « à une distance temporelle à partir d'ici/maintenant ».\n\n**Exemples :**\n* Tôi đã gặp anh ấy cách đây hai ngày.  \n  *(Je l'ai rencontré il y a deux jours.)*\n* Cách đây năm năm, tôi đã đến Việt Nam lần đầu tiên.  \n  *(Il y a cinq ans, je suis venu au Vietnam pour la première fois.)*\n* Chuyến xe đã rời đi cách đây mười phút.  \n  *(Le car est parti il y a dix minutes.)*",
+        "modele": "gemini-flash-latest",
+        "updatedAt": "2026-09-15T19:27:48.435Z"
+      }
     }
   },
-  "updatedAt": "2026-09-13T16:38:31.921Z",
-  "appVersion": "1.40.0"
+  "updatedAt": "2026-09-15T19:27:48.850Z",
+  "appVersion": "1.41.0"
 }
