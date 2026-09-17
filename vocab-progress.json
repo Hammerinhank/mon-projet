@@ -1118,7 +1118,7 @@
     "chớ có dại mà": 2,
     "hễ... là...": 1,
     "độ": 5,
-    "nhiệt độ": 3,
+    "nhiệt độ": 4,
     "thấp hơn": 2,
     "nóng hơn": 2,
     "mát hơn": 0,
@@ -1951,13 +1951,13 @@
     "ấm nước nóng": 0,
     "bấm": 0,
     "pha": 5,
-    "lấy": 0,
+    "lấy": 1,
     "tưới": 2,
-    "độ C": 3,
+    "độ C": 4,
     "ở đâu": 5
   },
   "currentSection": "- Thu : 16 septembre 2026",
   "sectionUpdatedAt": "1789673985456",
-  "updatedAt": "2026-09-17T19:46:54.826Z",
+  "updatedAt": "2026-09-17T19:47:54.817Z",
   "appVersion": "1.41.0"
 }
