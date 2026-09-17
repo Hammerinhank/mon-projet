@@ -1938,7 +1938,7 @@
     "tiếng của cháu": 0,
     "lan can": 0,
     "kéo mái che xuống": 0,
-    "cái dĩa": 0,
+    "cái dĩa": 5,
     "cái nĩa": 0,
     "cái cốc": 0,
     "khay đá": 0,
@@ -1946,7 +1946,7 @@
     "máy giặt": 0,
     "vòi hoa sen": 0,
     "bồn rửa mặt": 0,
-    "sữa chua": 0,
+    "sữa chua": 5,
     "bình nước nóng": 0,
     "ấm nước nóng": 0,
     "bấm": 0,
@@ -1954,10 +1954,10 @@
     "lấy": 0,
     "tưới": 0,
     "độ C": 0,
-    "ở đâu": 0
+    "ở đâu": 1
   },
   "currentSection": "- Thu : 16 septembre 2026",
   "sectionUpdatedAt": "1789673985456",
-  "updatedAt": "2026-09-17T19:40:50.922Z",
+  "updatedAt": "2026-09-17T19:41:50.928Z",
   "appVersion": "1.41.0"
 }
