@@ -1432,7 +1432,7 @@
     "ngủ muộn": 0,
     "mọi buổi sáng": 0,
     "mấy giờ": 0,
-    "cà phê": 0,
+    "cà phê": 5,
     "cà phê decaf": 0,
     "uống": 0,
     "dừng ở": 0,
@@ -1954,10 +1954,10 @@
     "lấy": 0,
     "tưới": 0,
     "độ C": 0,
-    "ở đâu": 1
+    "ở đâu": 5
   },
   "currentSection": "- Thu : 16 septembre 2026",
   "sectionUpdatedAt": "1789673985456",
-  "updatedAt": "2026-09-17T19:41:50.928Z",
+  "updatedAt": "2026-09-17T19:42:50.933Z",
   "appVersion": "1.41.0"
 }
