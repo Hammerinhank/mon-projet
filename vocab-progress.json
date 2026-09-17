@@ -1950,7 +1950,7 @@
     "bình nước nóng": 0,
     "ấm nước nóng": 0,
     "bấm": 0,
-    "pha": 0,
+    "pha": 5,
     "lấy": 0,
     "tưới": 0,
     "độ C": 0,
@@ -1958,6 +1958,6 @@
   },
   "currentSection": "- Thu : 16 septembre 2026",
   "sectionUpdatedAt": "1789673985456",
-  "updatedAt": "2026-09-17T19:39:50.481Z",
+  "updatedAt": "2026-09-17T19:40:50.922Z",
   "appVersion": "1.41.0"
 }
