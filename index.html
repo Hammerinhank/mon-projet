@@ -336,7 +336,7 @@
 </head>
 <body>
 
-    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.41.0</span></h1>
+    <h1 id="main-title">Vocabulaire <span id="app-version" onclick="showVersionHistory()" title="Historique des versions">v1.42.0</span></h1>
     <div class="section-title-row">
         <button type="button" class="word-font-btn" aria-label="Réduire la taille du texte des boutons" onclick="changeWordBtnFontSize(-2)"></button>
         <div id="section-display" onclick="showSectionPicker()"></div>
@@ -585,10 +585,11 @@
 
     <script>
         const GIST_ID = '19d9495bea22ee681aa829d908a4f41e';
-        const APP_VERSION = '1.41.0';
+        const APP_VERSION = '1.42.0';
 
         // Historique des versions, consultable en cliquant sur le badge rouge du titre.
         const VERSION_HISTORY = [
+            { v: '1.42.0', d: "La progression, les explications et les invites ChatGPT se lisent sur GitHub sans token (dépôt Hammerinhank/mon-projet, toujours modifiable) ; le token ne sert plus qu'à enregistrer. Un champ laissé vide reprend la valeur par défaut. Sans token, la synchronisation indique « Lecture seule » et n'essaie plus d'envoyer." },
             { v: '1.41.0', d: "La surcharge temporaire d'un modèle (« high demand », erreur 503) est distinguée d'un dépassement de quota : message en français avec un court décompte, aucun appel décompté, aucune estimation de délai faussée, et la liste des modèles signale « surchargé » plutôt que « épuisé »." },
             { v: '1.40.0', d: "La consommation de quota est comptée localement, modèle par modèle et par journée de quota (remise à zéro à minuit Pacifique), dans une clé localStorage commune à toutes les apps de la même origine. La liste des modèles affiche donc « 12/20 aujourd'hui » ou « ⛔ épuisé » avant même de tenter un appel, et un bouton « Tester ce modèle » permet de vérifier un modèle d'une requête minuscule." },
             { v: '1.39.0', d: "Dans le panneau d'explication, un appui sur la moitié droite du texte agrandit les caractères, un appui sur la moitié gauche les réduit (de 11 à 26 px). La taille choisie est conservée d'une explication à l'autre et d'une session à l'autre." },
@@ -720,7 +721,7 @@
             try {
                 const { content } = await fetchGistContent(loadGithubConfig().token);
                 appliquerContenuVocabulaire(content);
-                if (githubConfigured()) githubPull(false);
+                if (githubLisible()) githubPull(false);
             } catch (e) { document.getElementById('message').innerText = "Erreur chargement."; }
         }
 
@@ -2577,7 +2578,7 @@
         }
 
         async function loadExplicationsFromGithub() {
-            if (!githubConfigured()) return;
+            if (!githubLisible()) return;
             try {
                 const file = await githubFetchFile(explicationsConfig());
                 if (file.exists && file.data && file.data.mots) {
@@ -2798,7 +2799,7 @@
         // synchro GitHub) pour retrouver les requêtes personnalisées sur
         // n'importe quel appareil.
         async function loadChatGPTPromptsFromGithub() {
-            if (!githubConfigured()) return;
+            if (!githubLisible()) return;
             try {
                 const cfg = loadGithubConfig();
                 const promptsCfg = Object.assign({}, cfg, { path: CHATGPT_PROMPTS_GITHUB_PATH });
@@ -3437,14 +3438,22 @@
         // de progression si la synchro a lieu depuis plusieurs appareils.
         // Le token saisi ici sert aussi au "Data cleansing" du gist.
 
+        // Dépôt par défaut : lisible par tous sans token, le token ne servant qu'à écrire.
+        const GITHUB_DEFAUT = { owner: 'Hammerinhank', repo: 'mon-projet', path: 'vocab-progress.json', branch: 'main' };
         function loadGithubConfig() {
-            try { return JSON.parse(localStorage.getItem(GITHUB_CONFIG_KEY)) || {}; }
-            catch (e) { return {}; }
+            let c = {};
+            try { c = JSON.parse(localStorage.getItem(GITHUB_CONFIG_KEY)) || {}; } catch (e) { c = {}; }
+            for (const k of Object.keys(GITHUB_DEFAUT)) if (!c[k]) c[k] = GITHUB_DEFAUT[k];
+            return c;
         }
 
-        function githubConfigured() {
+        function githubConfigured() {          // écriture : token requis
             const c = loadGithubConfig();
             return !!(c.owner && c.repo && c.token && c.path);
+        }
+        function githubLisible() {             // lecture : dépôt public, pas de token requis
+            const c = loadGithubConfig();
+            return !!(c.owner && c.repo && c.path);
         }
 
         function githubContentsUrl(cfg, withRef) {
@@ -3495,20 +3504,20 @@
                 branch: document.getElementById('gh-branch').value.trim(),
                 token: document.getElementById('gh-token').value.trim()
             };
-            if (!cfg.owner || !cfg.repo || !cfg.token) {
-                setGithubStatus("⚠️ Renseigne au moins l'utilisateur, le dépôt et le token.");
-                return;
-            }
+            if (!cfg.owner) cfg.owner = GITHUB_DEFAUT.owner;
+            if (!cfg.repo) cfg.repo = GITHUB_DEFAUT.repo;
+            if (!cfg.branch) cfg.branch = GITHUB_DEFAUT.branch;
             localStorage.setItem(GITHUB_CONFIG_KEY, JSON.stringify(cfg));
             setGithubStatus("✅ Configuration enregistrée. Synchronisation...");
-            githubPull(false).then(() => githubPush(false));
+            // Sans token : on lit seulement ; l'envoi n'est tenté qu'avec un token.
+            githubPull(false).then(() => { if (cfg.token) githubPush(false); });
             loadChatGPTPromptsFromGithub();
         }
 
         async function githubFetchFile(cfg) {
-            const res = await fetch(githubContentsUrl(cfg, true), {
-                headers: { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' }
-            });
+            const entetes = { 'Accept': 'application/vnd.github+json' };
+            if (cfg.token) entetes['Authorization'] = `token ${cfg.token}`;   // sans token : lecture d'un dépôt public
+            const res = await fetch(githubContentsUrl(cfg, true), { headers: entetes });
             if (res.status === 404) return { exists: false, sha: null, data: null };
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
@@ -3540,7 +3549,7 @@
         }
 
         async function githubPull(interactive = true) {
-            if (!githubConfigured()) { if (interactive) setGithubStatus("⚠️ Configuration incomplète."); return; }
+            if (!githubLisible()) { if (interactive) setGithubStatus("⚠️ Configuration incomplète."); return; }
             const cfg = loadGithubConfig();
             setGithubStatus("⬇️ Récupération en cours...");
             try {
@@ -3570,7 +3579,8 @@
                         updateRefreshButtonText();
                         resetGameFull();
                     }
-                    setGithubStatus(`✅ Récupéré (${Object.keys(file.data.counters).length} mots distants).`);
+                    setGithubStatus(cfg.token ? `✅ Récupéré (${Object.keys(file.data.counters).length} mots distants).`
+                                              : `👁 Lecture seule : ${Object.keys(file.data.counters).length} mots récupérés. Ajoute un token pour enregistrer ta progression sur GitHub.`);
                 } else {
                     setGithubStatus("Aucune donnée distante pour l'instant.");
                 }
@@ -3581,7 +3591,7 @@
         }
 
         async function githubPush(interactive = true) {
-            if (!githubConfigured()) { if (interactive) setGithubStatus("⚠️ Configuration incomplète."); return; }
+            if (!githubConfigured()) { if (interactive) setGithubStatus(loadGithubConfig().token ? "⚠️ Configuration incomplète." : "👁 Lecture seule : un token est nécessaire pour enregistrer ta progression sur GitHub."); return; }
             if (githubPushInFlight) { githubPushQueued = true; return; }
             githubPushInFlight = true;
             githubLastPushTime = Date.now();
