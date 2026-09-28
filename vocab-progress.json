@@ -1927,7 +1927,7 @@
     "bắt tay trước": 0,
     "ít khi": 2,
     "10 lần nữa": 0,
-    "buổi học sau": 0,
+    "buổi học sau": 5,
     "e rằng": 0,
     "không thành công": 0,
     "chút nào": 0,
@@ -2035,6 +2035,6 @@
   },
   "currentSection": "- Yến : 14 septembre 2026",
   "sectionUpdatedAt": "1790581248472",
-  "updatedAt": "2026-09-28T07:53:05.948Z",
+  "updatedAt": "2026-09-28T07:54:39.179Z",
   "appVersion": "1.42.0"
 }
