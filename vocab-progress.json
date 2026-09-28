@@ -1893,7 +1893,7 @@
     "đợi": 2,
     "thư thả": 0,
     "không phải vội": 0,
-    "làm theo": 1,
+    "làm theo": 2,
     "nói đúng": 5,
     "làm sai": 0,
     "ngại": 0,
@@ -2035,6 +2035,6 @@
   },
   "currentSection": "- Yến : 14 septembre 2026",
   "sectionUpdatedAt": "1790581248472",
-  "updatedAt": "2026-09-28T07:56:39.336Z",
+  "updatedAt": "2026-09-28T07:58:18.043Z",
   "appVersion": "1.42.0"
 }
