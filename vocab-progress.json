@@ -1901,7 +1901,7 @@
     "xấu hổ": 0,
     "hãy": 0,
     "đặt câu hỏi": 0,
-    "lần nữa": 0,
+    "lần nữa": 5,
     "cũng được": 0,
     "chơi lại": 0,
     "nói tắt": 0,
@@ -2035,6 +2035,6 @@
   },
   "currentSection": "- Yến : 14 septembre 2026",
   "sectionUpdatedAt": "1790581248472",
-  "updatedAt": "2026-09-28T07:44:53.977Z",
+  "updatedAt": "2026-09-28T07:45:53.899Z",
   "appVersion": "1.42.0"
 }
