@@ -14,7 +14,7 @@
     "dính": 0,
     "má": 0,
     "Rồi xong": 1,
-    "bên cạnh": 2,
+    "bên cạnh": 3,
     "cô gái": 5,
     "hôn gió": 0,
     "về phía": 0,
@@ -2035,6 +2035,6 @@
   },
   "currentSection": "- Yến : 14 septembre 2026",
   "sectionUpdatedAt": "1790581248472",
-  "updatedAt": "2026-09-28T07:51:05.979Z",
+  "updatedAt": "2026-09-28T07:52:05.888Z",
   "appVersion": "1.42.0"
 }
