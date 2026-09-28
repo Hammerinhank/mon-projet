@@ -1920,7 +1920,7 @@
     "vỗ tay": 0,
     "vẫy tay": 0,
     "bắt tay": 0,
-    "ở hai bên": 0,
+    "ở hai bên": 1,
     "quy định": 0,
     "nguyên tắc": 0,
     "người phụ nữ": 5,
@@ -2035,6 +2035,6 @@
   },
   "currentSection": "- Yến : 14 septembre 2026",
   "sectionUpdatedAt": "1790581248472",
-  "updatedAt": "2026-09-28T07:58:18.043Z",
+  "updatedAt": "2026-09-28T07:59:17.955Z",
   "appVersion": "1.42.0"
 }
