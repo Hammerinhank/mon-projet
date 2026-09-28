@@ -1907,7 +1907,7 @@
     "nói tắt": 0,
     "nói ngắn lại": 0,
     "nhẹ nhàng": 0,
-    "giống như": 1,
+    "giống như": 2,
     "chảy": 0,
     "nghe rõ": 0,
     "nhìn thấy": 0,
@@ -2035,6 +2035,6 @@
   },
   "currentSection": "- Yến : 14 septembre 2026",
   "sectionUpdatedAt": "1790581248472",
-  "updatedAt": "2026-09-28T07:46:53.932Z",
+  "updatedAt": "2026-09-28T07:49:06.013Z",
   "appVersion": "1.42.0"
 }
