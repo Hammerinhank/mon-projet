@@ -1925,7 +1925,7 @@
     "nguyên tắc": 0,
     "người phụ nữ": 0,
     "bắt tay trước": 0,
-    "ít khi": 0,
+    "ít khi": 1,
     "10 lần nữa": 0,
     "buổi học sau": 0,
     "e rằng": 0,
@@ -2035,6 +2035,6 @@
   },
   "currentSection": "- Yến : 14 septembre 2026",
   "sectionUpdatedAt": "1790581248472",
-  "updatedAt": "2026-09-28T07:41:53.992Z",
+  "updatedAt": "2026-09-28T07:42:53.991Z",
   "appVersion": "1.42.0"
 }
