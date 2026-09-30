@@ -1756,7 +1756,7 @@
     "buổi học hôm nay": 0,
     "bảng trắng": 0,
     "phần ví dụ": 0,
-    "hộp rượu": 1,
+    "hộp rượu": 2,
     "cảnh sát": 2,
     "cảnh sát giao thông": 2,
     "đường cho xe máy": 2,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-30T06:07:48.085Z",
+  "updatedAt": "2026-09-30T06:08:48.134Z",
   "appVersion": "1.42.0"
 }
