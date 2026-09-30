@@ -1484,7 +1484,7 @@
     "một bạn": 0,
     "dạy học": 0,
     "đi qua": 5,
-    "xe tải": 0,
+    "xe tải": 1,
     "đường hầm": 1,
     "phương tiện giao thông": 2,
     "đường dành cho xe tải": 0,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-30T05:50:12.803Z",
+  "updatedAt": "2026-09-30T05:51:13.403Z",
   "appVersion": "1.42.0"
 }
