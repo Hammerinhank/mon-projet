@@ -1469,7 +1469,7 @@
     "bắt đầu bài học": 0,
     "bánh bao": 2,
     "bánh bao nhân thịt": 1,
-    "bánh bao chay": 2,
+    "bánh bao chay": 3,
     "nhân thịt": 0,
     "đồ ăn chay": 2,
     "người ăn chay": 5,
@@ -1769,7 +1769,7 @@
     "khu vườn": 2,
     "gửi": 5,
     "đáp án": 1,
-    "chọn đáp án đúng": 1,
+    "chọn đáp án đúng": 2,
     "cho phép": 2,
     "quan chức nhà nước": 1,
     "trưng bày": 1,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-30T06:11:45.457Z",
+  "updatedAt": "2026-09-30T06:13:25.473Z",
   "appVersion": "1.42.0"
 }
