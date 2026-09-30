@@ -1778,7 +1778,7 @@
     "họa sĩ nước Tây Ban Nha": 2,
     "họa sĩ nước Hà Lan": 3,
     "thường thường": 2,
-    "hiếm khi": 0,
+    "hiếm khi": 5,
     "không bao giờ": 5,
     "hàng tuần": 3,
     "thứ sáu": 2,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-30T06:09:48.089Z",
+  "updatedAt": "2026-09-30T06:11:45.457Z",
   "appVersion": "1.42.0"
 }
