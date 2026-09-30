@@ -1471,7 +1471,7 @@
     "bánh bao nhân thịt": 1,
     "bánh bao chay": 1,
     "nhân thịt": 0,
-    "đồ ăn chay": 1,
+    "đồ ăn chay": 2,
     "người ăn chay": 5,
     "đồ ăn": 0,
     "chai": 5,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-29T20:25:30.849Z",
+  "updatedAt": "2026-09-30T05:50:12.803Z",
   "appVersion": "1.42.0"
 }
