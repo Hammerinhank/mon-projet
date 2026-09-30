@@ -1758,7 +1758,7 @@
     "phần ví dụ": 0,
     "hộp rượu": 0,
     "cảnh sát": 1,
-    "cảnh sát giao thông": 0,
+    "cảnh sát giao thông": 1,
     "đường cho xe máy": 1,
     "đường cho người đi bộ": 2,
     "giờ cao điểm": 0,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-30T05:53:19.410Z",
+  "updatedAt": "2026-09-30T05:55:13.780Z",
   "appVersion": "1.42.0"
 }
