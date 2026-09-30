@@ -1764,7 +1764,7 @@
     "giờ cao điểm": 0,
     "đi lại": 2,
     "an toàn": 1,
-    "điều hòa": 1,
+    "điều hòa": 2,
     "phòng ngủ": 5,
     "khu vườn": 2,
     "gửi": 5,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-30T05:57:13.630Z",
+  "updatedAt": "2026-09-30T05:58:24.928Z",
   "appVersion": "1.42.0"
 }
