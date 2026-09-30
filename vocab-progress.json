@@ -1760,7 +1760,7 @@
     "cảnh sát": 2,
     "cảnh sát giao thông": 2,
     "đường cho xe máy": 2,
-    "đường cho người đi bộ": 2,
+    "đường cho người đi bộ": 3,
     "giờ cao điểm": 0,
     "đi lại": 2,
     "an toàn": 1,
@@ -2090,6 +2090,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1790713499298",
-  "updatedAt": "2026-09-30T06:05:40.690Z",
+  "updatedAt": "2026-09-30T06:06:48.130Z",
   "appVersion": "1.42.0"
 }
