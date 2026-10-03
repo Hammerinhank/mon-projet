@@ -1768,7 +1768,7 @@
     "phòng ngủ": 5,
     "khu vườn": 2,
     "gửi": 5,
-    "đáp án": 1,
+    "đáp án": 2,
     "chọn đáp án đúng": 2,
     "cho phép": 2,
     "quan chức nhà nước": 1,
@@ -1786,7 +1786,7 @@
     "không thể": 5,
     "quá": 5,
     "đã gửi": 5,
-    "chưa trả lời": 0,
+    "chưa trả lời": 1,
     "tệ": 2,
     "tạm thời": 1,
     "cao": 5,
@@ -2128,6 +2128,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1791007325915",
-  "updatedAt": "2026-10-03T06:02:10.927Z",
+  "updatedAt": "2026-10-03T06:03:11.373Z",
   "appVersion": "1.42.0"
 }
