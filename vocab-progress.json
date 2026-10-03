@@ -1304,7 +1304,7 @@
     "chị họ": 2,
     "em họ": 2,
     "bạn học cũ": 3,
-    "đồng nghiệp cũ": 1,
+    "đồng nghiệp cũ": 2,
     "giống gia đình": 0,
     "hơn 2 tuổi": 0,
     "hơn bác 2 tuổi": 0,
@@ -1759,7 +1759,7 @@
     "hộp rượu": 2,
     "cảnh sát": 2,
     "cảnh sát giao thông": 2,
-    "đường cho xe máy": 2,
+    "đường cho xe máy": 3,
     "đường cho người đi bộ": 3,
     "giờ cao điểm": 0,
     "đi lại": 2,
@@ -2128,6 +2128,6 @@
   },
   "currentSection": "- Chi : 9 septembre 2026",
   "sectionUpdatedAt": "1791007325915",
-  "updatedAt": "2026-10-03T06:03:11.373Z",
+  "updatedAt": "2026-10-03T06:07:56.099Z",
   "appVersion": "1.42.0"
 }
